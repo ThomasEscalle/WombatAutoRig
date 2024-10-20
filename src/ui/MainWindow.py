@@ -135,10 +135,6 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
             # Controller placement
             if not self.template.onControllerPlacementFinished(None):
                 return
-        if self.template != None and currentIndex == 5:
-            # Validation
-            if not self.template.onValidationFinished(None):
-                return
         ################################################################
         ################################################################
         ################################################################

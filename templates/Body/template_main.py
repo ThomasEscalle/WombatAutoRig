@@ -108,9 +108,10 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the joint placement is accepted
     def onJointPlacementAccepted(self, settings):
         print("onJointPlacementAccepted")
-        # Hide the two controllers
-        cmds.hide(self.jnts["ctrl_00"])
-        cmds.hide(self.jnts["ctrl_01"])
+
+        # Hide the two controllers by switching the LOD_visibility attribute of the shapes to 0
+        cmds.setAttr(self.jnts["ctrl_00"] + "Shape" + ".lodVisibility", 0)
+        cmds.setAttr(self.jnts["ctrl_01"] + "Shape" + ".lodVisibility", 0)
         cmds.hide(self.jnts["line_00"])
 
 
@@ -123,19 +124,19 @@ class Template(TemplateBase.TemplateBase):
     def onControllerPlacementEntered(self, settings):
         print("onControllerPlacementEntered")
         
-        # Select the first controller
-        cmds.select(self.jnts["ctrl_00"])
-        # Run the "circle" command to create a circle controller inside the selected object
-        maya.mel.eval("circle;")
-        # Rename the circle controller
-        self.ctrls["ctrl_00"] = cmds.ls(selection=True)[0]
+        # Create a controller circle  with a scale of 0.3
+        self.ctrls["ctrl_00"] = cmds.circle(name="CTRL_00", radius=0.3, normal=[0,1,0], degree=1)[0]
+        # Move the controller to the transformations of the jnts["ctrl_00"]
+        cmds.xform(self.ctrls["ctrl_00"], translation=cmds.xform(self.jnts["ctrl_00"], query=True, translation=True), worldSpace=True)
+        # Parent the controller to the jnt["ctrl_00"]
+        cmds.parent(self.ctrls["ctrl_00"], self.jnts["ctrl_00"])
 
-        # Select the second controller
-        cmds.select(self.jnts["ctrl_01"])
-        # Run the "circle" command to create a circle controller inside the selected object
-        maya.mel.eval("circle;")
-        # Rename the circle controller
-        self.ctrls["ctrl_01"] = cmds.ls(selection=True)[0]
+        # Create a controller circle  with a scale of 0.3
+        self.ctrls["ctrl_01"] = cmds.circle(name="CTRL_01", radius=0.3, normal=[0,1,0], degree=1)[0]
+        # Move the controller to the transformations of the jnts["ctrl_01"]
+        cmds.xform(self.ctrls["ctrl_01"], translation=cmds.xform(self.jnts["ctrl_01"], query=True, translation=True), worldSpace=True)
+        # Parent the controller to the jnt["ctrl_01"]
+        cmds.parent(self.ctrls["ctrl_01"], self.jnts["ctrl_01"])
 
 
         
@@ -166,4 +167,25 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the joint limits are finished (when the user clicks the "Next" button)
     def onValidationAccepted(self, settings):
         print("onValidationAccepted")
+
+        # Select the first controller
+        cmds.select(self.jnts["ctrl_00"])
+        # Freeze the transformations
+        cmds.makeIdentity(apply=True, t=1, r=1, s=1, n=0)
+        # Create a joint inside of the controller
+        jnt_00 = cmds.joint(name="JNT_00")
+        # Unparent the joint
+        cmds.parent(jnt_00, world=True)
+        
+        # Select the second controller
+        cmds.select(self.jnts["ctrl_01"])
+        # Create a joint inside of the controller
+        jnt_01 = cmds.joint(name="JNT_01")
+        # Unparent the joint
+        cmds.parent(jnt_01, world=True)
+        # Parent the jnt_01 inside the jnt_00
+        cmds.parent(jnt_01, jnt_00)
+
+
+
         return True
