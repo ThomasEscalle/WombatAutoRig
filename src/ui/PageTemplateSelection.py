@@ -30,15 +30,19 @@ class PageTemplateSelection(PageBase):
         # Refresh the page
         self.refresh()
 
+    # Get the selected template
+    def getSelectedTemplate(self):
+        template = TemplateManager.TemplateManager().getTemplate(self.ui.cbSelectTemplate.currentText())
+        return template
+
+
     # Say if the user can go to the next page or not
     def canGoNext(self):
         # Check if the selected template's name is not empty
-        """
         if self.ui.cbSelectTemplate.currentText() == "":
             # Warn the user
             QtWidgets.QMessageBox.warning(self, "Warning", "Please select a template to continue.")
             return False
-        """
         
         """
         templateManager = TemplateManager.TemplateManager()

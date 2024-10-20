@@ -1,4 +1,9 @@
 from wombatAutoRig.src.core import TemplateBase
+from wombatAutoRig.src.core import JointPlacement
+from maya import cmds
+import maya.mel
+
+
 
 # Autorig template : Body
 # Version : v01
@@ -10,10 +15,14 @@ class Template(TemplateBase.TemplateBase):
     def __init__(self):
         super(Template, self).__init__()
 
-        self.name = Body
-        self.identifier = body
-        self.version = v01
-        self.author = ThomasEsc
+        self.name = "Body"
+        self.identifier = "body"
+        self.version = "v01"
+        self.author = "ThomasEsc"
+
+        self.jnts = {}
+        self.ctrls = {}
+
         
 
     # This method is called when the template is initialized
@@ -82,6 +91,13 @@ class Template(TemplateBase.TemplateBase):
     def onJointPlacementEntered(self, settings):
         print("onJointPlacementEntered")
 
+        self.jnts["ctrl_00"] = JointPlacement.createController([0,0,0], 0.3, "CTRL_00")
+        self.jnts["ctrl_01"] = JointPlacement.createController([0,8,0], 0.3, "CTRL_01")
+        self.jnts["line_00"] = JointPlacement.connectLine(self.jnts["ctrl_00"], self.jnts["ctrl_01"], "LINE_00")
+
+
+
+
     # This method is called when the joint placement is finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct
     # If the settings are correct, the method should return True and the next page will be shown
@@ -92,6 +108,10 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the joint placement is accepted
     def onJointPlacementAccepted(self, settings):
         print("onJointPlacementAccepted")
+        # Hide the two controllers
+        cmds.hide(self.jnts["ctrl_00"])
+        cmds.hide(self.jnts["ctrl_01"])
+        cmds.hide(self.jnts["line_00"])
 
 
     ################################################################################################
@@ -102,6 +122,24 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the controller placement is entered
     def onControllerPlacementEntered(self, settings):
         print("onControllerPlacementEntered")
+        
+        # Select the first controller
+        cmds.select(self.jnts["ctrl_00"])
+        # Run the "circle" command to create a circle controller inside the selected object
+        maya.mel.eval("circle;")
+        # Rename the circle controller
+        self.ctrls["ctrl_00"] = cmds.ls(selection=True)[0]
+
+        # Select the second controller
+        cmds.select(self.jnts["ctrl_01"])
+        # Run the "circle" command to create a circle controller inside the selected object
+        maya.mel.eval("circle;")
+        # Rename the circle controller
+        self.ctrls["ctrl_01"] = cmds.ls(selection=True)[0]
+
+
+        
+
 
     # This method is called when the controller placement is finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct

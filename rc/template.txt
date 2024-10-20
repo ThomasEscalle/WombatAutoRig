@@ -1,4 +1,6 @@
 from wombatAutoRig.src.core import TemplateBase
+from maya import cmds
+
 
 # Autorig template : @name
 # Version : @version
@@ -10,10 +12,10 @@ class Template(TemplateBase.TemplateBase):
     def __init__(self):
         super(Template, self).__init__()
 
-        self.name = @name
-        self.identifier = @identifier
-        self.version = @version
-        self.author = @author
+        self.name = "@name"
+        self.identifier = "@identifier"
+        self.version = "@version"
+        self.author = "@author"
         
 
     # This method is called when the template is initialized

@@ -101,10 +101,75 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
             # Close the window
             self.close()
         
+        currentIndex = self.ui.stackedWidget.currentIndex()
+
 
         # Check if the current page can go to the next page
         if not self.ui.stackedWidget.currentWidget().canGoNext():
             return
+        
+        # Get the current template if it is the first page
+        if currentIndex == 0:
+            self.template = self.pageTemplateSelection.getSelectedTemplate()
+            if self.template == None:
+                return
+
+
+
+        ################################################################
+        ##################### Finished events ##########################
+        ################################################################
+        if self.template != None and currentIndex == 1:
+            # Global settings
+            if not self.template.onGlobalSettingsFinished(None):
+                return
+        if self.template != None and currentIndex == 2:
+            # Geometry selection
+            if not self.template.onGeometrySelectionFinished(None):
+                return
+        if self.template != None and currentIndex == 3:
+            # Joint placement
+            if not self.template.onJointPlacementFinished(None):
+                return
+        if self.template != None and currentIndex == 4:
+            # Controller placement
+            if not self.template.onControllerPlacementFinished(None):
+                return
+        if self.template != None and currentIndex == 5:
+            # Validation
+            if not self.template.onValidationFinished(None):
+                return
+        ################################################################
+        ################################################################
+        ################################################################
+
+
+
+        
+        ################################################################
+        ##################### Accepted events ##########################
+        ################################################################
+        if self.template != None and currentIndex == 1:
+            # Global settings
+            self.template.onGlobalSettingsAccepted(None)
+        if self.template != None and currentIndex == 2:
+            # Geometry selection
+            self.template.onGeometrySelectionAccepted(None)
+        if self.template != None and currentIndex == 3:
+            # Joint placement
+            self.template.onJointPlacementAccepted(None)
+        if self.template != None and currentIndex == 4:
+            # Controller placement
+            self.template.onControllerPlacementAccepted(None)
+        if self.template != None and currentIndex == 5:
+            # Validation
+            self.template.onValidationAccepted(None)
+        ################################################################
+        ################################################################
+        ################################################################
+
+
+
 
         # Go to the next page
         self.ui.stackedWidget.setCurrentIndex(self.ui.stackedWidget.currentIndex() + 1)
@@ -116,6 +181,33 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         else:
             self.ui.btnNext.show()
             self.ui.btnCancel.show()
+        
+        # Update the current index
+        currentIndex = self.ui.stackedWidget.currentIndex()
+
+
+
+        ################################################################
+        ##################### Entered events ###########################
+        ################################################################
+        if self.template != None and currentIndex == 1:
+            # Global settings
+            self.template.onGlobalSettingsEntered(None)
+        if self.template != None and currentIndex == 2:
+            # Geometry selection
+            self.template.onGeometrySelectionEntered(None)
+        if self.template != None and currentIndex == 3:
+            # Joint placement
+            self.template.onJointPlacementEntered(None)
+        if self.template != None and currentIndex == 4:
+            # Controller placement
+            self.template.onControllerPlacementEntered(None)
+        if self.template != None and currentIndex == 5:
+            # Validation
+            self.template.onValidationEntered(None)
+        ################################################################
+        ################################################################
+        ################################################################
 
 
     # When the user triggers the "New template" action
