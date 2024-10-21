@@ -93,7 +93,10 @@ class Template(TemplateBase.TemplateBase):
 
         self.jnts["ctrl_00"] = JointPlacement.createController([0,0,0], 0.3, "CTRL_00")
         self.jnts["ctrl_01"] = JointPlacement.createController([0,8,0], 0.3, "CTRL_01")
+        self.jnts["ctrl_02"] = JointPlacement.createController([0,16,0], 0.3, "CTRL_02")
         self.jnts["line_00"] = JointPlacement.connectLine(self.jnts["ctrl_00"], self.jnts["ctrl_01"], "LINE_00")
+        self.jnts["line_02"] = JointPlacement.connectLine(self.jnts["ctrl_01"], self.jnts["ctrl_02"], "LINE_01")
+
 
 
 
