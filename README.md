@@ -20,6 +20,6 @@ wombatAutoRig.run()
 
 ## Documentation
 
-- [Color](docs/Color.md)
-- [Offset](docs/Offset.md)
-- [Preferences](docs/Preferences.md)
+- [Color](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Colors.md)
+- [Offset](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Offset.md)
+- [Preferences](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Preferences.md)
