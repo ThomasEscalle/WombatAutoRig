@@ -6,94 +6,93 @@ from wombatAutoRig.src.core.Preferences import Preferences
 # Get the hexadecimal value of a color
 # @param color: color name, string
 def getHexColor(color):
-    if color == "white": 
-       return "#FFFFFF"
-    if color == "pink": 
-       return "#FFC0CB"
-    if color == "crimson": 
-       return "#DC143C"
-    if color == "red": 
-       return "#FF0000"
-    if color == "maroon": 
-       return "#800000"
-    if color == "brown": 
-       return "#A52A2A"
-    if color == "misty": 
-       return "#FFE4E1"
-    if color == "salmon": 
-       return "#FA8072"
-    if color == "coral": 
-       return "#FF7F50"
-    if color == "orange-red": 
-       return "#FF4500"
-    if color == "chocolate": 
-       return "#D2691E"
-    if color == "dark-gray": 
-       return "#A9A9A9"
-    if color == "orange": 
-       return "#FFA500"
-    if color == "gold": 
-       return "#FFD700"
-    if color == "ivory": 
-       return "#FFFFF0"
-    if color == "yellow": 
-       return "#FFFF00"
-    if color == "olive": 
-       return "#808000"
-    if color == "yellow-green": 
-       return "#9ACD32"
-    if color == "lawn-green": 
-       return "#7CFC00"
-    if color == "lime": 
-       return "#00FF00"
-    if color == "green": 
-       return "#008000"
-    if color == "spring-green": 
-       return "#00FF7F"
-    if color == "gray": 
-       return "#808080"
-    if color == "aqua-marine": 
-       return "#7FFFD4"
-    if color == "turquoise": 
-       return "#40E0D0"
-    if color == "azure": 
-       return "#007FFF"
-    if color == "aqua": 
-       return "#00FFFF"
-    if color == "teal": 
-       return "#008080"
-    if color == "lavender": 
-       return "#E6E6FA"
-    if color == "blue": 
-       return "#0000FF"
-    if color == "navy": 
-       return "#000080"
-    if color == "blue-violet": 
-       return "#8A2BE2"
-    if color == "black": 
-       return "#000000"
-    if color == "indigo": 
-       return "#4B0082"
-    if color == "dark-violet": 
-       return "#9400D3"
-    if color == "plum": 
-       return "#DDA0DD"
-    if color == "magenta": 
-       return "#FF00FF"
-    if color == "purple": 
-       return "#800080"
-    if color == "red-violet": 
-       return "#C71585"
-    if color == "tan": 
-       return "#D2B48C"
-    if color == "slate-gray": 
-       return "#708090"
-    if color == "dark-slate-gray": 
-       return "#2F4F4F"
-    if color == "light-gray": 
-       return "#D3D3D3"
-    return ""
-
+   if color == "white" : 
+      return "#FFFFFF"
+   if color == "pink" : 
+      return "#F9BFCB"
+   if color == "crimson" : 
+      return "#DD1E3F"
+   if color == "red" : 
+      return "#ED1E24"
+   if color == "maroon" : 
+      return "#7E1416"
+   if color == "brown" : 
+      return "#A62A2A"
+   if color == "misty" : 
+      return "#FCE3DF"
+   if color == "salmon" : 
+      return "#F57F73"
+   if color == "coral" : 
+      return "#F47D52"
+   if color == "orange-red" : 
+      return "#F14924"
+   if color == "chocolate" : 
+      return "#D36A28"
+   if color == "dark-gray" : 
+      return "#AAAAAA"
+   if color == "orange" : 
+      return "#FFA419"
+   if color == "gold" : 
+      return "#E4BD20"
+   if color == "ivory" : 
+      return "#FAF9E5"
+   if color == "yellow" : 
+      return "#F7EC14"
+   if color == "olive" : 
+      return "#6B692C"
+   if color == "yellow-green" : 
+      return "#9AC93B"
+   if color == "lawn-green" : 
+      return "#91C73E"
+   if color == "lime" : 
+      return "#69BD44"
+   if color == "green" : 
+      return "#10813F"
+   if color == "spring-green" : 
+      return "#71C16A"
+   if color == "gray" : 
+      return "#696969"
+   if color == "aqua-marine" : 
+      return "#99D4C0"
+   if color == "turquoise" : 
+      return "#63C6C1"
+   if color == "azure" : 
+      return "#DEF2F3"
+   if color == "aqua" : 
+      return "#6FCCDD"
+   if color == "teal" : 
+      return "#008181"
+   if color == "lavender" : 
+      return "#D9D7EC"
+   if color == "blue" : 
+      return "#3853A4"
+   if color == "navy" : 
+      return "#272974"
+   if color == "blue-violet" : 
+      return "#7651A1"
+   if color == "black" : 
+      return "#000000"
+   if color == "indigo" : 
+      return "#4E2A7C"
+   if color == "dark-violet" : 
+      return "#80469B"
+   if color == "plum" : 
+      return "#D4A2C8"
+   if color == "magenta" : 
+      return "#B9539F"
+   if color == "purple" : 
+      return "#7D277E"
+   if color == "red-violet" : 
+      return "#C71784"
+   if color == "tan" : 
+      return "#D1B48C"
+   if color == "slate-gray" : 
+      return "#6F7F8F"
+   if color == "dark-slate-gray" : 
+      return "#2F4F4E"
+   if color == "light-gray" : 
+      return "#D3D3D3"
+   
 # Set the color of an object
 # @param obj: list of objects to color, or a single object
 # @param color: color to apply to the object , string (hexadecimal or color name)
