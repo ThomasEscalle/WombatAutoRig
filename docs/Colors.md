@@ -1,6 +1,31 @@
 # Colors
+```python
+import wombatAutoRig.src.core.Colors as Colors
+```
 
-Allow the user to set a color to maya elements.
+## Description
+
+This module provides a function to set the color of an object or a list of objects. The color can be set by name or by hexadecimal value. The list of available colors is provided below.
+
+## Usage
+
+```python
+import wombatAutoRig.src.core.Colors as Colors
+Colors.setColor("locator", "red")
+```
+
+
+
+## Detailed Description
+
+### setColor(obj, color) : None
+Parameters:
+- **obj**: list of objects to color, or a single object
+- **color**: color to set to the object, name or hexadecimal (e.g. "red" or "#FF0000")
+
+Returns: 
+    - Nothing
+
 
 
 ## Color list :
