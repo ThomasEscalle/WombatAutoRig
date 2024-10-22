@@ -2,7 +2,7 @@
 ```python
 import wombatAutoRig.src.core.Colors as Colors
 ```
-Source: [Colors.py](../src/core/Colors.py)
+Source: [Colors.py](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/src/core/Color.py)
 
 ## Description
 
