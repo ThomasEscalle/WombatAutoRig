@@ -17,3 +17,9 @@ wombatAutoRig.run()
 
 
 
+
+## Documentation
+
+- [Color](docs/Color.md)
+- [Offset](docs/Offset.md)
+- [Preferences](docs/Preferences.md)
