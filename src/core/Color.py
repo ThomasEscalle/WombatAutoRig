@@ -157,11 +157,8 @@ def setColor(obj, color ):
 
 
 
-
-# Test the script with selected objects
-def test():
-    obj = cmds.ls(selection=True)
-    setColor(obj, "pink")
-
-
-test()
+# Set the default color of an object by it's type
+# @param obj: object to color, or a list of objects
+# @param type: type of the object, string
+def setDefaultColor(obj, type):
+   pass
