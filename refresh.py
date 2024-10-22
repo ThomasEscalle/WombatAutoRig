@@ -88,7 +88,17 @@ importlib.reload(DlgNewTemplate)
 from wombatAutoRig.src.ui.forms import ui_DlgNewTemplate
 importlib.reload(ui_DlgNewTemplate)
 
+# Recharge le module wombatAutoRig.src.ui.DlgColor
+from wombatAutoRig.src.ui import DlgColor
+importlib.reload(DlgColor)
+
+# Recharge le module wombatAutoRig.src.ui.forms.ui_DlgColor
+from wombatAutoRig.src.ui.forms import ui_DlgColor
+importlib.reload(ui_DlgColor)
 
 
+# wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
-wombatAutoRig.run()  # Appeler la fonction run() après rechargement
+
+color_picker = DlgColor.DlgColor()
+color_picker.run()

@@ -17,3 +17,5 @@ cd D:\Autodesk\Maya2024\Maya2024\bin
 
 
 .\pyside2-uic.exe -o C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgNewTemplate.py C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgNewTemplate.ui
+
+.\pyside2-uic.exe -o C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgColor.py C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgColor.ui
