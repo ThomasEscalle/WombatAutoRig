@@ -1,7 +1,7 @@
 # Preferences
 
 ```python
-import wombatAutoRig.src.core.Preferences as Preferences
+from wombatAutoRig.src.core.Preferences import Preferences
 ```
 Source: [Preferences.py](../src/core/Colors.py)
 
@@ -16,7 +16,7 @@ The file is saved in the root of the script directory :
 ## Usage
     
 ```python
-import wombatAutoRig.src.core.Preferences as Preferences
+from wombatAutoRig.src.core.Preferences import Preferences
 
 # Create a preference object, the file is automatically loaded
 prefs = Preferences.Preferences()

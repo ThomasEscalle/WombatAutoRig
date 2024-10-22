@@ -19,6 +19,17 @@ def getTemplatesPath():
 
     return filePath
 
+# Return the path of the preferences file (preferences.json)    
+def getPreferencesPath():
+    filePath = os.path.abspath(__file__)
+    filePath = filePath.replace("\\", "/")
+    filePath = filePath.replace("/src/core/FileHelper.py", "")
+    filePath += "/preferences.json"
+
+    print("Preferences folder path: " + filePath)
+
+    return filePath
+
 # Return the path of the rc folder
 def getRcPath():
     filePath = os.path.abspath(__file__)

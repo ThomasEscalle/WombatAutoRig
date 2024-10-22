@@ -12,7 +12,12 @@ This module provides a function to set the color of an object or a list of objec
 
 ```python
 import wombatAutoRig.src.core.Colors as Colors
+
+### Set the color of the object to red
 Colors.setColor("locator", "red")
+
+### Apply to the locator the default color for the DrvJnt saved in the preferences
+Colors.setDefaultColor("locator", "DrvJnt")
 ```
 
 
@@ -20,11 +25,26 @@ Colors.setColor("locator", "red")
 ## Detailed Description
 
 ### setColor(obj, color) : None
+Set the color of the object to the specified color. The color can be set by name or by hexadecimal value.
+
 Parameters:
 - **obj**: list of objects to color, or a single object
 - **color**: color to set to the object, name or hexadecimal (e.g. "red" or "#FF0000")
 
 Returns: 
+- Nothing
+
+
+### setDefaultColor(obj, type) : None
+Set the color of the object to the default color for the specified type. 
+The color can be set by name or by hexadecimal value.
+The color is saved in the preferences.json file.
+
+Parameters:
+- **obj**: list of objects to color, or a single object.
+- **type**: type of object to color, the way it is saved in the preferences.json file.
+
+Returns:
 - Nothing
 
 

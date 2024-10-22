@@ -1,5 +1,7 @@
 #### Script to apply colors to maya objects
 import maya.cmds as cmds
+from wombatAutoRig.src.core.Preferences import Preferences
+
 
 # Get the hexadecimal value of a color
 # @param color: color name, string
@@ -161,4 +163,17 @@ def setColor(obj, color ):
 # @param obj: object to color, or a list of objects
 # @param type: type of the object, string
 def setDefaultColor(obj, type):
-   pass
+   prefs = Preferences()
+   defaultColors = prefs.get("defaultColors", {})
+   
+   if type in defaultColors:
+      setColor(obj, defaultColors[type])
+
+
+
+
+def test():
+   selected = cmds.ls(selection=True)
+   setDefaultColor(selected, "DrvJnt")
+
+test()
