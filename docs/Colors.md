@@ -4,6 +4,8 @@ import wombatAutoRig.src.core.Colors as Colors
 ```
 Source: [Colors.py](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/src/core/Color.py)
 
+See also: [Preferences](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Preferences.md)
+
 ## Description
 
 This module provides a function to set the color of an object or a list of objects. The color can be set by name or by hexadecimal value. The list of available colors is provided below.
