@@ -1,6 +1,6 @@
 # Colors
 ```python
-import wombatAutoRig.src.core.Colors as Colors
+from wombatAutoRig.src.core import Colors
 ```
 Source: [Colors.py](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/src/core/Color.py)
 
@@ -13,7 +13,7 @@ This module provides a function to set the color of an object or a list of objec
 ## Usage
 
 ```python
-import wombatAutoRig.src.core.Colors as Colors
+from wombatAutoRig.src.core import Colors
 
 ### Set the color of the object to red
 Colors.setColor("locator", "red")

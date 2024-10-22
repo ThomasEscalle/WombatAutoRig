@@ -79,6 +79,7 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         self.ui.actionAbout.triggered.connect(self.about)
         self.ui.actionHelp.triggered.connect(self.help)
         self.ui.actionTemplate_Folder.triggered.connect(self.openTemplateFolder)
+        self.ui.actionPreferences.triggered.connect(self.preferences)
 
         # Set icons
         self.ui.btnNext.setIcon(IconLoader.loadIcon("arrow_forward.png"))
@@ -89,6 +90,7 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         self.ui.actionAbout.setIcon(IconLoader.loadIcon("about.png"))
         self.ui.actionHelp.setIcon(IconLoader.loadIcon("help.png"))
         self.ui.actionTemplate_Folder.setIcon(IconLoader.loadIcon("folder.png"))
+        self.ui.actionPreferences.setIcon(IconLoader.loadIcon("settings.png"))
 
 
     # Show window with docking ability
@@ -212,6 +214,8 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         dlg = DlgNewTemplate.DlgNewTemplate()
         dlg.exec()
 
+    
+
     # When the cancel button is pressed
     def cancel(self):
         self.close()
@@ -225,6 +229,8 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
     def openTemplateFolder(self):
         FileHelper.openFolderInExplorer(FileHelper.getTemplatesPath())
 
+    def preferences(self):
+        FileHelper.openFolderInExplorer(FileHelper.getPreferencesPath())
 
 
 

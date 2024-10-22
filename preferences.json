@@ -1,5 +1,7 @@
 {
     "defaultColors": {
-        "DrvJnt" : "orange"
+        "DrvJnt" : "orange",
+        "Move" : "indigo",
+        "Hook" : "orange"
     }
 }
