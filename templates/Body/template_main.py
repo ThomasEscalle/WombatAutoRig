@@ -1,5 +1,6 @@
 from wombatAutoRig.src.core import TemplateBase
 from wombatAutoRig.src.core import JointPlacement
+
 from maya import cmds
 import maya.mel
 
@@ -33,6 +34,7 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the autorig is canceled
     # It shoud be used to clean up any temporary files or variables
     def onCanceled(self):
+        # Clean up the controllers
         print("onCanceled")
 
 
@@ -79,6 +81,8 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the geometry selection is accepted
     def onGeometrySelectionAccepted(self, settings):
         print("onGeometrySelectionAccepted")
+
+
 
 
 
