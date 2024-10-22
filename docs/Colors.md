@@ -24,7 +24,7 @@ Parameters:
 - **color**: color to set to the object, name or hexadecimal (e.g. "red" or "#FF0000")
 
 Returns: 
-    - Nothing
+- Nothing
 
 
 
