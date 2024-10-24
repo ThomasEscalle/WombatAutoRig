@@ -2,8 +2,6 @@ import importlib
 
 print("Hi!")
 
-print("ta gueule")
-
 # Recharger le module wombatAutoRig
 from wombatAutoRig import wombatAutoRig
 importlib.reload(wombatAutoRig)
