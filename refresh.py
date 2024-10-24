@@ -1,5 +1,7 @@
 import importlib
 
+print("Hi!")
+
 # Recharger le module wombatAutoRig
 from wombatAutoRig import wombatAutoRig
 importlib.reload(wombatAutoRig)
