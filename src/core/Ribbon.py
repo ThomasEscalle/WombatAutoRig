@@ -7,72 +7,8 @@ Probleme si on créer plrs ribbon avec le meme nom
 
 import maya.cmds as cmds
 import re
+from wombatAutoRig.src.core import Offset
 
-def Offset(object, nbr=1):
-
-    # get selected object's parent and store name
-    selParent = cmds.listRelatives(object, parent=True)
-
-    # create OFFSET and MOVE groups under temp names
-    offsetGroup = cmds.group(em=True, name= object+'_Offset')
-    if nbr >1:
-        moveGroup = cmds.group(em=True, name=object+'_Move')
-    if nbr >2:
-        hookGroup = cmds.group(em=True, name=object+'_Hook')
-
-
-    # set group color 
-    if nbr >1:
-        cmds.setAttr(moveGroup + '.useOutlinerColor', 1)
-        cmds.setAttr(moveGroup + '.outlinerColorR', 0.7)
-        cmds.setAttr(moveGroup + '.outlinerColorG', 0.6)
-        cmds.setAttr(moveGroup + '.outlinerColorB', 1)
-
-    if nbr >2:
-        cmds.setAttr(hookGroup + '.useOutlinerColor', 1)
-        cmds.setAttr(hookGroup + '.outlinerColorR', 1)
-        cmds.setAttr(hookGroup + '.outlinerColorG', 0.62)
-        cmds.setAttr(hookGroup + '.outlinerColorB', 0.09)
-
-    # Match group transforms to selected object and
-    #   create parent hierarchy
-    cmds.matchTransform(offsetGroup, object)
-    if nbr >1:
-        cmds.matchTransform(moveGroup, object)
-    if nbr >2:
-        cmds.matchTransform(hookGroup, object)
-    
-    cmds.parent(object, offsetGroup)
-    if nbr >1:
-        cmds.parent(moveGroup, offsetGroup)
-        cmds.parent(object, moveGroup)
-    if nbr >2:
-        cmds.parent(moveGroup, hookGroup)
-        cmds.parent(hookGroup, offsetGroup)
-    if selParent is None:
-        print('none')
-    else:
-        cmds.parent(offsetGroup, selParent)
-
-
-def load_plugin( toLoad= list() ):
-    '''
-    Check if the needed plugin already load. if not loaded, load and autoload check for the plugin
-    
-    :param toLoad: A list of the plugin name to load.
-    :type toLoad: list
-    '''
-    # Get the plugin already loaded
-    plugin_loaded = cmds.pluginInfo( query=True, listPlugins=True )
-    
-    for plugin in toLoad:
-        # Check if the plugin wasn't already load
-        if not plugin in plugin_loaded:
-            # Load plugin
-            cmds.loadPlugin( plugin )
-        # autoLoad plugin
-        if not cmds.pluginInfo( plugin, query=True, autoload=True ):
-            cmds.pluginInfo( plugin, edit=True, autoload=True )
 
 def build_Rivet(name, Nurbs):
       
@@ -179,7 +115,7 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5):
         cmds.joint(name= "Bind_Ribbon_0{}".format(i))
         cmds.setAttr("Bind_Ribbon_0{}.jointOrientX".format(i), 90)
         cmds.setAttr("Bind_Ribbon_0{}.jointOrientY".format(i), 90)
-        Offset("Bind_Ribbon_0{}".format(i), nbr=2)
+        Offset.offset("Bind_Ribbon_0{}".format(i), nbr=2)
     
     #Setting the BlendShape
     Ribbon_BlShp = cmds.nurbsPlane(lr=1/Span, u=Span, ax=[0,1,0], w=8, name="Blshp_"+Name)
@@ -207,9 +143,9 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5):
     #Hierarchiser elements
     cmds.parent("DrvJnt_Ribbon_BlShp_Start", "DrvJnt_Ribbon_BlShp_Mid", "DrvJnt_Ribbon_BlShp_End", group_DrvJnt)
     cmds.parent(Ribbon_BlShp, Curve_Ribbon_BlShp, group_ExtraNodesToHide)
-    Offset(object ="DrvJnt_Ribbon_BlShp_Start")
-    Offset(object ="DrvJnt_Ribbon_BlShp_Mid", nbr=2)
-    Offset(object ="DrvJnt_Ribbon_BlShp_End")
+    Offset.offset(object ="DrvJnt_Ribbon_BlShp_Start")
+    Offset.offset(object ="DrvJnt_Ribbon_BlShp_Mid", nbr=2)
+    Offset.offset(object ="DrvJnt_Ribbon_BlShp_End")
 
     #Skin Curve
     cmds.skinCluster("DrvJnt_Ribbon_BlShp_Start", "DrvJnt_Ribbon_BlShp_Mid", "DrvJnt_Ribbon_BlShp_End", Curve_Ribbon_BlShp, bindMethod=1, mi=3, tsb=True, name="Skin_Crv_Ribbon_BlShp")
@@ -232,7 +168,7 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5):
     CTRL_Mid = cmds.curve(p=[(1,0,1),(-1,0,1),(-1,0,-1),(1,0,-1),(1,0,1)], d=1, name="CTRL_Mid_Ribbon")
 
     cmds.parent(CTRL_Mid, CTRL_End, CTRL_Start, group_CTRLs)
-    Offset(CTRL_Mid, nbr=1)
+    Offset.offset(CTRL_Mid, nbr=1)
 
     #Link CTRLs to DrvJnt
     cmds.connectAttr("CTRL_Start_Ribbon.t", "DrvJnt_Ribbon_BlShp_Start.t")
@@ -247,12 +183,3 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5):
     cmds.parentConstraint(CTRL_Start, CTRL_End, "CTRL_Mid_Ribbon_Offset", sr="none")
     cmds.parentConstraint("DrvJnt_Ribbon_BlShp_Start", "DrvJnt_Ribbon_BlShp_End", "DrvJnt_Ribbon_BlShp_Mid_Move", sr="none")
 
-
-
-
-
-
-
-
-
-Ribbon(Name="Ribbon_01", Span=5)
