@@ -188,4 +188,5 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5):
     cmds.parentConstraint(CTRL_Start, CTRL_End, "CTRL_Mid_{}_Offset".format(Name), sr="none")
     cmds.parentConstraint("DrvJnt_Ribbon_BlShp_{}_Start".format(Name), "DrvJnt_Ribbon_BlShp_{}_End".format(Name), "DrvJnt_Ribbon_BlShp_{}_Mid_Move".format(Name), sr="none")
 
-Ribbon(Name="dbezcv")
+
+
