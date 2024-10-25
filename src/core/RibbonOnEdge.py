@@ -72,7 +72,7 @@ Fonction qui permet de créer un ribbon facial a partir de 2 curves.
 @Name : str Nom du système
 @ws : boolean Indique si vous souhaitez que les joints soient orienté par rapport au monde ou au rivet (True==> monde, False==> rivet, default=False)
 '''
-def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False):
+def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False, wsDrvJnt=False):
     #Creation Loft
     Curves = cmds.ls(selection=True)
     Loft = cmds.loft(Curves, reverse=Rev, rebuild=Joints, name=Name, u=True)
@@ -114,14 +114,24 @@ def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False):
     for i in range(DrvJnt):
         build_Rivet(name="RivDrvJnt_{}_{}".format(Name,i), Nurbs=Loft)
         cmds.setAttr("RivDrvJnt_{}_{}.pos V".format(Name,i), (1-(i/(DrvJnt-1))))
-    for i in range(DrvJnt):
-        cmds.joint(name='DrvJnt_{}_{}'.format(Name,i), rad = 2)
-        cmds.parent('DrvJnt_{}_{}'.format(Name,i), "RivDrvJnt_{}_{}".format(Name,i))
-        cmds.setAttr('DrvJnt_{}_{}.t'.format(Name,i), 0,0,0)
-        cmds.parent('DrvJnt_{}_{}'.format(Name,i), group_DrvJnt)
-        cmds.delete("RivDrvJnt_{}_{}".format(Name,i))
-        Offset.offset('DrvJnt_{}_{}'.format(Name,i))
-        Color.setColor('DrvJnt_{}_{}'.format(Name,i), color="yellow")
+    
+    if wsDrvJnt == True:
+        for i in range(DrvJnt):
+            cmds.joint(name='DrvJnt_{}_{}'.format(Name,i), rad = 2)
+            cmds.parent('DrvJnt_{}_{}'.format(Name,i), "RivDrvJnt_{}_{}".format(Name,i))
+            cmds.setAttr('DrvJnt_{}_{}.t'.format(Name,i), 0,0,0)
+            cmds.parent('DrvJnt_{}_{}'.format(Name,i), group_DrvJnt)
+            cmds.delete("RivDrvJnt_{}_{}".format(Name,i))
+            Offset.offset('DrvJnt_{}_{}'.format(Name,i))
+            Color.setColor('DrvJnt_{}_{}'.format(Name,i), color="yellow")
+    else :
+        for i in range(DrvJnt):
+            cmds.select("RivDrvJnt_{}_{}".format(Name,i))
+            cmds.joint(name='DrvJnt_{}_{}'.format(Name,i), rad = 2)
+            cmds.parent('DrvJnt_{}_{}'.format(Name,i), group_DrvJnt)
+            cmds.delete("RivDrvJnt_{}_{}".format(Name,i))
+            Offset.offset('DrvJnt_{}_{}'.format(Name,i))
+            Color.setColor('DrvJnt_{}_{}'.format(Name,i), color="yellow")
 
     #Skinner le ribbon
     for i in range(DrvJnt):
@@ -133,5 +143,3 @@ def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False):
     
 
 
-
-RibbonOnCurve(ws=False,Rev=True, DrvJnt = 3)
