@@ -83,6 +83,7 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5):
     group_rivet = cmds.group(name="Grp_Ribbon_Rivet_{}".format(Name), empty=True)
     group_DrvJnt = cmds.group(name="Grp_DrvJnt_Ribbon_{}".format(Name), empty=True)
     CTRL_Global = cmds.curve(p=[(3,0,-2),(-3,0,-2),(-4,0,-1),(-4,0,1),(-3,0,2),(3,0,2),(4,0,1),(4,0,-1),(3,0,-2)], d=1, name="CTRL_Global_{}".format(Name))
+    Color.setColor(obj=CTRL_Global, color="yellow")
 
     cmds.parent(group_ExtraNodes, CTRL_Global, group_Global)
     cmds.parent(group_GlobalMove, CTRL_Global)
@@ -164,9 +165,12 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5):
     #Creation des CTRLs
     CTRL_End = cmds.curve(p=[(-3,0,1),(-5,0,1),(-5,0,-1),(-3,0,-1),(-3,0,1)], d=1, name="CTRL_End_"+Name)
     cmds.matchTransform(CTRL_End, "DrvJnt_Ribbon_BlShp_{}_End".format(Name), piv=True)
+    Color.setColor(obj=CTRL_End, color="yellow")
     CTRL_Start = cmds.curve(p=[(3,0,1),(5,0,1),(5,0,-1),(3,0,-1),(3,0,1)], d=1, name="CTRL_Start_"+Name)
     cmds.matchTransform(CTRL_Start, "DrvJnt_Ribbon_BlShp_{}_Start".format(Name), piv=True)
+    Color.setColor(obj=CTRL_Start, color="yellow")
     CTRL_Mid = cmds.curve(p=[(1,0,1),(-1,0,1),(-1,0,-1),(1,0,-1),(1,0,1)], d=1, name="CTRL_Mid_"+Name)
+    Color.setColor(obj=CTRL_Mid, color="yellow")
 
     cmds.parent(CTRL_Mid, CTRL_End, CTRL_Start, group_CTRLs)
     Offset.offset(CTRL_Mid, nbr=1)
