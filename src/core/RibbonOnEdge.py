@@ -70,9 +70,10 @@ Fonction qui permet de créer un ribbon facial a partir de 2 curves.
 @DrvJnt : int Nombre de joints voulu controllant le ribbon
 @Rev : boolean Permet de reverse le ribbon a sa creation s'il s'est créer dans le mauvais sens
 @Name : str Nom du système
-@ws : boolean Indique si vous souhaitez que les joints soient orienté par rapport au monde ou au rivet (True==> monde, False==> rivet, default=False)
+@ws : boolean Indique si vous souhaitez que les Bind joints soient orienté par rapport au monde ou au rivet (True==> monde, False==> rivet, default=False)
+@wsDrvjnt : boolean Indique si vous souhaitez que les DrvJnt joints soient orienté par rapport au monde ou au rivet (True==> monde, False==> rivet, default=True)
 '''
-def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False, wsDrvJnt=False):
+def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False, wsDrvJnt=True):
     #Creation Loft
     Curves = cmds.ls(selection=True)
     Loft = cmds.loft(Curves, reverse=Rev, rebuild=Joints, name=Name, u=True)
