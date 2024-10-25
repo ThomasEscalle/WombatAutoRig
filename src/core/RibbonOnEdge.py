@@ -73,16 +73,28 @@ Fonction qui permet de créer un ribbon facial a partir de 2 curves.
 @ws : boolean Indique si vous souhaitez que les joints soient orienté par rapport au monde ou au rivet (True==> monde, False==> rivet, default=False)
 '''
 def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False):
-
     #Creation Loft
     Curves = cmds.ls(selection=True)
     Loft = cmds.loft(Curves, reverse=Rev, rebuild=Joints, name=Name, u=True)
+
+    #Hierarchie
+    group_Global = cmds.group(name = Name, empty=True)
+    group_Curves = cmds.group(name='Grp_Crvs_'+Name, empty=True)
+    group_DrvJnt = cmds.group(name="Grp_DrvJnt_"+Name, empty=True)
+    group_rivet = cmds.group(name='Grp_Riv_'+Name, empty=True)
+
+    cmds.parent(Curves, Loft[0], group_Curves)
+    cmds.parent(group_Curves, group_DrvJnt, group_rivet, group_Global)
 
     #Creation rivets
     for i in range(Joints):
         build_Rivet(name="Riv_{}_{}".format(Name,i), Nurbs=Loft)
         cmds.setAttr("Riv_{}_{}.pos V".format(Name,i), (1-(Joints-1)/(Joints))/2+(i)/(Joints))
         cmds.setAttr("Riv_{}_{}Shape.lodVisibility".format(Name,i), False)
+    for i in range(Joints):
+        cmds.select(["Riv_{}_{}".format(Name,i)], add=True)
+    ls_rivet=cmds.ls(sl=True)
+    cmds.parent(ls_rivet, group_rivet)
     
     #Creation Joints
     if ws == True:
@@ -97,7 +109,22 @@ def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False):
             cmds.joint(name='Bind_{}_{}'.format(Name,i))
             Color.setColor('Bind_{}_{}'.format(Name,i), color="white")
     
+    #Creation curve intermediaire pour placer DrvJnt
+    cmds.select(clear=True)
+    for i in range(DrvJnt):
+        build_Rivet(name="RivDrvJnt_{}_{}".format(Name,i), Nurbs=Loft)
+        cmds.setAttr("RivDrvJnt_{}_{}.pos V".format(Name,i), (((DrvJnt-1)/(DrvJnt-1))-(i/(DrvJnt-1))))
+    for i in range(DrvJnt):
+        cmds.joint(name='DrvJnt_{}_{}'.format(Name,i), rad = 2)
+        cmds.parent('DrvJnt_{}_{}'.format(Name,i), "RivDrvJnt_{}_{}".format(Name,i))
+        cmds.setAttr('DrvJnt_{}_{}.t'.format(Name,i), 0,0,0)
+        cmds.parent('DrvJnt_{}_{}'.format(Name,i), group_DrvJnt)
+        cmds.delete("RivDrvJnt_{}_{}".format(Name,i))
+        Offset.offset('DrvJnt_{}_{}'.format(Name,i))
+        Color.setColor('DrvJnt_{}_{}'.format(Name,i), color="yellow")
+
+    
 
 
 
-RibbonOnCurve(ws=False)
+RibbonOnCurve(ws=False,Rev=True, DrvJnt = 3)
