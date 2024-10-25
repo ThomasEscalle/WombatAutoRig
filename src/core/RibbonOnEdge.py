@@ -113,7 +113,7 @@ def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False):
     cmds.select(clear=True)
     for i in range(DrvJnt):
         build_Rivet(name="RivDrvJnt_{}_{}".format(Name,i), Nurbs=Loft)
-        cmds.setAttr("RivDrvJnt_{}_{}.pos V".format(Name,i), (((DrvJnt-1)/(DrvJnt-1))-(i/(DrvJnt-1))))
+        cmds.setAttr("RivDrvJnt_{}_{}.pos V".format(Name,i), (1-(i/(DrvJnt-1))))
     for i in range(DrvJnt):
         cmds.joint(name='DrvJnt_{}_{}'.format(Name,i), rad = 2)
         cmds.parent('DrvJnt_{}_{}'.format(Name,i), "RivDrvJnt_{}_{}".format(Name,i))
@@ -122,6 +122,13 @@ def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False):
         cmds.delete("RivDrvJnt_{}_{}".format(Name,i))
         Offset.offset('DrvJnt_{}_{}'.format(Name,i))
         Color.setColor('DrvJnt_{}_{}'.format(Name,i), color="yellow")
+
+    #Skinner le ribbon
+    for i in range(DrvJnt):
+        cmds.select('DrvJnt_{}_{}'.format(Name,i),add=True)
+    DrvJnt_ls = cmds.ls(selection=True)
+    cmds.skinCluster(DrvJnt_ls, Loft, bindMethod=1, mi=3, tsb=True, name="Skin_Crv_{}_BlShp".format(Name))
+
 
     
 
