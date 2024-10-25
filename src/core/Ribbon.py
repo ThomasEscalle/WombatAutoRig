@@ -4,7 +4,6 @@ Probleme si on créer plrs ribbon avec le meme nom
 
 '''
 
-
 import maya.cmds as cmds
 import re
 from wombatAutoRig.src.core import Offset
@@ -99,6 +98,7 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5):
     #creating rivet
     for i in range(Span):
         build_Rivet(name="rivet_{}_0{}".format(Name,i), Nurbs=Ribbon)
+        cmds.setAttr("rivet_{}_0{}Shape.lodVisibility".format(Name,i), False)
     
     #placing rivet
     for i in range(Span):
