@@ -19,6 +19,19 @@ def getTemplatesPath():
 
     return filePath
 
+# Return the path of the controllers
+def getControllersPath():
+    filePath = os.path.abspath(__file__)
+    filePath = filePath.replace("\\", "/")
+    filePath = filePath.replace("/src/core/FileHelper.py", "")
+    filePath += "/controllers"
+
+    createFolderIfNotExists(filePath)
+
+    print("Controllers folder path: " + filePath)
+
+    return filePath
+
 # Return the path of the preferences file (preferences.json)    
 def getPreferencesPath():
     filePath = os.path.abspath(__file__)
