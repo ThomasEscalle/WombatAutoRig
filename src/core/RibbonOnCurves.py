@@ -76,7 +76,7 @@ Fonction qui permet de créer un ribbon facial a partir de 2 curves.
 def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False, wsDrvJnt=True):
     #Creation Loft
     Curves = cmds.ls(selection=True)
-    Loft = cmds.loft(Curves, reverse=Rev, rebuild=Joints, name=Name, u=True, autoReverse=False)
+    Loft = cmds.loft(Curves, rsn=Rev, rebuild=Joints, name=Name, u=True, autoReverse=True)
 
     #Hierarchie
     group_Global = cmds.group(name = Name, empty=True)
@@ -88,10 +88,19 @@ def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False, w
     cmds.parent(group_Curves, group_DrvJnt, group_rivet, group_Global)
 
     #Creation rivets
-    for i in range(Joints):
-        build_Rivet(name="Riv_{}_{}".format(Name,i), Nurbs=Loft)
-        cmds.setAttr("Riv_{}_{}.pos V".format(Name,i), (1-(Joints-1)/(Joints))/2+(i)/(Joints))
-        cmds.setAttr("Riv_{}_{}Shape.lodVisibility".format(Name,i), False)
+
+    if Rev == True :
+        uvSpace = "U"
+        for i in range(Joints):
+            build_Rivet(name="Riv_{}_{}".format(Name,i), Nurbs=Loft)
+            cmds.setAttr("Riv_{}_{}.pos {}".format(Name,i,uvSpace), (1-(Joints-1)/(Joints))/2+(i)/(Joints))
+            cmds.setAttr("Riv_{}_{}Shape.lodVisibility".format(Name,i), False)
+    else :
+        uvSpace = "V"
+        for i in range(Joints):
+            build_Rivet(name="Riv_{}_{}".format(Name,i), Nurbs=Loft)
+            cmds.setAttr("Riv_{}_{}.pos {}".format(Name,i,uvSpace), (1-(Joints-1)/(Joints))/2+(i)/(Joints))
+            cmds.setAttr("Riv_{}_{}Shape.lodVisibility".format(Name,i), False)
     for i in range(Joints):
         cmds.select(["Riv_{}_{}".format(Name,i)], add=True)
     ls_rivet=cmds.ls(sl=True)
@@ -112,9 +121,16 @@ def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False, w
     
     #Creation curve intermediaire pour placer DrvJnt
     cmds.select(clear=True)
-    for i in range(DrvJnt):
-        build_Rivet(name="RivDrvJnt_{}_{}".format(Name,i), Nurbs=Loft)
-        cmds.setAttr("RivDrvJnt_{}_{}.pos V".format(Name,i), (1-(i/(DrvJnt-1))))
+    if Rev == True:
+        uvSpace = "U"
+        for i in range(DrvJnt):
+            build_Rivet(name="RivDrvJnt_{}_{}".format(Name,i), Nurbs=Loft)
+            cmds.setAttr("RivDrvJnt_{}_{}.pos {}".format(Name,i,uvSpace), (1-(i/(DrvJnt-1))))
+    else :
+        uvSpace = "V"
+        for i in range(DrvJnt):
+            build_Rivet(name="RivDrvJnt_{}_{}".format(Name,i), Nurbs=Loft)
+            cmds.setAttr("RivDrvJnt_{}_{}.pos {}".format(Name,i,uvSpace), (1-(i/(DrvJnt-1))))
     
     if wsDrvJnt == True:
         for i in range(DrvJnt):
