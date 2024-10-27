@@ -85,6 +85,9 @@ class DlgColor(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.ui.btn_pickColor.clicked.connect(self.pickColor)
 
 
+    def setColor(name) :
+        pass
+
     # Show window with docking ability
     def run(self):
         self.show(dockable = True)

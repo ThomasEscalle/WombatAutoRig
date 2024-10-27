@@ -77,6 +77,3 @@ def createController(controllerName , name = ""):
 # @param controllerName: The name of the controller to replace
 def replaceController(controllerName):
     pass
-
-
-createController("test")
