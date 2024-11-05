@@ -2,9 +2,14 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 import math
 
+if __name__ == '__main__':
+        joints = cmds.ls(selection = True)
+        joint_1 = joints[0]
+        joint_2 = joints[1]
+        joint_3 = joints[2]
+        CTRL = joints[3]
 
-
-def pv_pos(joint_1, joint_2, joint_3):
+def PoleVector(joint_1, joint_2, joint_3, CTRL):
     a = om.MVector(cmds.xform(joint_1, q=True, rp=True, ws=True))
     b = om.MVector(cmds.xform(joint_2, q=True, rp=True, ws=True))
     c = om.MVector(cmds.xform(joint_3, q=True, rp=True, ws=True))
@@ -28,8 +33,14 @@ def pv_pos(joint_1, joint_2, joint_3):
     projection *= mult
     projection += b
 
-    locator = cmds.spaceLocator()[0]
-    cmds.xform(locator, translation = [projection.x, projection.y, projection.z], worldSpace=True)
+
+    cmds.setAttr('{}.translateX'.format(CTRL), projection.x)
+    cmds.setAttr('{}.translateY'.format(CTRL), projection.y)
+    cmds.setAttr('{}.translateZ'.format(CTRL), projection.z)
+
+
+if __name__ == '__main__':
+        PoleVector(joint_1, joint_2, joint_3, CTRL)
 
 
 
