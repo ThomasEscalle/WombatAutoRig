@@ -133,3 +133,17 @@ def connectLine(object0, object1, name="line", width = 4 ):
     cmds.setAttr(curve + ".template", 1)
 
     return curve
+
+
+groupWIP = cmds.group(name='WIP', empty=True)
+
+createController(pos=(4.125,9.609,-0.318),name='Ankle_L')
+createController(pos=(-4.125,9.609,-0.318),name='Ankle_R')
+createController(pos=(4.366,2.707,4.391),name='Ball_L')
+createController(pos=(-4.366,2.707,4.391),name='Ball_R')
+createController(pos=(4.411,1.428,8.568),name='Toe_L')
+createController(pos=(-4.411,1.428,8.568),name='Toe_R')
+createController(pos=(4.299,28.693,0.09),name='Knee_L')
+createController(pos=(-4.299,28.693,0.09),name='Knee_R')
+
+cmds.parent('Ankle_L','Ankle_R','Ball_L','Ball_R','Toe_L','Toe_R','Knee_L','Knee_R', groupWIP)
