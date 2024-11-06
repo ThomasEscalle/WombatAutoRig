@@ -99,8 +99,4 @@ from wombatAutoRig.src.ui.forms import ui_DlgColor
 importlib.reload(ui_DlgColor)
 
 
-# wombatAutoRig.run()  # Appeler la fonction run() après rechargement
-
-
-color_picker = DlgColor.DlgColor()
-color_picker.run()
+wombatAutoRig.run()  # Appeler la fonction run() après rechargement

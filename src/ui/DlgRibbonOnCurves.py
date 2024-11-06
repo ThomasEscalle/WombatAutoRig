@@ -32,11 +32,15 @@ class RibbonOnCurve(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.ui.setupUi(self)
 
         self.ui.btn_OK.clicked.connect(self.create)
+        self.ui.btn_Close.clicked.connect(self.onClose)
 
         self.setWindowTitle("Ribbon On Curves")
 
     def create(self):
         print("hello world !")
+
+    def onClose(self):
+        self.close()
 
 
     # Show window with docking ability
