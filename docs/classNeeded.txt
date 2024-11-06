@@ -11,3 +11,4 @@
 * Hand rig
 * Class that "attach" member (input : un membre, un joint d'attache, mode d'attche ; output : creer l'attache)
 * matrix
+* hierarchy global_move etc
