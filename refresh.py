@@ -98,5 +98,14 @@ importlib.reload(DlgColor)
 from wombatAutoRig.src.ui.forms import ui_DlgColor
 importlib.reload(ui_DlgColor)
 
+from wombatAutoRig.src.ui.forms import ui_DlgRibbonOnCurves
+importlib.reload(ui_DlgRibbonOnCurves)
 
-wombatAutoRig.run()  # Appeler la fonction run() après rechargement
+from wombatAutoRig.src.ui import DlgRibbonOnCurves
+importlib.reload(DlgRibbonOnCurves)
+
+
+# wombatAutoRig.run()  # Appeler la fonction run() après rechargement
+
+dialog = DlgRibbonOnCurves.DlgRibbonOnCurves()
+dialog.run()
