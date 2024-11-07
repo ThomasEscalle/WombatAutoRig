@@ -116,9 +116,15 @@ importlib.reload(ui_DlgRibbon)
 from wombatAutoRig.src.ui import DlgRibbon
 importlib.reload(DlgRibbon)
 
+from wombatAutoRig.src.ui.forms import ui_DlgMatrixConstraint
+importlib.reload(ui_DlgMatrixConstraint)
+
+from wombatAutoRig.src.ui import DlgMatrixConstraint
+importlib.reload(DlgMatrixConstraint)
+
 
 
 # wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
-dialog = DlgRibbon.DlgRibbon()
-dialog.run()
+dialog = DlgMatrixConstraint.DlgMatrixConstraint()
+dialog.run()  # Appeler la fonction run() après rechargement

@@ -25,3 +25,5 @@ cd D:\Autodesk\Maya2024\Maya2024\bin
 .\pyside2-uic.exe -o C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgAddToShelf.py C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgAddToShelf.ui
 
 .\pyside2-uic.exe -o C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgRibbon.py C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgRibbon.ui
+
+.\pyside2-uic.exe -o C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgMatrixConstraint.py C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgMatrixConstraint.ui
