@@ -38,6 +38,7 @@ class DlgAddToShelf(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.ui.btn_close.clicked.connect(self.close)
 
         self.ui.comboBox.addItem("Color")
+        self.ui.comboBox.addItem("Ribbon")
         self.ui.comboBox.addItem("Ribbon on Curve")
         self.ui.comboBox.addItem("Hook")
 
@@ -60,6 +61,9 @@ class DlgAddToShelf(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         if(selectedItem == "Color"):
             name = "Color"
             command = "import wombatAutoRig.src.ui.DlgColor as DlgColor\\nDialog = DlgColor.DlgColor()\\nDialog.run()"
+        elif(selectedItem == "Ribbon"):
+            name = "Ribbon"
+            command = "import wombatAutoRig.src.ui.DlgRibbon as DlgRibbon\\nDialog = DlgRibbon.DlgRibbon()\\nDialog.run()"
         elif(selectedItem == "Ribbon on Curve"):
             name = "Ribbon on Curve"
             command = "import wombatAutoRig.src.ui.DlgRibbonOnCurves as DlgRibbonOnCurves\\nDialog = DlgRibbonOnCurves.DlgRibbonOnCurves()\\nDialog.run()"
