@@ -8,6 +8,7 @@ Probleme si on créer plrs ribbon avec le meme nom
 import maya.cmds as cmds
 import re
 
+
 def Offset(object, nbr=1):
 
     # get selected object's parent and store name
