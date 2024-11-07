@@ -111,7 +111,7 @@ from wombatAutoRig.src.ui.forms import ui_DlgAddToShelf
 importlib.reload(ui_DlgAddToShelf)
 
 
-# wombatAutoRig.run()  # Appeler la fonction run() après rechargement
+wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
-dialog = DlgAddToShelf.DlgAddToShelf()
-dialog.run()
+#dialog = DlgAddToShelf.DlgAddToShelf()
+#dialog.run()

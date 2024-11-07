@@ -97,8 +97,15 @@
     </property>
     <addaction name="actionPreferences"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionAdd_to_shelf"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -147,6 +154,11 @@
   <action name="actionPreferences">
    <property name="text">
     <string>Preferences</string>
+   </property>
+  </action>
+  <action name="actionAdd_to_shelf">
+   <property name="text">
+    <string>Add to shelf</string>
    </property>
   </action>
  </widget>
