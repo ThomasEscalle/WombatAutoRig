@@ -21,3 +21,5 @@ cd D:\Autodesk\Maya2024\Maya2024\bin
 .\pyside2-uic.exe -o C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgColor.py C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgColor.ui
 
 .\pyside2-uic.exe -o C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgRibbonOnCurves.py C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgRibbonOnCurves.ui
+
+.\pyside2-uic.exe -o C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgAddToShelf.py C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgAddToShelf.ui

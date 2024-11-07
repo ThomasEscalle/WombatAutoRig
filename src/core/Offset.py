@@ -68,3 +68,8 @@ def offset(object, nbr=1):
     if nbr >2:
         Color.setDefaultColor(hookGroup, "Hook")
 
+
+
+def offsetSelected(nbr=1):
+    sel = cmds.ls(selection=True)
+    offset(sel, nbr)

@@ -104,8 +104,14 @@ importlib.reload(ui_DlgRibbonOnCurves)
 from wombatAutoRig.src.ui import DlgRibbonOnCurves
 importlib.reload(DlgRibbonOnCurves)
 
+from wombatAutoRig.src.ui import DlgAddToShelf
+importlib.reload(DlgAddToShelf)
+
+from wombatAutoRig.src.ui.forms import ui_DlgAddToShelf
+importlib.reload(ui_DlgAddToShelf)
+
 
 # wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
-dialog = DlgRibbonOnCurves.DlgRibbonOnCurves()
+dialog = DlgAddToShelf.DlgAddToShelf()
 dialog.run()
