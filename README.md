@@ -23,3 +23,13 @@ wombatAutoRig.run()
 - [Color](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Colors.md)
 - [Offset](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Offset.md)
 - [Preferences](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Preferences.md)
+- [Ribbon](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Ribbon.md)
+
+
+
+
+AutoRig_Data
+    JointsPlacement
+    ControllersPlacement
+        IK_Controllers
+        FK_Controllers

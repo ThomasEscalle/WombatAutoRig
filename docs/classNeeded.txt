@@ -1,0 +1,14 @@
+* Choose CTRL
+* create a spine rig (if we don't have the spine ribbon)
+* Pole vector creator (genre on lui donne les 3 joints un CTRL et il le place bien)
+
+        * Make an IK/FK switch (input : 3 joints or 3 location in space, output : a switch IK/FK system) 
+          [pour la jambe il faudra sans doute prendre en compte le pied au moment du switch IK/FK et donc une methode differente]
+    sans doute juste faire une class pour les jambes et une class pour les bras
+
+* placement switch
+* CTRL Foot
+* Hand rig
+* Class that "attach" member (input : un membre, un joint d'attache, mode d'attche ; output : creer l'attache)
+* matrix
+* hierarchy global_move etc
