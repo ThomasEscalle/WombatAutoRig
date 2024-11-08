@@ -1,6 +1,5 @@
 import importlib
 
-print("Hi!")
 
 # Recharger le module wombatAutoRig
 from wombatAutoRig import wombatAutoRig
@@ -124,7 +123,7 @@ importlib.reload(DlgMatrixConstraint)
 
 
 
-# wombatAutoRig.run()  # Appeler la fonction run() après rechargement
+wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
-dialog = DlgMatrixConstraint.DlgMatrixConstraint()
-dialog.run()  # Appeler la fonction run() après rechargement
+# dialog = DlgMatrixConstraint.DlgMatrixConstraint()
+# dialog.run()  # Appeler la fonction run() après rechargement
