@@ -106,10 +106,10 @@ class Ui_DlgMatrixConstraint(object):
 
         self.horizontalLayout_2.addWidget(self.cb_rotate_Y)
 
-        self.checkBox_6 = QCheckBox(DlgMatrixConstraint)
-        self.checkBox_6.setObjectName(u"checkBox_6")
+        self.cb_rotate_Z = QCheckBox(DlgMatrixConstraint)
+        self.cb_rotate_Z.setObjectName(u"cb_rotate_Z")
 
-        self.horizontalLayout_2.addWidget(self.checkBox_6)
+        self.horizontalLayout_2.addWidget(self.cb_rotate_Z)
 
 
         self.formLayout.setLayout(5, QFormLayout.FieldRole, self.horizontalLayout_2)
@@ -163,7 +163,7 @@ class Ui_DlgMatrixConstraint(object):
         self.label_6.setText("")
         self.cb_rotate_X.setText(QCoreApplication.translate("DlgMatrixConstraint", u"X", None))
         self.cb_rotate_Y.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Y", None))
-        self.checkBox_6.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Z", None))
+        self.cb_rotate_Z.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Z", None))
         self.btn_apply.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Apply", None))
         self.btn_create.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Create", None))
         self.btn_cancel.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Cancel", None))

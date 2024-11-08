@@ -5,6 +5,12 @@ import maya.OpenMaya as OpenMaya
 import sys
 import math
 
+
+
+## import maya.cmds as cmds
+## nodeName = cmds.scriptNode( st=2, afterScript='cmds.sphere()' , n='MATRIX', stp='python')
+
+
 if __name__ == '__main__':
         toto = cmds.ls(selection = True)
         Master = toto[0]

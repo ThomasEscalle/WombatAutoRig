@@ -1,5 +1,6 @@
 from wombatAutoRig.src.core import JointPlacement
 from wombatAutoRig.src.core import Offset
+from maya import cmds
 
 def connectLine(object0, object1, name="line", width = 4 ):
     # Create a curve with two points
