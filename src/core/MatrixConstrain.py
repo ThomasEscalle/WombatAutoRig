@@ -58,8 +58,16 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         cmds.connectAttr(DecMatX+'.outputScaleZ',Slave+'.scaleZ')
 
     locator = cmds.spaceLocator(name='IS_CONSTRAIN_BY_{}'.format(Master))[0]
-    cmds.setAttr('{}.visibility'.format(locator), False)
+
+    afterScript = 'import maya.cmds as cmds\n'
+
+    if Offset == True:
+        afterScript += 'cmds.delete("{}")\n'.format(MultMatX_Offset, DecMatX_Offset)
+    afterScript += 'cmds.delete("{}")\n'.format(MultMatX, DecMatX)
+    Script = cmds.scriptNode(stp ='python', afterScripting = afterScript)
+    cmds.connectAttr(locator + '.visibility', Script + '.nodeState')
     cmds.parent(locator, Slave)
+
 
 if __name__ == '__main__':
     MatrixConstrain(Master, Slave, Offset = False)
