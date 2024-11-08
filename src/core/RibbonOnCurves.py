@@ -158,5 +158,3 @@ def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False, w
 
 
     
-
-RibbonOnCurve(Joints = 7, DrvJnt = 3, ws=False, wsDrvJnt = True, Rev=True)
