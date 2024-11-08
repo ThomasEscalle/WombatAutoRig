@@ -70,10 +70,10 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
     if Offset == True:
         afterScript += 'cmds.delete("{}")\n'.format(MultMatX_Offset, DecMatX_Offset)
     afterScript += 'cmds.delete("{}")\n'.format(MultMatX, DecMatX)
-    Script = cmds.scriptNode(stp ='python', afterScripting = afterScript)
-    cmds.connectAttr(locator + '.visibility', Script + '.nodeState')
+    Script = cmds.scriptNode(stp ='python', afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
+    cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
     cmds.parent(locator, Slave)
 
 
 if __name__ == '__main__':
-    MatrixConstrain(Master, Slave, Offset = False)
+    MatrixConstrain(Master, Slave, Offset = True)
