@@ -67,10 +67,10 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
 
     afterScript = 'import maya.cmds as cmds\n'
 
-    if Offset == True:
-        afterScript += 'cmds.delete("{}")\n'.format(MultMatX_Offset, DecMatX_Offset)
     afterScript += 'cmds.delete("{}")\n'.format(MultMatX, DecMatX)
-    Script = cmds.scriptNode(stp ='python', afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
+    if Offset == True:
+        afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
+    Script = cmds.scriptNode(stp ='python', st = 1, afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
     cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
     cmds.parent(locator, Slave)
 
