@@ -11,69 +11,157 @@ import math
 ## nodeName = cmds.scriptNode( st=2, afterScript='cmds.sphere()' , n='MATRIX', stp='python')
 
 
-if __name__ == '__main__':
-        toto = cmds.ls(selection = True)
-        Master = toto[0]
-        Slave = toto[1]
 
 
 def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=True, rY=True, rZ=True, sX=True, sY=True, sZ=True):
 
-    # Creation des differents Nodes Matrix
+    toto = cmds.ls(selection = True)
 
-    MultMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_'+Slave)
-    DecMatX = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_'+Slave)
-    if Offset == True:
-        MultMatX_Offset = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_Offset_'+Slave)
-        DecMatX_Offset = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_Offset_'+Slave)
+    if len(toto) < 3 :
+        if __name__ == '__main__':
+                Master = toto[0]
+                Slave = toto[1]
 
-        # Creation et recuperation de l'Offset
+        # Creation des differents Nodes Matrix
 
-        cmds.connectAttr(Slave+'.worldMatrix[0]',MultMatX_Offset+'.matrixIn[0]')
-        cmds.connectAttr(Master+'.worldInverseMatrix[0]',MultMatX_Offset+'.matrixIn[1]')
-        cmds.connectAttr(MultMatX_Offset+'.matrixSum',DecMatX_Offset+'.inputMatrix')
-        cmds.disconnectAttr (MultMatX_Offset+'.matrixSum',DecMatX_Offset+'.inputMatrix')
-        cmds.delete(MultMatX_Offset)
+        MultMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_'+Slave)
+        DecMatX = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_'+Slave)
+        if Offset == True:
+            MultMatX_Offset = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_Offset_'+Slave)
+            DecMatX_Offset = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_Offset_'+Slave)
 
-        # Connexion de l'Offset, du Slave et du Master dans le Multiply Matrix puis dans le Decompose Matrix
+            # Creation et recuperation de l'Offset
 
-        cmds.connectAttr(DecMatX_Offset+'.inputMatrix',MultMatX+'.matrixIn[0]')
-    cmds.connectAttr(Master+'.worldMatrix[0]',MultMatX+'.matrixIn[1]')
-    cmds.connectAttr(Slave+'.parentInverseMatrix[0]',MultMatX+'.matrixIn[2]')
-    cmds.connectAttr(MultMatX+'.matrixSum',DecMatX+'.inputMatrix')
+            cmds.connectAttr(Slave+'.worldMatrix[0]',MultMatX_Offset+'.matrixIn[0]')
+            cmds.connectAttr(Master+'.worldInverseMatrix[0]',MultMatX_Offset+'.matrixIn[1]')
+            cmds.connectAttr(MultMatX_Offset+'.matrixSum',DecMatX_Offset+'.inputMatrix')
+            cmds.disconnectAttr (MultMatX_Offset+'.matrixSum',DecMatX_Offset+'.inputMatrix')
+            cmds.delete(MultMatX_Offset)
 
-    # Connexion des outputs des Attribts du Decompose Matrix dans les input du Slave
+            # Connexion de l'Offset, du Slave et du Master dans le Multiply Matrix puis dans le Decompose Matrix
 
-    if tX == True:
-        cmds.connectAttr(DecMatX+'.outputTranslateX',Slave+'.translateX')
-    if tY == True:
-        cmds.connectAttr(DecMatX+'.outputTranslateY',Slave+'.translateY')
-    if tZ == True:
-        cmds.connectAttr(DecMatX+'.outputTranslateZ',Slave+'.translateZ')
-    if rX == True:
-        cmds.connectAttr(DecMatX+'.outputRotateX',Slave+'.rotateX')
-    if rY == True:
-        cmds.connectAttr(DecMatX+'.outputRotateY',Slave+'.rotateY')
-    if rZ == True:
-        cmds.connectAttr(DecMatX+'.outputRotateZ',Slave+'.rotateZ')
-    if sX == True:
-        cmds.connectAttr(DecMatX+'.outputScaleX',Slave+'.scaleX')
-    if sY == True:
-        cmds.connectAttr(DecMatX+'.outputScaleY',Slave+'.scaleY')
-    if sZ == True:
-        cmds.connectAttr(DecMatX+'.outputScaleZ',Slave+'.scaleZ')
+            cmds.connectAttr(DecMatX_Offset+'.inputMatrix',MultMatX+'.matrixIn[0]')
+        cmds.connectAttr(Master+'.worldMatrix[0]',MultMatX+'.matrixIn[1]')
+        cmds.connectAttr(Slave+'.parentInverseMatrix[0]',MultMatX+'.matrixIn[2]')
+        cmds.connectAttr(MultMatX+'.matrixSum',DecMatX+'.inputMatrix')
 
-    locator = cmds.spaceLocator(name='IS_CONSTRAIN_BY_{}'.format(Master))[0]
+        # Connexion des outputs des Attribts du Decompose Matrix dans les input du Slave
 
-    afterScript = 'import maya.cmds as cmds\n'
+        if tX == True:
+            cmds.connectAttr(DecMatX+'.outputTranslateX',Slave+'.translateX')
+        if tY == True:
+            cmds.connectAttr(DecMatX+'.outputTranslateY',Slave+'.translateY')
+        if tZ == True:
+            cmds.connectAttr(DecMatX+'.outputTranslateZ',Slave+'.translateZ')
+        if rX == True:
+            cmds.connectAttr(DecMatX+'.outputRotateX',Slave+'.rotateX')
+        if rY == True:
+            cmds.connectAttr(DecMatX+'.outputRotateY',Slave+'.rotateY')
+        if rZ == True:
+            cmds.connectAttr(DecMatX+'.outputRotateZ',Slave+'.rotateZ')
+        if sX == True:
+            cmds.connectAttr(DecMatX+'.outputScaleX',Slave+'.scaleX')
+        if sY == True:
+            cmds.connectAttr(DecMatX+'.outputScaleY',Slave+'.scaleY')
+        if sZ == True:
+            cmds.connectAttr(DecMatX+'.outputScaleZ',Slave+'.scaleZ')
 
-    afterScript += 'cmds.delete("{}")\n'.format(MultMatX, DecMatX)
-    if Offset == True:
-        afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
-    Script = cmds.scriptNode(stp ='python', st = 1, afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
-    cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
-    cmds.parent(locator, Slave)
+        locator = cmds.spaceLocator(name='IS_CONSTRAIN_BY_{}'.format(Master))[0]
+
+        afterScript = 'import maya.cmds as cmds\n'
+
+        afterScript += 'cmds.delete("{}")\n'.format(MultMatX, DecMatX)
+        if Offset == True:
+            afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
+        Script = cmds.scriptNode(stp ='python', st = 1, afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
+        cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
+        cmds.parent(locator, Slave)
+    else : 
+        n = len(toto)
+        if __name__ == '__main__':
+            Master = []
+            for i in range(n):
+                if i != n-1:
+                    Master.append(toto[i])
+                else :
+                    Slave = toto[i]
+
+        # Creation des differents Nodes Matrix
+        #toto = cmds.shadingNode('addMatrix', asUtility=True, n='tototo')
+        #cmds.setAttr('tototo.matrixIn[0]',(0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333),type='matrix')
+        BlendMatX = cmds.shadingNode('blendMatrix', asUtility=True, n='BlendMatrix_'+Slave)
+        MultMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_'+Slave)
+        DecMatX = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_'+Slave)
+        cmds.setAttr(BlendMatX+'.envelope', 0.5)
+
+        k =n-2
+        cmds.connectAttr(Master[0]+'.worldMatrix[0]', BlendMatX+'.inputMatrix')
+        for i in range(k) :
+            cmds.connectAttr(Master[i+1]+'.worldMatrix[0]', BlendMatX+'.target[{}].targetMatrix'.format(i))
+        if Offset == True:
+            MultMatX_Offset = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_Offset_'+Slave)
+            DecMatX_Offset = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_Offset_'+Slave)
+            InvMatX_Offset = cmds.shadingNode('inverseMatrix', asUtility=True, n='InvMatX_Offset_'+Slave)
+
+            # Creation et recuperation de l'Offset
+
+            cmds.connectAttr(BlendMatX+'.outputMatrix', InvMatX_Offset+'.inputMatrix')
+            cmds.connectAttr(Slave+'.worldMatrix[0]',MultMatX_Offset+'.matrixIn[0]')
+            cmds.connectAttr(InvMatX_Offset+'.outputMatrix',MultMatX_Offset+'.matrixIn[1]')
+            cmds.connectAttr(MultMatX_Offset+'.matrixSum',DecMatX_Offset+'.inputMatrix')
+            cmds.disconnectAttr (MultMatX_Offset+'.matrixSum',DecMatX_Offset+'.inputMatrix')
+            cmds.delete(MultMatX_Offset)
+
+            # Connexion de l'Offset, du Slave et du Master dans le Multiply Matrix puis dans le Decompose Matrix
+
+            cmds.connectAttr(DecMatX_Offset+'.inputMatrix',MultMatX+'.matrixIn[0]')
+        cmds.connectAttr(BlendMatX+'.outputMatrix',MultMatX+'.matrixIn[1]')
+        cmds.connectAttr(Slave+'.parentInverseMatrix[0]',MultMatX+'.matrixIn[2]')
+        cmds.connectAttr(MultMatX+'.matrixSum',DecMatX+'.inputMatrix')
+
+        # Connexion des outputs des Attribts du Decompose Matrix dans les input du Slave
+
+        if tX == True:
+            cmds.connectAttr(DecMatX+'.outputTranslateX',Slave+'.translateX')
+        if tY == True:
+            cmds.connectAttr(DecMatX+'.outputTranslateY',Slave+'.translateY')
+        if tZ == True:
+            cmds.connectAttr(DecMatX+'.outputTranslateZ',Slave+'.translateZ')
+        if rX == True:
+            cmds.connectAttr(DecMatX+'.outputRotateX',Slave+'.rotateX')
+        if rY == True:
+            cmds.connectAttr(DecMatX+'.outputRotateY',Slave+'.rotateY')
+        if rZ == True:
+            cmds.connectAttr(DecMatX+'.outputRotateZ',Slave+'.rotateZ')
+        if sX == True:
+            cmds.connectAttr(DecMatX+'.outputScaleX',Slave+'.scaleX')
+        if sY == True:
+            cmds.connectAttr(DecMatX+'.outputScaleY',Slave+'.scaleY')
+        if sZ == True:
+            cmds.connectAttr(DecMatX+'.outputScaleZ',Slave+'.scaleZ')
+
+        locator = cmds.spaceLocator(name='IS_CONSTRAIN_BY_{}'.format(Master))[0]
+
+        afterScript = 'import maya.cmds as cmds\n'
+
+        afterScript += 'cmds.delete("{}")\n'.format(MultMatX)
+        afterScript += 'cmds.delete("{}")\n'.format(BlendMatX)
+        afterScript += 'cmds.delete("{}")\n'.format(DecMatX)
+        if Offset == True:
+            afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
+        Script = cmds.scriptNode(stp ='python', st = 1, afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
+        cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
+        cmds.parent(locator, Slave)
 
 
+toto = cmds.ls(selection=True)
 if __name__ == '__main__':
-    MatrixConstrain(Master, Slave, Offset = True)
+    Master = []
+    n = len(toto)
+    for i in range(n):
+        if i != n-1:
+            Master.append(toto[i])
+        else :
+            Slave = toto[i]
+if __name__ == '__main__':
+    MatrixConstrain(Master, Slave, Offset = False)
