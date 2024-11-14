@@ -78,6 +78,4 @@ Offset.offset(Knee_L, nbr=1)
 Offset.offset(Leg_L, nbr=1)
 Offset.offset(Root, nbr=1)
 
-#MATCHING PIVOT
-cmds.matchTransform(Knee_L, Leg_L, piv=True)
 
