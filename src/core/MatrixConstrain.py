@@ -17,6 +17,9 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
 
     toto = cmds.ls(selection = True)
 
+    if len(toto)<1 :
+        print("NOTHING IS SELECTED!!!!!!!!!!!!!!!!!")
+
     if len(toto) < 3 :
         if __name__ == '__main__':
                 Master = toto[0]
@@ -86,9 +89,6 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
                 else :
                     Slave = toto[i]
 
-        # Creation des differents Nodes Matrix
-        #toto = cmds.shadingNode('addMatrix', asUtility=True, n='tototo')
-        #cmds.setAttr('tototo.matrixIn[0]',(0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333),type='matrix')
         j = 1/len(Master)
         AddMatX = cmds.shadingNode('addMatrix', asUtility=True, n='AddMatrix_'+Slave)
         MultMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_'+Slave)
