@@ -89,15 +89,22 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         # Creation des differents Nodes Matrix
         #toto = cmds.shadingNode('addMatrix', asUtility=True, n='tototo')
         #cmds.setAttr('tototo.matrixIn[0]',(0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333,0.3333),type='matrix')
-        BlendMatX = cmds.shadingNode('blendMatrix', asUtility=True, n='BlendMatrix_'+Slave)
+        j = 1/len(Master)
+        AddMatX = cmds.shadingNode('addMatrix', asUtility=True, n='AddMatrix_'+Slave)
         MultMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_'+Slave)
         DecMatX = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_'+Slave)
-        cmds.setAttr(BlendMatX+'.envelope', 0.5)
+        InitMatX = cmds.shadingNode('addMatrix', asUtility=True, n='InitMatX_'+Slave)
+        cmds.setAttr(InitMatX+'.matrixIn[0]', (j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j), type = 'matrix')
+        MultMasterMatX = cmds.shadingNode('addMatrix', asUtility=True, n='MultMasterMatX'+Slave)
 
-        k =n-2
-        cmds.connectAttr(Master[0]+'.worldMatrix[0]', BlendMatX+'.inputMatrix')
+        k =n-1
+
         for i in range(k) :
-            cmds.connectAttr(Master[i+1]+'.worldMatrix[0]', BlendMatX+'.target[{}].targetMatrix'.format(i))
+            cmds.connectAttr(Master[i]+'.worldMatrix[0]', AddMatX+'.matrixIn[{}]'.format(i))
+        
+        cmds.connectAttr(InitMatX+'.matrixSum', MultMasterMatX+'.matrixIn[0]')
+        cmds.connectAttr(AddMatX+'.matrixSum', MultMasterMatX+'.matrixIn[1]')
+
         if Offset == True:
             MultMatX_Offset = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_Offset_'+Slave)
             DecMatX_Offset = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_Offset_'+Slave)
@@ -105,7 +112,7 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
 
             # Creation et recuperation de l'Offset
 
-            cmds.connectAttr(BlendMatX+'.outputMatrix', InvMatX_Offset+'.inputMatrix')
+            cmds.connectAttr(MultMasterMatX+'.matrixSum', InvMatX_Offset+'.inputMatrix')
             cmds.connectAttr(Slave+'.worldMatrix[0]',MultMatX_Offset+'.matrixIn[0]')
             cmds.connectAttr(InvMatX_Offset+'.outputMatrix',MultMatX_Offset+'.matrixIn[1]')
             cmds.connectAttr(MultMatX_Offset+'.matrixSum',DecMatX_Offset+'.inputMatrix')
@@ -115,7 +122,7 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
             # Connexion de l'Offset, du Slave et du Master dans le Multiply Matrix puis dans le Decompose Matrix
 
             cmds.connectAttr(DecMatX_Offset+'.inputMatrix',MultMatX+'.matrixIn[0]')
-        cmds.connectAttr(BlendMatX+'.outputMatrix',MultMatX+'.matrixIn[1]')
+        cmds.connectAttr(MultMasterMatX+'.matrixSum',MultMatX+'.matrixIn[1]')
         cmds.connectAttr(Slave+'.parentInverseMatrix[0]',MultMatX+'.matrixIn[2]')
         cmds.connectAttr(MultMatX+'.matrixSum',DecMatX+'.inputMatrix')
 
@@ -145,8 +152,9 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         afterScript = 'import maya.cmds as cmds\n'
 
         afterScript += 'cmds.delete("{}")\n'.format(MultMatX)
-        afterScript += 'cmds.delete("{}")\n'.format(BlendMatX)
-        afterScript += 'cmds.delete("{}")\n'.format(DecMatX)
+        afterScript += 'cmds.delete("{}")\n'.format(MultMasterMatX)
+        afterScript += 'cmds.delete("{}")\n'.format(AddMatX)
+        afterScript += 'cmds.delete("{}")\n'.format(InitMatX)
         if Offset == True:
             afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
         Script = cmds.scriptNode(stp ='python', st = 1, afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
