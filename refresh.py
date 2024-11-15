@@ -121,12 +121,21 @@ importlib.reload(ui_DlgMatrixConstraint)
 from wombatAutoRig.src.ui import DlgMatrixConstraint
 importlib.reload(DlgMatrixConstraint)
 
+from wombatAutoRig.src.ui.forms import ui_DlgControllers
+importlib.reload(ui_DlgControllers)
+
+from wombatAutoRig.src.ui import DlgControllers
+importlib.reload(DlgControllers)
+
+
+
+
 from wombatAutoRig.src.core import MatrixConstrain
 importlib.reload(MatrixConstrain)
 
 
 
-wombatAutoRig.run()  # Appeler la fonction run() après rechargement
+#wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
-#dialog = DlgMatrixConstraint.DlgMatrixConstraint()
-#dialog.run()  # Appeler la fonction run() après rechargement
+dialog = DlgControllers.DlgControllers()
+dialog.run()  # Appeler la fonction run() après rechargement
