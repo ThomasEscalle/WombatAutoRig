@@ -70,6 +70,7 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the geometry selection is entered
     def onGeometrySelectionEntered(self, settings):
         print("onGeometrySelectionEntered")
+        print ("The identifier is " , settings["identifier"])
 
     # This method is called when the geometry selection is finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct
@@ -93,6 +94,8 @@ class Template(TemplateBase.TemplateBase):
 
     # This method is called when the joint placement is entered
     def onJointPlacementEntered(self, settings):
+
+        print("The settings are ", settings)
         print("onJointPlacementEntered")
 
         self.jnts["ctrl_00"] = JointPlacement.createController([0,0,0], 0.3, "CTRL_00")

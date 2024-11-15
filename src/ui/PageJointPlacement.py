@@ -16,3 +16,7 @@ class PageJointPlacement(PageBase):
     # Say if the user can go to the next page or not
     def canGoNext(self):
         return True
+
+    def addDataToSettings(self,settings):
+        print("Add the data to the settings")
+        return settings

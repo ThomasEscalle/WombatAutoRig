@@ -35,6 +35,9 @@ class PageTemplateSelection(PageBase):
         template = TemplateManager.TemplateManager().getTemplate(self.ui.cbSelectTemplate.currentText())
         return template
 
+    def addDataToSettings(self,settings):
+        print("Add the data to the settings")
+        return settings
 
     # Say if the user can go to the next page or not
     def canGoNext(self):

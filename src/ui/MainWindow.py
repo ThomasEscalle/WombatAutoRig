@@ -50,6 +50,7 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
 
         # The current template
         self.template = None
+        self.settings = {}
 
         # Add pages to the stacked widget
         self.pageTemplateSelection = PageTemplateSelection.PageTemplateSelection()
@@ -102,6 +103,7 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         self.show(dockable = True)
 
     def nextPage(self):
+        
         # Check if the current page is the last one
         if self.ui.stackedWidget.currentIndex() == self.ui.stackedWidget.count() - 1:
             # Close the window
@@ -127,25 +129,27 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         ################################################################
         if self.template != None and currentIndex == 1:
             # Global settings
-            if not self.template.onGlobalSettingsFinished(None):
+            if not self.template.onGlobalSettingsFinished(self.settings):
                 return
         if self.template != None and currentIndex == 2:
             # Geometry selection
-            if not self.template.onGeometrySelectionFinished(None):
+            if not self.template.onGeometrySelectionFinished(self.settings):
                 return
         if self.template != None and currentIndex == 3:
             # Joint placement
-            if not self.template.onJointPlacementFinished(None):
+            if not self.template.onJointPlacementFinished(self.settings):
                 return
         if self.template != None and currentIndex == 4:
             # Controller placement
-            if not self.template.onControllerPlacementFinished(None):
+            if not self.template.onControllerPlacementFinished(self.settings):
                 return
         ################################################################
         ################################################################
         ################################################################
 
 
+        ## Add the data to the settings object
+        self.settings = self.ui.stackedWidget.currentWidget().addDataToSettings(self.settings)
 
         
         ################################################################
@@ -153,16 +157,16 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         ################################################################
         if self.template != None and currentIndex == 1:
             # Global settings
-            self.template.onGlobalSettingsAccepted(None)
+            self.template.onGlobalSettingsAccepted(self.settings)
         if self.template != None and currentIndex == 2:
             # Geometry selection
-            self.template.onGeometrySelectionAccepted(None)
+            self.template.onGeometrySelectionAccepted(self.settings)
         if self.template != None and currentIndex == 3:
             # Joint placement
-            self.template.onJointPlacementAccepted(None)
+            self.template.onJointPlacementAccepted(self.settings)
         if self.template != None and currentIndex == 4:
             # Controller placement
-            self.template.onControllerPlacementAccepted(None)
+            self.template.onControllerPlacementAccepted(self.settings)
         if self.template != None and currentIndex == 5:
             # Validation
             self.template.onValidationAccepted(None)
@@ -194,16 +198,16 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         ################################################################
         if self.template != None and currentIndex == 1:
             # Global settings
-            self.template.onGlobalSettingsEntered(None)
+            self.template.onGlobalSettingsEntered(self.settings)
         if self.template != None and currentIndex == 2:
             # Geometry selection
-            self.template.onGeometrySelectionEntered(None)
+            self.template.onGeometrySelectionEntered(self.settings)
         if self.template != None and currentIndex == 3:
             # Joint placement
-            self.template.onJointPlacementEntered(None)
+            self.template.onJointPlacementEntered(self.settings)
         if self.template != None and currentIndex == 4:
             # Controller placement
-            self.template.onControllerPlacementEntered(None)
+            self.template.onControllerPlacementEntered(self.settings)
         if self.template != None and currentIndex == 5:
             # Validation
             self.template.onValidationEntered(None)

@@ -15,3 +15,7 @@ class PageBase(QWidget):
     # Say if the next and cancel button should be hidden or not
     def hideNextAndCancel(self):
         return False
+
+    def addDataToSettings(self,settings):
+        print("Add the data to the settings")
+        return settings

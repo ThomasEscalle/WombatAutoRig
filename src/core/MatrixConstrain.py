@@ -14,24 +14,21 @@ import math
 
 
 def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=True, rY=True, rZ=True, sX=True, sY=True, sZ=True):
-
-    if Master == None :
-        selection = cmds.ls(selection = True)
-        n = len(selection)
-        Master = []
-        for i in range(n):
-            if i != n-1:
-                Master.append(toto[i])
-            else :
-                Slave = toto[i]
+    # Check if the Master and Slave are not None
+    if Master == None or Slave == None:
+        return
     
-    if type(Master) != list :
+    # If the master is not an array, we convert it to an array
+    if type(Master) !=  list:
+        print("master is a list : " , Master)
         Master = [Master]
-
-    if len(Master)<1 :
-        print("NOTHING IS SELECTED!!!!!!!!!!!!!!!!!")
+    else:
+        print("master is not a list " , Master)
 
     if len(Master) < 2 :
+        # Conversion des Master
+        Master = Master[0]
+
 
         # Creation des differents Nodes Matrix
 
@@ -97,9 +94,9 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         cmds.setAttr(InitMatX+'.matrixIn[0]', (j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j), type = 'matrix')
         MultMasterMatX = cmds.shadingNode('addMatrix', asUtility=True, n='MultMasterMatX'+Slave)
 
-        k =n-1
+        
 
-        for i in range(k) :
+        for i in range(len(Master)) :
             cmds.connectAttr(Master[i]+'.worldMatrix[0]', AddMatX+'.matrixIn[{}]'.format(i))
         
         cmds.connectAttr(InitMatX+'.matrixSum', MultMasterMatX+'.matrixIn[0]')

@@ -71,8 +71,13 @@ class DlgMatrixConstraint(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             return
 
         # Get the selected items
-        Master = selection[0]
-        Slave = selection[1]
+        Master  = []
+        n = len(selection)
+        for i in range(n):
+            if i != n-1:
+                Master.append(selection[i])
+            else :
+                Slave = selection[i]
         
         offset = self.ui.cb_offset.isChecked()
 

@@ -15,7 +15,16 @@ class PageGlobalSettings(PageBase):
 
         self.ui = ui_PageGlobalSettings.Ui_PageGlobalSettings()
         self.ui.setupUi(self)
+        
+    def addDataToSettings(self,settings):
+        print("Add the data to the settings")
+        settings["name"] = self.ui.leName.text()
+        settings["identifier"] = self.ui.leIdentifier.text()
+        settings["version"] = self.ui.leVersion.text()
+        settings["author"] = self.ui.leAuthor.text()
 
+
+        return settings
     # Say if the user can go to the next page or not
     def canGoNext(self):
 

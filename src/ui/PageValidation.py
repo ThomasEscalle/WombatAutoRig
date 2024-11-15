@@ -30,6 +30,10 @@ class PageValidation(PageBase):
     def onYesClicked(self):
         print("Yes clicked")
 
+    def addDataToSettings(self,settings):
+        print("Add the data to the settings")
+        return settings
+        
     # When the user clicks the No button
     def onNoClicked(self):
         print("No clicked")

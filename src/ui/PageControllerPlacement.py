@@ -39,6 +39,10 @@ class PageControllerPlacement(PageBase):
         self.ui.btnIkMode.show()
         self.ui.btnFkMode.hide()
 
+    def addDataToSettings(self,settings):
+        print("Add the data to the settings")
+        return settings
+
     # When the user clicks the Ik mode button
     # Hide the Ik mode button and show the Fk mode button to make it look like a toggle
     def onIkModeClicked(self):

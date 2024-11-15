@@ -61,4 +61,15 @@ class PageGeometrySelection(PageBase):
         # Delete the selected item from the list
         item = self.ui.listWidget.currentItem()
         self.ui.listWidget.takeItem(self.ui.listWidget.row(item))
-        
+    
+    def addDataToSettings(self,settings):
+        selectedItems = []
+        for i in range(self.ui.listWidget.count()):
+            selectedItems.append(self.ui.listWidget.item(i).text())
+        settings["geo"] = selectedItems
+
+        # Get the bounding box of all the geo
+        bbox = cmds.exactWorldBoundingBox(selectedItems)
+        settings["bbox"] = bbox
+
+        return settings
