@@ -15,15 +15,23 @@ import math
 
 def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=True, rY=True, rZ=True, sX=True, sY=True, sZ=True):
 
-    toto = cmds.ls(selection = True)
+    if Master == None :
+        selection = cmds.ls(selection = True)
+        n = len(selection)
+        Master = []
+        for i in range(n):
+            if i != n-1:
+                Master.append(toto[i])
+            else :
+                Slave = toto[i]
+    
+    if type(Master) != list :
+        Master = [Master]
 
-    if len(toto)<1 :
+    if len(Master)<1 :
         print("NOTHING IS SELECTED!!!!!!!!!!!!!!!!!")
 
-    if len(toto) < 3 :
-        if __name__ == '__main__':
-                Master = toto[0]
-                Slave = toto[1]
+    if len(Master) < 2 :
 
         # Creation des differents Nodes Matrix
 
@@ -80,14 +88,6 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
         cmds.parent(locator, Slave)
     else : 
-        n = len(toto)
-        if __name__ == '__main__':
-            Master = []
-            for i in range(n):
-                if i != n-1:
-                    Master.append(toto[i])
-                else :
-                    Slave = toto[i]
 
         j = 1/len(Master)
         AddMatX = cmds.shadingNode('addMatrix', asUtility=True, n='AddMatrix_'+Slave)
@@ -162,8 +162,8 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         cmds.parent(locator, Slave)
 
 
-toto = cmds.ls(selection=True)
 if __name__ == '__main__':
+    toto = cmds.ls(selection=True)
     Master = []
     n = len(toto)
     for i in range(n):
@@ -171,5 +171,4 @@ if __name__ == '__main__':
             Master.append(toto[i])
         else :
             Slave = toto[i]
-if __name__ == '__main__':
     MatrixConstrain(Master, Slave, Offset = False)
