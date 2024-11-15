@@ -5,6 +5,7 @@ from wombatAutoRig.src.core import FileHelper
 
 
 
+
 ### Save the selected curve to a file as a controller 
 # @param controllerName: The name of the controller to save
 def saveController(controllerName):
@@ -76,7 +77,47 @@ def createController(controllerName , name = ""):
 # Replace the selected controller with a new one, at the same location
 # @param controllerName: The name of the controller to replace
 def replaceController(controllerName):
+
+    print("Replace controller: " + controllerName)
+    # Get the selected controller
+    selection = cmds.ls(selection=True)
+
+    if len(selection) == 0:
+        print("No controller selected")
+        return
+
+    selection = selection[0]
+
+    # Get the bounding box of the controller
+    bbox = cmds.xform(selection, query=True, boundingBox=True)
+    # Get the width, height and depth of the controller
+    width = bbox[3] - bbox[0]
+    height = bbox[4] - bbox[1]
+    depth = bbox[5] - bbox[2]
+
+    maximum = max(width, height, depth)
+
+    # Create the new controller
+    newController = createController(controllerName, name=selection + "_new")
+
+    if newController is None:
+        print("Error creating controller")
+        return
+    
+    # Scale the new controller to match the size of the old one
+    cmds.scale(maximum / 2, maximum / 2, maximum / 2, newController)
+
+    # Get the position of the old controller from the center of the bounding box
+    position = bbox[0] + width / 2, bbox[1] + height / 2, bbox[2] + depth / 2
+    # Move the new controller to the position of the old one
+    cmds.move(position[0], position[1], position[2], newController)
+
+    # Get the rotation of the old controller
+    rotation = cmds.xform(selection, query=True, rotation=True)
+    # Rotate the new controller to match the rotation of the old one
+    cmds.rotate(rotation[0], rotation[1], rotation[2], newController)
+
+    # Delete the old controller
+    cmds.delete(selection)
+
     pass
-
-
-createController("test_2222")

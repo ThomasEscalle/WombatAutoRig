@@ -92,6 +92,10 @@ def importFile(filePath):
 
     return module
 
+def fileExists(filePath):
+    return os.path.exists(filePath)
+
+
 # Open a folder in the explorer
 def openFolderInExplorer(path):
     QDesktopServices.openUrl("file:///" + path)

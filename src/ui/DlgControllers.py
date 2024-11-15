@@ -15,6 +15,7 @@ from wombatAutoRig.src.ui.forms import ui_DlgControllers
 from wombatAutoRig.src.ui import IconLoader
 from wombatAutoRig.src.core import FileHelper
 
+from wombatAutoRig.src.core import Controllers
 
 def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
@@ -30,9 +31,21 @@ class DlgControllers(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.ui = ui_DlgControllers.Ui_DlgControllers()
         self.ui.setupUi(self)
 
-        self.setWindowTitle("Controllers")
+        self.setWindowTitle("Create Controllers")
+
+        self.mode = "create"
 
         self.setup()
+
+
+    def setCreateMode(self):
+        self.mode = "create"
+        self.setWindowTitle("Create Controllers")
+
+    def setReplaceMode(self):
+        self.mode = "replace"
+        self.setWindowTitle("Replace Controllers")
+        
 
     # Load the controllers from the controllers directory
     # And add the buttons to the UI
@@ -66,12 +79,25 @@ class DlgControllers(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                 # Increment the button number
                 btnNumber += 1
 
+                # Connect the button to the execFile function
+                button.clicked.connect(lambda self=self, file=file: self.execFile(file))
+                # Check if there is a file named "file".png
+                # If so, set the button icon
+                iconPath = file + ".png"
+                if FileHelper.fileExists(iconPath):
+                    button.setIcon(QIcon(iconPath))
+                    button.setIconSize(QSize(32, 32))
 
-                
 
+    def execFile(self, file):
+        file = file.replace("\\", "/")
+        fileName = file.split("/")[-1].split(".")[0]
 
-        pass
-
+        if self.mode == "create":
+            Controllers.createController(fileName)
+        elif self.mode == "replace":
+            Controllers.replaceController(fileName)
+        
 
     # Show window with docking ability
     def run(self):

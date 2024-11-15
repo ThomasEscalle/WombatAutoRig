@@ -128,6 +128,8 @@ from wombatAutoRig.src.ui import DlgControllers
 importlib.reload(DlgControllers)
 
 
+from wombatAutoRig.src.core import Controllers
+importlib.reload(Controllers)
 
 
 from wombatAutoRig.src.core import MatrixConstrain
@@ -138,4 +140,5 @@ importlib.reload(MatrixConstrain)
 #wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
 dialog = DlgControllers.DlgControllers()
+dialog.setReplaceMode()
 dialog.run()  # Appeler la fonction run() après rechargement
