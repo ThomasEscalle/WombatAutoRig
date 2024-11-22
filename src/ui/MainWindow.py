@@ -169,7 +169,7 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
             self.template.onControllerPlacementAccepted(self.settings)
         if self.template != None and currentIndex == 5:
             # Validation
-            self.template.onValidationAccepted(None)
+            self.template.onValidationAccepted(self.settings)
         ################################################################
         ################################################################
         ################################################################
@@ -210,7 +210,7 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
             self.template.onControllerPlacementEntered(self.settings)
         if self.template != None and currentIndex == 5:
             # Validation
-            self.template.onValidationEntered(None)
+            self.template.onValidationEntered(self.settings)
         ################################################################
         ################################################################
         ################################################################

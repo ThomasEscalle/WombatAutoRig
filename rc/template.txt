@@ -1,4 +1,5 @@
 from wombatAutoRig.src.core import TemplateBase
+from wombatAutoRig.src.core import DefaultFolders
 from maya import cmds
 
 
@@ -37,6 +38,7 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the global settings are entered
     def onGlobalSettingsEntered(self, settings):
         print("onGlobalSettingsEntered")
+        DefaultFolders.createDefaultAutorigFolder("autorig")
     
     # This method is called when the global settings are finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct
@@ -130,4 +132,12 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the joint limits are finished (when the user clicks the "Next" button)
     def onValidationAccepted(self, settings):
         print("onValidationAccepted")
+        
+        # Create the folder hierarchy
+        DefaultFolders.createDefaultFolder(settings["name"])
+
+
+        # Remove the autorig folder
+        DefaultFolders.removeDefaultAutorigFolder("autorig")
+
         return True

@@ -1,15 +1,12 @@
 from wombatAutoRig.src.core import TemplateBase
-from wombatAutoRig.src.core import JointPlacement
-
+from wombatAutoRig.src.core import AutorigHelper
 from maya import cmds
-import maya.mel
-
 
 
 # Autorig template : Body
-# Version : v01
+# Version : 0.0.1
 # Author : ThomasEsc
-# Identifier : body
+# Identifier : Body
 # Description : This is a template for an autorig
 class Template(TemplateBase.TemplateBase):
 
@@ -17,13 +14,9 @@ class Template(TemplateBase.TemplateBase):
         super(Template, self).__init__()
 
         self.name = "Body"
-        self.identifier = "body"
-        self.version = "v01"
+        self.identifier = "Body"
+        self.version = "0.0.1"
         self.author = "ThomasEsc"
-
-        self.jnts = {}
-        self.ctrls = {}
-
         
 
     # This method is called when the template is initialized
@@ -34,7 +27,6 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the autorig is canceled
     # It shoud be used to clean up any temporary files or variables
     def onCanceled(self):
-        # Clean up the controllers
         print("onCanceled")
 
 
@@ -46,6 +38,7 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the global settings are entered
     def onGlobalSettingsEntered(self, settings):
         print("onGlobalSettingsEntered")
+        AutorigHelper.createDefaultAutorigFolder("autorig")
     
     # This method is called when the global settings are finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct
@@ -70,7 +63,6 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the geometry selection is entered
     def onGeometrySelectionEntered(self, settings):
         print("onGeometrySelectionEntered")
-        print ("The identifier is " , settings["identifier"])
 
     # This method is called when the geometry selection is finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct
@@ -85,8 +77,6 @@ class Template(TemplateBase.TemplateBase):
 
 
 
-
-
     ################################################################################################
     ################### J O I N T   P L A C E M E N T   P A G E ####################################
     ################################################################################################
@@ -94,19 +84,9 @@ class Template(TemplateBase.TemplateBase):
 
     # This method is called when the joint placement is entered
     def onJointPlacementEntered(self, settings):
-
-        print("The settings are ", settings)
         print("onJointPlacementEntered")
 
-        self.jnts["ctrl_00"] = JointPlacement.createController([0,0,0], 0.3, "CTRL_00")
-        self.jnts["ctrl_01"] = JointPlacement.createController([0,8,0], 0.3, "CTRL_01")
-        self.jnts["ctrl_02"] = JointPlacement.createController([0,16,0], 0.3, "CTRL_02")
-        self.jnts["line_00"] = JointPlacement.connectLine(self.jnts["ctrl_00"], self.jnts["ctrl_01"], "LINE_00")
-        self.jnts["line_02"] = JointPlacement.connectLine(self.jnts["ctrl_01"], self.jnts["ctrl_02"], "LINE_01")
-
-
-
-
+        AutorigHelper.makeTemplate(settings["geo"], 1)
 
     # This method is called when the joint placement is finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct
@@ -119,10 +99,7 @@ class Template(TemplateBase.TemplateBase):
     def onJointPlacementAccepted(self, settings):
         print("onJointPlacementAccepted")
 
-        # Hide the two controllers by switching the LOD_visibility attribute of the shapes to 0
-        cmds.setAttr(self.jnts["ctrl_00"] + "Shape" + ".lodVisibility", 0)
-        cmds.setAttr(self.jnts["ctrl_01"] + "Shape" + ".lodVisibility", 0)
-        cmds.hide(self.jnts["line_00"])
+        AutorigHelper.makeTemplate(settings["geo"], 0)
 
 
     ################################################################################################
@@ -133,24 +110,6 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the controller placement is entered
     def onControllerPlacementEntered(self, settings):
         print("onControllerPlacementEntered")
-        
-        # Create a controller circle  with a scale of 0.3
-        self.ctrls["ctrl_00"] = cmds.circle(name="CTRL_00", radius=0.3, normal=[0,1,0], degree=1)[0]
-        # Move the controller to the transformations of the jnts["ctrl_00"]
-        cmds.xform(self.ctrls["ctrl_00"], translation=cmds.xform(self.jnts["ctrl_00"], query=True, translation=True), worldSpace=True)
-        # Parent the controller to the jnt["ctrl_00"]
-        cmds.parent(self.ctrls["ctrl_00"], self.jnts["ctrl_00"])
-
-        # Create a controller circle  with a scale of 0.3
-        self.ctrls["ctrl_01"] = cmds.circle(name="CTRL_01", radius=0.3, normal=[0,1,0], degree=1)[0]
-        # Move the controller to the transformations of the jnts["ctrl_01"]
-        cmds.xform(self.ctrls["ctrl_01"], translation=cmds.xform(self.jnts["ctrl_01"], query=True, translation=True), worldSpace=True)
-        # Parent the controller to the jnt["ctrl_01"]
-        cmds.parent(self.ctrls["ctrl_01"], self.jnts["ctrl_01"])
-
-
-        
-
 
     # This method is called when the controller placement is finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct
@@ -177,25 +136,10 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the joint limits are finished (when the user clicks the "Next" button)
     def onValidationAccepted(self, settings):
         print("onValidationAccepted")
-
-        # Select the first controller
-        cmds.select(self.jnts["ctrl_00"])
-        # Freeze the transformations
-        cmds.makeIdentity(apply=True, t=1, r=1, s=1, n=0)
-        # Create a joint inside of the controller
-        jnt_00 = cmds.joint(name="JNT_00")
-        # Unparent the joint
-        cmds.parent(jnt_00, world=True)
-        
-        # Select the second controller
-        cmds.select(self.jnts["ctrl_01"])
-        # Create a joint inside of the controller
-        jnt_01 = cmds.joint(name="JNT_01")
-        # Unparent the joint
-        cmds.parent(jnt_01, world=True)
-        # Parent the jnt_01 inside the jnt_00
-        cmds.parent(jnt_01, jnt_00)
+        # Create the folder hierarchy
+        AutorigHelper.createDefaultFolder(settings["name"])
 
 
-
+        # Remove the autorig folder
+        AutorigHelper.removeDefaultAutorigFolder("autorig")
         return True
