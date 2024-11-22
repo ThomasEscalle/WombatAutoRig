@@ -47,12 +47,19 @@ class DlgMatrixConstraint(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         # Connect the signals to the slots
         self.ui.cb_translate_all.clicked.connect(self.on_translate_all)
         self.ui.cb_rotate_all.clicked.connect(self.on_rotate_all)
+        self.ui.cb_scale_all.clicked.connect(self.on_scale_all)
+
         self.ui.cb_translate_X.clicked.connect(lambda: self.on_translate("X"))
         self.ui.cb_translate_Y.clicked.connect(lambda: self.on_translate("Y"))
         self.ui.cb_translate_Z.clicked.connect(lambda: self.on_translate("Z"))
+
         self.ui.cb_rotate_X.clicked.connect(lambda: self.on_rotate("X"))
         self.ui.cb_rotate_Y.clicked.connect(lambda: self.on_rotate("Y"))
         self.ui.cb_rotate_Z.clicked.connect(lambda: self.on_rotate("Z"))
+
+        self.ui.cb_scale_X.clicked.connect(lambda: self.on_scale("X"))
+        self.ui.cb_scale_Y.clicked.connect(lambda: self.on_scale("Y"))
+        self.ui.cb_scale_Z.clicked.connect(lambda: self.on_scale("Z"))
 
         self.ui.btn_apply.clicked.connect(self.apply)
         self.ui.btn_create.clicked.connect(self.create)
@@ -89,8 +96,12 @@ class DlgMatrixConstraint(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         rY = self.ui.cb_rotate_Y.isChecked()
         rZ = self.ui.cb_rotate_Z.isChecked()
 
+        sX = self.ui.cb_scale_X.isChecked()
+        sY = self.ui.cb_scale_Y.isChecked()
+        sZ = self.ui.cb_scale_Z.isChecked()
+
         
-        MatrixConstrain.MatrixConstrain(Master, Slave, Offset=offset, tX=tX, tY=tY, tZ=tZ, rX=rX, rY=rY, rZ=rZ)
+        MatrixConstrain.MatrixConstrain(Master, Slave, Offset=offset, tX=tX, tY=tY, tZ=tZ, rX=rX, rY=rY, rZ=rZ , sX=sX, sY=sY, sZ=sZ)
         pass
 
     # Apply and close
@@ -127,18 +138,31 @@ class DlgMatrixConstraint(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             self.ui.cb_rotate_Y.setChecked(False)
             self.ui.cb_rotate_Z.setChecked(False)
 
+    # When the user triggers the scale_all checkbox
+    def on_scale_all(self):
+        if self.ui.cb_scale_all.isChecked():
+            self.ui.cb_scale_X.setChecked(True)
+            self.ui.cb_scale_Y.setChecked(True)
+            self.ui.cb_scale_Z.setChecked(True)
+        else:
+            self.ui.cb_scale_X.setChecked(False)
+            self.ui.cb_scale_Y.setChecked(False)
+            self.ui.cb_scale_Z.setChecked(False)
+
     # When the user triggers the translate checkbox (X, Y, Z)
     def on_translate(self, axis):
         # Uncheck the translate_all checkbox
         self.ui.cb_translate_all.setChecked(False)
 
-        pass
-
     # When the user triggers the rotate checkbox (X, Y, Z)
     def on_rotate(self, axis):
         # Uncheck the rotate_all checkbox
         self.ui.cb_rotate_all.setChecked(False)
-        pass
+
+    # When the user triggers the scale checkbox (X, Y, Z)
+    def on_scale(self, axis):
+        # Uncheck the scale_all checkbox
+        self.ui.cb_scale_all.setChecked(False)
 
 
     

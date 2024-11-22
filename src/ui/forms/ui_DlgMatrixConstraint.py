@@ -17,7 +17,7 @@ class Ui_DlgMatrixConstraint(object):
     def setupUi(self, DlgMatrixConstraint):
         if not DlgMatrixConstraint.objectName():
             DlgMatrixConstraint.setObjectName(u"DlgMatrixConstraint")
-        DlgMatrixConstraint.resize(601, 331)
+        DlgMatrixConstraint.resize(298, 290)
         self.verticalLayout = QVBoxLayout(DlgMatrixConstraint)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.formLayout = QFormLayout()
@@ -54,6 +54,11 @@ class Ui_DlgMatrixConstraint(object):
 
         self.formLayout.setWidget(2, QFormLayout.FieldRole, self.cb_translate_all)
 
+        self.label_4 = QLabel(DlgMatrixConstraint)
+        self.label_4.setObjectName(u"label_4")
+
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_4)
+
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.cb_translate_X = QCheckBox(DlgMatrixConstraint)
@@ -73,11 +78,6 @@ class Ui_DlgMatrixConstraint(object):
 
 
         self.formLayout.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout)
-
-        self.label_4 = QLabel(DlgMatrixConstraint)
-        self.label_4.setObjectName(u"label_4")
-
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_4)
 
         self.label_5 = QLabel(DlgMatrixConstraint)
         self.label_5.setObjectName(u"label_5")
@@ -114,10 +114,45 @@ class Ui_DlgMatrixConstraint(object):
 
         self.formLayout.setLayout(5, QFormLayout.FieldRole, self.horizontalLayout_2)
 
+        self.label_7 = QLabel(DlgMatrixConstraint)
+        self.label_7.setObjectName(u"label_7")
+
+        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_7)
+
+        self.cb_scale_all = QCheckBox(DlgMatrixConstraint)
+        self.cb_scale_all.setObjectName(u"cb_scale_all")
+
+        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.cb_scale_all)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.cb_scale_X = QCheckBox(DlgMatrixConstraint)
+        self.cb_scale_X.setObjectName(u"cb_scale_X")
+
+        self.horizontalLayout_4.addWidget(self.cb_scale_X)
+
+        self.cb_scale_Y = QCheckBox(DlgMatrixConstraint)
+        self.cb_scale_Y.setObjectName(u"cb_scale_Y")
+
+        self.horizontalLayout_4.addWidget(self.cb_scale_Y)
+
+        self.cb_scale_Z = QCheckBox(DlgMatrixConstraint)
+        self.cb_scale_Z.setObjectName(u"cb_scale_Z")
+
+        self.horizontalLayout_4.addWidget(self.cb_scale_Z)
+
+
+        self.formLayout.setLayout(7, QFormLayout.FieldRole, self.horizontalLayout_4)
+
+        self.label_8 = QLabel(DlgMatrixConstraint)
+        self.label_8.setObjectName(u"label_8")
+
+        self.formLayout.setWidget(7, QFormLayout.LabelRole, self.label_8)
+
 
         self.verticalLayout.addLayout(self.formLayout)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
@@ -154,16 +189,22 @@ class Ui_DlgMatrixConstraint(object):
         self.label_2.setText("")
         self.label_3.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Translate :", None))
         self.cb_translate_all.setText(QCoreApplication.translate("DlgMatrixConstraint", u"All", None))
+        self.label_4.setText("")
         self.cb_translate_X.setText(QCoreApplication.translate("DlgMatrixConstraint", u"X", None))
         self.cb_translate_Y.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Y", None))
         self.cb_translate_Z.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Z", None))
-        self.label_4.setText("")
         self.label_5.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Rotate", None))
         self.cb_rotate_all.setText(QCoreApplication.translate("DlgMatrixConstraint", u"All", None))
         self.label_6.setText("")
         self.cb_rotate_X.setText(QCoreApplication.translate("DlgMatrixConstraint", u"X", None))
         self.cb_rotate_Y.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Y", None))
         self.cb_rotate_Z.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Z", None))
+        self.label_7.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Scale", None))
+        self.cb_scale_all.setText(QCoreApplication.translate("DlgMatrixConstraint", u"All", None))
+        self.cb_scale_X.setText(QCoreApplication.translate("DlgMatrixConstraint", u"X", None))
+        self.cb_scale_Y.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Y", None))
+        self.cb_scale_Z.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Z", None))
+        self.label_8.setText("")
         self.btn_apply.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Apply", None))
         self.btn_create.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Create", None))
         self.btn_cancel.setText(QCoreApplication.translate("DlgMatrixConstraint", u"Cancel", None))
