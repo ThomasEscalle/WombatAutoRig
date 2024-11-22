@@ -59,3 +59,14 @@ def makeTemplate(elements, state = 1):
     for element in elements:
         cmds.setAttr(element + ".template", state)
 
+def hideJointsPlacement(state = 1):
+    cmds.setAttr("AutoRig_Data|JointsPlacement.visibility", not state)
+
+def hideControllersPlacement(state = 1):
+    cmds.setAttr("AutoRig_Data|ControllersPlacement.visibility", not state)
+
+
+
+def resizeJnts(bbox, size):
+    
+    return size
