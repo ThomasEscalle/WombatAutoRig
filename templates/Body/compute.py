@@ -168,3 +168,5 @@ def compute(settings):
     cmds.connectAttr("FK_Ball_L.rotate", "Bind_Ball_L.rotate")
     cmds.connectAttr("FK_Toe_L.rotate", "Bind_Toe_L.rotate")
     
+    cmds.createNode("reverse", asUtility=True, n="Reverse_Leg_L")
+    cmds.connectAttr("Switch_Leg_L.IK_FK", "Reverse_Leg_L.inputX")
