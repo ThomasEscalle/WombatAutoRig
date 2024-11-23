@@ -127,12 +127,12 @@ def compute(settings):
     
     cmds.parent("Grp_Ribbon_Knee_L", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs".format(settings["name"]))
     
-    DrvJnt_Knee_L = ["DrvJnt_Knee_L"]
+    DrvJnt_Knee_L_Ribbon = ["DrvJnt_Knee_L"]
     MatrixConstrain.MatrixConstrain(("DrvJnt_Knee_L", "DrvJnt_Ankle_L"), "CTRL_Global_Ribbon_Knee_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, "CTRL_Global_Ribbon_Knee_L", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    cmds.delete("IS_CONSTRAIN_BY___DrvJnt_Knee_L__")
+    cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Knee_L|CTRL_Global_Ribbon_Knee_L|IS_CONSTRAIN_BY___DrvJnt_Knee_L__".format(settings["name"]))
     cmds.rotate(90, 0, 0, "CTRL_Global_Ribbon_Knee_L", r=True, os=True)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "CTRL_Global_Ribbon_Knee_L", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L_Ribbon, "CTRL_Global_Ribbon_Knee_L", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
 
     #endregion Leg L 
     
