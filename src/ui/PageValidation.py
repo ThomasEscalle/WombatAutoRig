@@ -3,6 +3,8 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
+from PySide2.QtCore import Signal
+
 from wombatAutoRig.src.ui.forms import ui_PageValidation
 
 from wombatAutoRig.src.ui import IconLoader
@@ -19,16 +21,32 @@ class PageValidation(PageBase):
         self.ui.btnYes.clicked.connect(self.onYesClicked)
         self.ui.btnNo.clicked.connect(self.onNoClicked)
 
+        
+
         self.ui.btnYes.setIcon(IconLoader.loadIcon("yes"))
         self.ui.btnNo.setIcon(IconLoader.loadIcon("close"))
 
-    # Say if the user can go to the next page or not
+
+    # Signal to create the rig
+    yesClicked = Signal()
+    noClicked = Signal()
+
+
     def hideNextAndCancel(self):
+        """
+        Hides the "Next" and "Cancel" buttons in the UI.
+
+        Returns:
+            bool: Always returns True.
+        """
         return True
+
+
 
     # When the user clicks the Yes button
     def onYesClicked(self):
-        print("Yes clicked")
+        # Emit the signal to create the rig
+        self.yesClicked.emit()
 
     def addDataToSettings(self,settings):
         print("Add the data to the settings")
@@ -36,4 +54,4 @@ class PageValidation(PageBase):
         
     # When the user clicks the No button
     def onNoClicked(self):
-        print("No clicked")
+        self.noClicked.emit()
