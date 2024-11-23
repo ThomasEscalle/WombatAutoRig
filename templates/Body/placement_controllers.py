@@ -12,7 +12,6 @@ def placeControllers(settings):
     cmds.parent(PlacementCtrl_hip_L, "AutoRig_Data|ControllersPlacement|FK_Controllers")
     Color.setColor("PlacementCtrl_hip_L", "yellow")
 
-
     # PlacementCtrl_knee_L
     cmds.select(clear=True)
     PlacementCtrl_knee_L = cmds.circle(name="PlacementCtrl_knee_L", normal=[0, 1, 0], radius=6)
@@ -27,7 +26,7 @@ def placeControllers(settings):
     cmds.parent(PlacementCtrl_ankle_L, "AutoRig_Data|ControllersPlacement|FK_Controllers")
     Color.setColor("PlacementCtrl_ankle_L", "yellow")
 
-    # PlacementCtrl_Foot
+    # PlacementCtrl_Foot_L
     cmds.select(clear=True)
     PlacementCtrl_Foot = cmds.circle(name="PlacementCtrl_Foot_L", normal=[0, 1, 0], radius=8)
     cmds.matchTransform(PlacementCtrl_Foot, "PlacementJnt_Ball_L", pos=True, rotationY=False, scl=False)
@@ -41,3 +40,43 @@ def placeControllers(settings):
     cmds.move(24, 78, 0, PlacementCtrl_Switch_Leg_L)
     cmds.parent(PlacementCtrl_Switch_Leg_L, "AutoRig_Data|ControllersPlacement|Global_Controllers")
     Color.setColor("PlacementCtrl_Switch_Leg_L", "yellow")
+
+    # PlacementCtrl_hip_R
+    cmds.select(clear=True)
+    PlacementCtrl_hip_R = cmds.circle(name="PlacementCtrl_hip_R", normal=[0, 1, 0], radius=9)
+    cmds.matchTransform(PlacementCtrl_hip_R, "PlacementJnt_Hip_R", pos=True, rot=False, scl=False)
+    cmds.parent(PlacementCtrl_hip_R, "AutoRig_Data|ControllersPlacement|FK_Controllers")
+    Color.setColor("PlacementCtrl_hip_R", "yellow")
+
+    # PlacementCtrl_knee_R
+    cmds.select(clear=True)
+    PlacementCtrl_knee_R = cmds.circle(name="PlacementCtrl_knee_R", normal=[0, 1, 0], radius=6)
+    cmds.matchTransform(PlacementCtrl_knee_R, "PlacementJnt_Knee_R", pos=True, rot=False, scl=False)
+    cmds.parent(PlacementCtrl_knee_R, "AutoRig_Data|ControllersPlacement|FK_Controllers")
+    Color.setColor("PlacementCtrl_knee_R", "yellow")
+
+    # PlacementCtrl_ankle_R
+    cmds.select(clear=True)
+    PlacementCtrl_ankle_R = cmds.circle(name="PlacementCtrl_ankle_R", normal=[0, 1, 0], radius=6)
+    cmds.matchTransform(PlacementCtrl_ankle_R, "PlacementJnt_Ankle_R", pos=True, rot=False, scl=False)
+    cmds.parent(PlacementCtrl_ankle_R, "AutoRig_Data|ControllersPlacement|FK_Controllers")
+    Color.setColor("PlacementCtrl_ankle_R", "yellow")
+
+    # PlacementCtrl_Foot_R
+    cmds.select(clear=True)
+    PlacementCtrl_Foot = cmds.circle(name="PlacementCtrl_Foot_R", normal=[0, 1, 0], radius=8)
+    cmds.matchTransform(PlacementCtrl_Foot, "PlacementJnt_Ball_R", pos=True, rotationY=False, scl=False)
+    cmds.setAttr(PlacementCtrl_Foot[0] + ".translateY", 0)
+
+    cmds.parent(PlacementCtrl_Foot, "AutoRig_Data|ControllersPlacement|IK_Controllers")
+    Color.setColor("PlacementCtrl_Foot_R", "yellow")
+
+    # PlacementCtrl_Switch_Leg_R
+    cmds.select(clear=True)
+    PlacementCtrl_Switch_Leg_R = cmds.circle(name="PlacementCtrl_Switch_Leg_R", normal=[0, 1, 0], radius=6)
+    cmds.move(-24, 78, 0, PlacementCtrl_Switch_Leg_R)
+    cmds.parent(PlacementCtrl_Switch_Leg_R, "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    Color.setColor("PlacementCtrl_Switch_Leg_R", "yellow")
+    
+
+    
