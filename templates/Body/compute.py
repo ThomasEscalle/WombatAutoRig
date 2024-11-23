@@ -61,11 +61,14 @@ def compute(settings):
     Offset.offset("Preserve_Knee_L", nbr=3)
     
     #Rangement des joints dans un groupe
-    
-    cmds.parent("Bind_Root_Offset", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
-    cmds.parent("DrvJnt_Leg_L_Offset", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
-    cmds.parent("FK_Leg_L_Offset", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
-    cmds.parent("Preserve_Knee_L_Offset", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
+    cmds.group(n="Joints_Legs", em=True)
+    cmds.group(n="Joints_Leg_L", em=True)
+    cmds.parent("Joints_Leg_L", "Joints_Legs")
+    cmds.parent("Joints_Legs", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
+    cmds.parent("Bind_Root_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_L".format(settings["name"]))
+    cmds.parent("DrvJnt_Leg_L_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_L".format(settings["name"]))
+    cmds.parent("FK_Leg_L_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_L".format(settings["name"]))
+    cmds.parent("Preserve_Knee_L_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_L".format(settings["name"]))
     
     #Creating the IK handle
     cmds.ikHandle(n="IK_Leg_L", sj="DrvJnt_Leg_L", ee="DrvJnt_Ankle_L", sol="ikRPsolver")
@@ -117,12 +120,22 @@ def compute(settings):
     MatrixConstrain.MatrixConstrain(("DrvJnt_Leg_L", "DrvJnt_Knee_L"), "CTRL_Global_Ribbon_Leg_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "CTRL_Global_Ribbon_Leg_L", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
     cmds.delete("IS_CONSTRAIN_BY___DrvJnt_Leg_L__")
-    cmds.rotate(90, 0, 0, "CTRL_Global_Ribbon_Leg_L", r=True)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "CTRL_Global_Ribbon_Leg_L", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    cmds.rotate(90, 0, 0, "CTRL_Global_Ribbon_Leg_L", r=True, os=True)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "CTRL_Global_Ribbon_Leg_L", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    
+    cmds.parent("Grp_Ribbon_Knee_L|Grp_Extra_Nodes_Ribbon_Knee_L|Grp_Extra_Nodes_To_Hide_Ribbon_Knee_L", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01|Ribbons_Legs_Hide".format(settings["name"]))
+    
+    cmds.parent("Grp_Ribbon_Knee_L", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs".format(settings["name"]))
+    
+    DrvJnt_Knee_L = ["DrvJnt_Knee_L"]
+    MatrixConstrain.MatrixConstrain(("DrvJnt_Knee_L", "DrvJnt_Ankle_L"), "CTRL_Global_Ribbon_Knee_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, "CTRL_Global_Ribbon_Knee_L", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    cmds.delete("IS_CONSTRAIN_BY___DrvJnt_Knee_L__")
+    cmds.rotate(90, 0, 0, "CTRL_Global_Ribbon_Knee_L", r=True, os=True)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "CTRL_Global_Ribbon_Knee_L", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
 
     #endregion Leg L 
     
     computeThomas.compute(settings)
-    
     
     
