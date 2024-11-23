@@ -39,6 +39,11 @@ class Ui_PageJointPlacement(object):
 
         self.verticalLayout.addWidget(self.btnShowLRA)
 
+        self.btnTemplate = QPushButton(PageJointPlacement)
+        self.btnTemplate.setObjectName(u"btnTemplate")
+
+        self.verticalLayout.addWidget(self.btnTemplate)
+
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
@@ -54,5 +59,6 @@ class Ui_PageJointPlacement(object):
         self.label.setText(QCoreApplication.translate("PageJointPlacement", u"Joints placement", None))
         self.label_2.setText("")
         self.btnShowLRA.setText(QCoreApplication.translate("PageJointPlacement", u"Show LRA", None))
+        self.btnTemplate.setText(QCoreApplication.translate("PageJointPlacement", u"Toggle template geo", None))
     # retranslateUi
 

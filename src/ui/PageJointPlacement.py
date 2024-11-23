@@ -3,6 +3,8 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
+from wombatAutoRig.src.core import AutorigHelper
+
 from wombatAutoRig.src.ui import IconLoader
 
 from maya import cmds
@@ -20,7 +22,11 @@ class PageJointPlacement(PageBase):
         self.ui.btnShowLRA.clicked.connect(self.showLraButtonClicked)
         self.ui.btnShowLRA.setIcon(IconLoader.loadIcon("LRA"))
 
-    # Say if the user can go to the next page or not
+        self.ui.btnTemplate.clicked.connect(self.templateButtonClicked)
+        self.ui.btnTemplate.setIcon(IconLoader.loadIcon("eye"))
+
+
+    # Say if the user can go sto the next page or not
     def canGoNext(self):
         return True
 
@@ -39,3 +45,8 @@ class PageJointPlacement(PageBase):
                 else:
                     cmds.setAttr(jnt + ".displayLocalAxis", 1)
         return
+    
+    def templateButtonClicked(self):
+        print("Template button clicked")
+
+    

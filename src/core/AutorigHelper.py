@@ -46,6 +46,12 @@ def createDefaultAutorigFolder(name):
     cmds.group(name="ControllersPlacement", empty=True, parent="AutoRig_Data")
     cmds.group(name="IK_Controllers", empty=True, parent="ControllersPlacement")
     cmds.group(name="FK_Controllers", empty=True, parent="ControllersPlacement")
+    cmds.group(name="Global_Controllers", empty=True, parent="ControllersPlacement")
+
+    # Hide the controllers by default
+    cmds.hide("AutoRig_Data|ControllersPlacement")
+    # Hide the Fk controllers by default
+    cmds.hide("AutoRig_Data|ControllersPlacement|FK_Controllers")
 
 
 # Remove the Autorig folder

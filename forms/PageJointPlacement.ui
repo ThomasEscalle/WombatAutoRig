@@ -42,6 +42,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QPushButton" name="btnTemplate">
+     <property name="text">
+      <string>Toggle template geo</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
