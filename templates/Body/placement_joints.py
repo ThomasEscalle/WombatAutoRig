@@ -52,10 +52,10 @@ def placeJointsLegs(settings):
     
     # Create the placement controllers for the foot (front, left, right, back)
     sphereRadius = 0.3
-    JointPlacement.createControllerSphere((7.636, 0, 16.905), sphereRadius, "PlacementCtrl_Foot_Front_L" )
-    JointPlacement.createControllerSphere((2.969, 0, 8.428), sphereRadius, "PlacementCtrl_Foot_Int_L")
-    JointPlacement.createControllerSphere((13.606, 0, 8.428), sphereRadius, "PlacementCtrl_Foot_Ext_L")
-    JointPlacement.createControllerSphere((7.636, 0, -5.765), sphereRadius, "PlacementCtrl_Foot_Back_L")
+    JointPlacement.createControllerSphere(AutorigHelper.resizeJnts(bbox = settings["bbox"] , size = (7.636, 0, 16.905)), sphereRadius, "PlacementCtrl_Foot_Front_L" )
+    JointPlacement.createControllerSphere(AutorigHelper.resizeJnts(bbox = settings["bbox"] , size = (2.969, 0, 8.428 )), sphereRadius, "PlacementCtrl_Foot_Int_L")
+    JointPlacement.createControllerSphere(AutorigHelper.resizeJnts(bbox = settings["bbox"] , size = (13.606, 0, 8.428)), sphereRadius, "PlacementCtrl_Foot_Ext_L")
+    JointPlacement.createControllerSphere(AutorigHelper.resizeJnts(bbox = settings["bbox"] , size = (7.636, 0, -5.765)), sphereRadius, "PlacementCtrl_Foot_Back_L")
     
     cmds.parent("PlacementCtrl_Foot_Front_L", "JointsPlacement")
     cmds.parent("PlacementCtrl_Foot_Int_L", "JointsPlacement")
@@ -64,10 +64,10 @@ def placeJointsLegs(settings):
 
 
     # Create the placement controllers for the foot (front, left, right, back)
-    JointPlacement.createControllerSphere((-7.636, 0, 16.905), sphereRadius, "PlacementCtrl_Foot_Front_R" )
-    JointPlacement.createControllerSphere((-2.969, 0, 8.428), sphereRadius, "PlacementCtrl_Foot_Int_R")
-    JointPlacement.createControllerSphere((-13.606, 0, 8.428), sphereRadius, "PlacementCtrl_Foot_Ext_R")
-    JointPlacement.createControllerSphere((-7.636, 0, -5.765), sphereRadius, "PlacementCtrl_Foot_Back_R")
+    JointPlacement.createControllerSphere(AutorigHelper.resizeJnts(bbox = settings["bbox"] , size = (-7.636, 0, 16.905)), sphereRadius, "PlacementCtrl_Foot_Front_R" )
+    JointPlacement.createControllerSphere(AutorigHelper.resizeJnts(bbox = settings["bbox"] , size = (-2.969, 0, 8.428 )), sphereRadius, "PlacementCtrl_Foot_Int_R")
+    JointPlacement.createControllerSphere(AutorigHelper.resizeJnts(bbox = settings["bbox"] , size = (-13.606, 0, 8.428)), sphereRadius, "PlacementCtrl_Foot_Ext_R")
+    JointPlacement.createControllerSphere(AutorigHelper.resizeJnts(bbox = settings["bbox"] , size = (-7.636, 0, -5.765)), sphereRadius, "PlacementCtrl_Foot_Back_R")
 
     cmds.parent("PlacementCtrl_Foot_Front_R", "JointsPlacement")
     cmds.parent("PlacementCtrl_Foot_Int_R", "JointsPlacement")

@@ -7,242 +7,261 @@ from wombatAutoRig.src.core import MatrixConstrain
 from wombatAutoRig.src.core import Ribbon
 
 
-
 def compute(settings):
+    cmds.duplicate("PlacementJnt_Root", n="Bind_Root", po = True)
+    cmds.parent(f"Bind_Root", world=True)
+    Offset.offset("Bind_Root", nbr=3)
+
+
+    createLeg(settings, "L")
+    createLeg(settings, "R")
+
+def createLeg(settings, side = "L"):
 
 
     #region Leg L
 
     #Creating the joints 
-    cmds.duplicate("PlacementJnt_Root", n="Bind_Root", po = True)
-    cmds.duplicate("PlacementJnt_Hip_L", n="Bind_Hip_L", po = True)
     
-    cmds.duplicate("PlacementJnt_Hip_L", n="DrvJnt_Leg_L", po=True)
-    Color.setColor("DrvJnt_Leg_L", "yellow")
-    cmds.duplicate("PlacementJnt_Knee_L", n="DrvJnt_Knee_L", po=True)
-    Color.setColor("DrvJnt_Knee_L", "yellow")
-    cmds.duplicate("PlacementJnt_Ankle_L", n="DrvJnt_Ankle_L", po=True)
-    Color.setColor("DrvJnt_Ankle_L", "yellow")
+    cmds.duplicate(f"PlacementJnt_Hip_{side}", n=f"Bind_Hip_{side}", po = True)
     
-    cmds.duplicate("PlacementJnt_Hip_L", n="FK_Leg_L", po=True)
-    Color.setColor("FK_Leg_L", "blue")
-    cmds.duplicate("PlacementJnt_Knee_L", n="FK_Knee_L", po=True)
-    Color.setColor("FK_Knee_L", "blue")
-    cmds.duplicate("PlacementJnt_Ankle_L", n="FK_Ankle_L", po=True)
-    Color.setColor("FK_Ankle_L", "blue")
-    cmds.duplicate("PlacementJnt_Ball_L", n="FK_Ball_L", po=True)
-    Color.setColor("FK_Ball_L", "blue")
-    cmds.duplicate("PlacementJnt_Toe_L", n="FK_Toe_L", po=True)
-    Color.setColor("FK_Toe_L", "blue")
+    cmds.duplicate(f"PlacementJnt_Hip_{side}", n=f"DrvJnt_Leg_{side}", po=True)
+    Color.setColor(f"DrvJnt_Leg_{side}", "yellow")
+    cmds.duplicate(f"PlacementJnt_Knee_{side}", n=f"DrvJnt_Knee_{side}", po=True)
+    Color.setColor(f"DrvJnt_Knee_{side}", "yellow")
+    cmds.duplicate(f"PlacementJnt_Ankle_{side}", n=f"DrvJnt_Ankle_{side}", po=True)
+    Color.setColor(f"DrvJnt_Ankle_{side}", "yellow")
+    
+    cmds.duplicate(f"PlacementJnt_Hip_{side}", n=f"FK_Leg_{side}", po=True)
+    Color.setColor(f"FK_Leg_{side}", "blue")
+    cmds.duplicate(f"PlacementJnt_Knee_{side}", n=f"FK_Knee_{side}", po=True)
+    Color.setColor(f"FK_Knee_{side}", "blue")
+    cmds.duplicate(f"PlacementJnt_Ankle_{side}", n=f"FK_Ankle_{side}", po=True)
+    Color.setColor(f"FK_Ankle_{side}", "blue")
+    cmds.duplicate(f"PlacementJnt_Ball_{side}", n=f"FK_Ball_{side}", po=True)
+    Color.setColor(f"FK_Ball_{side}", "blue")
+    cmds.duplicate(f"PlacementJnt_Toe_{side}", n=f"FK_Toe_{side}", po=True)
+    Color.setColor(f"FK_Toe_{side}", "blue")
     
     
-    cmds.duplicate("PlacementJnt_Knee_L", n="Preserve_Knee_L", po=True)
+    cmds.duplicate(f"PlacementJnt_Knee_{side}", n=f"Preserve_Knee_{side}", po=True)
     
     #Unparenting the joints
     
-    cmds.parent("Bind_Root", world=True)
-    cmds.parent("Bind_Hip_L", world=True)
-    cmds.parent("DrvJnt_Leg_L", world=True)
-    cmds.parent("DrvJnt_Knee_L", world=True)
-    cmds.parent("DrvJnt_Ankle_L", world=True)
-    cmds.parent("FK_Leg_L", world=True)
-    cmds.parent("FK_Knee_L", world=True)
-    cmds.parent("FK_Ankle_L", world=True)
-    cmds.parent("Preserve_Knee_L", world=True)
+    
+    cmds.parent(f"Bind_Hip_{side}", world=True)
+    cmds.parent(f"DrvJnt_Leg_{side}", world=True)
+    cmds.parent(f"DrvJnt_Knee_{side}", world=True)
+    cmds.parent(f"DrvJnt_Ankle_{side}", world=True)
+    cmds.parent(f"FK_Leg_{side}", world=True)
+    cmds.parent(f"FK_Knee_{side}", world=True)
+    cmds.parent(f"FK_Ankle_{side}", world=True)
+    cmds.parent(f"Preserve_Knee_{side}", world=True)
     
     #Reparenting the joints
     
-    cmds.parent("Bind_Hip_L", "Bind_Root")
-    cmds.parent("DrvJnt_Knee_L", "DrvJnt_Leg_L")
-    cmds.parent("DrvJnt_Ankle_L", "DrvJnt_Knee_L")
-    cmds.parent("FK_Knee_L", "FK_Leg_L")
-    cmds.parent("FK_Ankle_L", "FK_Knee_L")
-    cmds.parent("FK_Ball_L", "FK_Ankle_L")
-    cmds.parent("FK_Toe_L", "FK_Ball_L")
+    cmds.parent(f"Bind_Hip_{side}", f"Bind_Root")
+    cmds.parent(f"DrvJnt_Knee_{side}", f"DrvJnt_Leg_{side}")
+    cmds.parent(f"DrvJnt_Ankle_{side}", f"DrvJnt_Knee_{side}")
+    cmds.parent(f"FK_Knee_{side}", f"FK_Leg_{side}")
+    cmds.parent(f"FK_Ankle_{side}", f"FK_Knee_{side}")
+    cmds.parent(f"FK_Ball_{side}", f"FK_Ankle_{side}")
+    cmds.parent(f"FK_Toe_{side}", f"FK_Ball_{side}")
     
     #Offset for the joints
     
-    Offset.offset("Bind_Root", nbr=3)
-    Offset.offset("DrvJnt_Leg_L", nbr=3)
-    Offset.offset("FK_Leg_L", nbr=3)
-    Offset.offset("Preserve_Knee_L", nbr=3)
+
+    Offset.offset(f"DrvJnt_Leg_{side}", nbr=3)
+    Offset.offset(f"FK_Leg_{side}", nbr=3)
+    Offset.offset(f"Preserve_Knee_{side}", nbr=3)
     
     #Rangement des joints dans un groupe
-    cmds.group(n="Joints_Legs", em=True)
-    cmds.group(n="Joints_Leg_L", em=True)
-    cmds.parent("Joints_Leg_L", "Joints_Legs")
-    cmds.parent("Joints_Legs", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
-    cmds.parent("Bind_Root_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_L".format(settings["name"]))
-    cmds.parent("DrvJnt_Leg_L_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_L".format(settings["name"]))
-    cmds.parent("FK_Leg_L_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_L".format(settings["name"]))
-    cmds.parent("Preserve_Knee_L_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_L".format(settings["name"]))
+
+    # Check if "Joints_Legs" exists, if not create it
+    if not cmds.objExists("Joints_Legs"):
+        cmds.group(n=f"Joints_Legs", em=True)
+        cmds.parent("Joints_Legs", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
+
+    cmds.group(n=f"Joints_Leg_{side}", em=True)
+    cmds.parent(f"Joints_Leg_{side}", "Joints_Legs")
+    cmds.parent(f"Bind_Root_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_{}".format(settings["name"] , side))
+    cmds.parent(f"DrvJnt_Leg_{side}_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_{}".format(settings["name"], side))
+    cmds.parent(f"FK_Leg_{side}_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_{}".format(settings["name"], side))
+    cmds.parent(f"Preserve_Knee_{side}_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_{}".format(settings["name"], side))
     
     #Creating a controller for the preserve Knee to be in
-    cmds.duplicate("PlacementCtrl_knee_L", n="CTRL_Preserve_Knee_L")
-    cmds.parent("CTRL_Preserve_Knee_L", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_L|Preserve_Knee_L_Offset|Preserve_Knee_L_Hook|Preserve_Knee_L_Move".format(settings["name"]))
-    cmds.parent("Preserve_Knee_L", "CTRL_Preserve_Knee_L")
-    cmds.createNode('multiplyDivide', n="MD_Preserve_Knee_L")
-    cmds.connectAttr("DrvJnt_Knee_L.ry", "MD_Preserve_Knee_L.input1X")
-    cmds.connectAttr("MD_Preserve_Knee_L.outputX", "Preserve_Knee_L_Move.ry")
-    cmds.setAttr("MD_Preserve_Knee_L.input2X", 0.5)
+    cmds.duplicate(f"PlacementCtrl_knee_{side}", n=f"CTRL_Preserve_Knee_{side}")
+    cmds.parent(f"CTRL_Preserve_Knee_{side}", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_{}|Preserve_Knee_{}_Offset|Preserve_Knee_{}_Hook|Preserve_Knee_{}_Move".format(settings["name"], side, side, side, side))
+    cmds.parent(f"Preserve_Knee_{side}", f"CTRL_Preserve_Knee_{side}")
+    cmds.createNode('multiplyDivide', n=f"MD_Preserve_Knee_{side}")
+    cmds.connectAttr(f"DrvJnt_Knee_{side}.ry", f"MD_Preserve_Knee_{side}.input1X")
+    cmds.connectAttr(f"MD_Preserve_Knee_{side}.outputX", f"Preserve_Knee_{side}_Move.ry")
+    cmds.setAttr(f"MD_Preserve_Knee_{side}.input2X", 0.5)
     
     #Creating the IK handle
-    cmds.ikHandle(n="IK_Leg_L", sj="DrvJnt_Leg_L", ee="DrvJnt_Ankle_L", sol="ikRPsolver")
-    cmds.parent("IK_Leg_L", "{}|GlobalMove_01|IKs_01".format(settings["name"]))
-    Locator = cmds.spaceLocator(n="PoleVector_L")
-    Color.setColor("PoleVector_L", "green")
-    PoleVector.PoleVector(joint_1="DrvJnt_Leg_L", joint_2="DrvJnt_Knee_L", joint_3="DrvJnt_Ankle_L", CTRL="PoleVector_L")
-    Offset.offset("PoleVector_L", nbr=1)
-    cmds.poleVectorConstraint(Locator, "IK_Leg_L")
-    cmds.parent("PoleVector_L_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+    cmds.ikHandle(n=f"IK_Leg_{side}", sj=f"DrvJnt_Leg_{side}", ee=f"DrvJnt_Ankle_{side}", sol="ikRPsolver")
+    cmds.parent(f"IK_Leg_{side}", "{}|GlobalMove_01|IKs_01".format(settings["name"]))
+    Locator = cmds.spaceLocator(n=f"PoleVector_{side}")
+    Color.setColor(f"PoleVector_{side}", "green")
+    PoleVector.PoleVector(joint_1=f"DrvJnt_Leg_{side}", joint_2=f"DrvJnt_Knee_{side}", joint_3=f"DrvJnt_Ankle_{side}", CTRL=f"PoleVector_{side}")
+    Offset.offset(f"PoleVector_{side}", nbr=1)
+    cmds.poleVectorConstraint(Locator, f"IK_Leg_{side}")
+    cmds.parent(f"PoleVector_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     
     #Attach Joints chain To Hip
-    Bind_Hip_L = ["Bind_Hip_L"]
-    DrvJnt_Leg_L = ["DrvJnt_Leg_L"]
-    MatrixConstrain.MatrixConstrain(Bind_Hip_L, "DrvJnt_Leg_L_Hook", Offset=False, sX=False, sY=False, sZ=False)
-    MatrixConstrain.MatrixConstrain(Bind_Hip_L, "FK_Leg_L_Hook", Offset=False, sX=False, sY=False, sZ=False)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "Preserve_Knee_L_Hook", Offset=True, sX=False, sY=False, sZ=False)
+    Bind_Hip_L = [f"Bind_Hip_{side}"]
+    DrvJnt_Leg_L = [f"DrvJnt_Leg_{side}"]
+    MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"DrvJnt_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False)
+    MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"FK_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"Preserve_Knee_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False)
     
     #Creating a switch for the IK FK
-    cmds.duplicate("PlacementCtrl_Switch_Leg_L", n="Switch_Leg_L")
-    cmds.parent("Switch_Leg_L", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
-    cmds.addAttr("Switch_Leg_L", ln="IK_FK", at="enum", en="FK:IK", k=True)
-    cmds.setAttr("Switch_Leg_L.tx", keyable=False, channelBox=False)
-    cmds.setAttr("Switch_Leg_L.ty", keyable=False, channelBox=False)
-    cmds.setAttr("Switch_Leg_L.tz", keyable=False, channelBox=False)
-    cmds.setAttr("Switch_Leg_L.rx", keyable=False, channelBox=False)
-    cmds.setAttr("Switch_Leg_L.ry", keyable=False, channelBox=False)
-    cmds.setAttr("Switch_Leg_L.rz", keyable=False, channelBox=False)
-    cmds.setAttr("Switch_Leg_L.sx", keyable=False, channelBox=False)
-    cmds.setAttr("Switch_Leg_L.sy", keyable=False, channelBox=False)
-    cmds.setAttr("Switch_Leg_L.sz", keyable=False, channelBox=False)
-    Offset.offset("Switch_Leg_L", nbr=2)
-    MatrixConstrain.MatrixConstrain(Bind_Hip_L, "Switch_Leg_L_Move", Offset=True, sX=False, sY=False, sZ=False)
-    cmds.setAttr("Switch_Leg_L.IK_FK", 1)
+    cmds.duplicate(f"PlacementCtrl_Switch_Leg_{side}", n=f"Switch_Leg_{side}")
+    cmds.parent(f"Switch_Leg_{side}", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+    cmds.addAttr(f"Switch_Leg_{side}", ln="IK_FK", at="enum", en="FK:IK", k=True)
+    cmds.setAttr(f"Switch_Leg_{side}.tx", keyable=False, channelBox=False)
+    cmds.setAttr(f"Switch_Leg_{side}.ty", keyable=False, channelBox=False)
+    cmds.setAttr(f"Switch_Leg_{side}.tz", keyable=False, channelBox=False)
+    cmds.setAttr(f"Switch_Leg_{side}.rx", keyable=False, channelBox=False)
+    cmds.setAttr(f"Switch_Leg_{side}.ry", keyable=False, channelBox=False)
+    cmds.setAttr(f"Switch_Leg_{side}.rz", keyable=False, channelBox=False)
+    cmds.setAttr(f"Switch_Leg_{side}.sx", keyable=False, channelBox=False)
+    cmds.setAttr(f"Switch_Leg_{side}.sy", keyable=False, channelBox=False)
+    cmds.setAttr(f"Switch_Leg_{side}.sz", keyable=False, channelBox=False)
+    Offset.offset(f"Switch_Leg_{side}", nbr=2)
+    MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"Switch_Leg_{side}_Move", Offset=True, sX=False, sY=False, sZ=False)
+    cmds.setAttr(f"Switch_Leg_{side}.IK_FK", 1)
     
     #Attach Ribbon to DrvJnt
-    Ribbon.Ribbon(Name="Ribbon_Leg_L", Span=5)
-    Ribbon.Ribbon(Name="Ribbon_Knee_L", Span=5)
+    Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5)
+    Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5)
     
-    cmds.group(n="Ribbons_Legs_Hide", em=True)
-    cmds.parent("Ribbons_Legs_Hide", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
-    cmds.parent("Grp_Ribbon_Leg_L|Grp_Extra_Nodes_Ribbon_Leg_L|Grp_Extra_Nodes_To_Hide_Ribbon_Leg_L", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01|Ribbons_Legs_Hide".format(settings["name"]))
+    if not cmds.objExists("Ribbons_Legs_Hide"):
+        cmds.group(n="Ribbons_Legs_Hide", em=True)
+        cmds.parent("Ribbons_Legs_Hide", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
+
+    cmds.parent(f"Grp_Ribbon_Leg_{side}|Grp_Extra_Nodes_Ribbon_Leg_{side}|Grp_Extra_Nodes_To_Hide_Ribbon_Leg_{side}", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01|Ribbons_Legs_Hide".format(settings["name"]))
     
-    cmds.group(n="Ribbons_Legs", em=True)
-    cmds.parent("Ribbons_Legs", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01".format(settings["name"]))
-    cmds.parent("Grp_Ribbon_Leg_L", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs".format(settings["name"]))
+
+    if not cmds.objExists("Ribbons_Legs"):
+        cmds.group(n="Ribbons_Legs", em=True)
+        cmds.parent("Ribbons_Legs", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01".format(settings["name"]))
+    cmds.parent(f"Grp_Ribbon_Leg_{side}", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs".format(settings["name"]))
     
-    DrvJnt_Leg_L = ["DrvJnt_Leg_L"]
-    MatrixConstrain.MatrixConstrain(("DrvJnt_Leg_L", "DrvJnt_Knee_L"), "CTRL_Global_Ribbon_Leg_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Leg_L|CTRL_Global_Ribbon_Leg_L".format(settings["name"]), Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Leg_L|CTRL_Global_Ribbon_Leg_L|IS_CONSTRAIN_BY___DrvJnt_Leg_L__".format(settings["name"]))
-    cmds.rotate(90, 0, 0, "CTRL_Global_Ribbon_Leg_L", r=True, os=True)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "CTRL_Global_Ribbon_Leg_L", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    DrvJnt_Leg_L = [f"DrvJnt_Leg_{side}"]
+    MatrixConstrain.MatrixConstrain((f"DrvJnt_Leg_{side}", f"DrvJnt_Knee_{side}"), f"CTRL_Global_Ribbon_Leg_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Leg_{}|CTRL_Global_Ribbon_Leg_{}".format(settings["name"], side,side), Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Leg_{}|CTRL_Global_Ribbon_Leg_{}|IS_CONSTRAIN_BY___DrvJnt_Leg_{}__".format(settings["name"], side ,side ,side))
+    cmds.rotate(90, 0, 0, f"CTRL_Global_Ribbon_Leg_{side}", r=True, os=True)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"CTRL_Global_Ribbon_Leg_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
     
-    cmds.parent("Grp_Ribbon_Knee_L|Grp_Extra_Nodes_Ribbon_Knee_L|Grp_Extra_Nodes_To_Hide_Ribbon_Knee_L", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01|Ribbons_Legs_Hide".format(settings["name"]))
+    cmds.parent(f"Grp_Ribbon_Knee_{side}|Grp_Extra_Nodes_Ribbon_Knee_{side}|Grp_Extra_Nodes_To_Hide_Ribbon_Knee_{side}", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01|Ribbons_Legs_Hide".format(settings["name"]))
     
-    cmds.parent("Grp_Ribbon_Knee_L", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs".format(settings["name"]))
+    cmds.parent(f"Grp_Ribbon_Knee_{side}", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs".format(settings["name"]))
     
-    DrvJnt_Knee_L = ["DrvJnt_Knee_L"]
-    MatrixConstrain.MatrixConstrain(("DrvJnt_Knee_L", "DrvJnt_Ankle_L"), "CTRL_Global_Ribbon_Knee_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, "CTRL_Global_Ribbon_Knee_L", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Knee_L|CTRL_Global_Ribbon_Knee_L|IS_CONSTRAIN_BY___DrvJnt_Knee_L__".format(settings["name"]))
-    cmds.rotate(90, 0, 0, "CTRL_Global_Ribbon_Knee_L", r=True, os=True)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, "CTRL_Global_Ribbon_Knee_L", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    DrvJnt_Knee_L = [f"DrvJnt_Knee_{side}"]
+    MatrixConstrain.MatrixConstrain((f"DrvJnt_Knee_{side}", f"DrvJnt_Ankle_{side}"), f"CTRL_Global_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, f"CTRL_Global_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Knee_{}|CTRL_Global_Ribbon_Knee_{}|IS_CONSTRAIN_BY___DrvJnt_Knee_{}__".format(settings["name"], side , side ,side))
+    cmds.rotate(90, 0, 0, f"CTRL_Global_Ribbon_Knee_{side}", r=True, os=True)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, f"CTRL_Global_Ribbon_Knee_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
     
-    DrvJnt_Ankle_L = ["DrvJnt_Ankle_L"]
-    Preserve_Knee_L = ["Preserve_Knee_L"]
-    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "CTRL_End_Ribbon_Leg_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Ankle_L, "CTRL_Start_Ribbon_Knee_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(Preserve_Knee_L, "CTRL_End_Ribbon_Knee_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(Preserve_Knee_L, "CTRL_Start_Ribbon_Leg_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    DrvJnt_Ankle_L = [f"DrvJnt_Ankle_{side}"]
+    Preserve_Knee_L = [f"Preserve_Knee_{side}"]
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"CTRL_End_Ribbon_Leg_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Ankle_L, f"CTRL_Start_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(Preserve_Knee_L, f"CTRL_End_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(Preserve_Knee_L, f"CTRL_Start_Ribbon_Leg_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     
 
     #endregion Leg L 
     
-    computeThomas.compute(settings)
+
+
+
+    computeThomas.createFoot(settings, side)
     
     
     #Connecting the FK and IK to the switch (FK rotate into DrvJnt rotate)
-    cmds.connectAttr("Switch_Leg_L.IK_FK", "IK_Leg_L.ikBlend")
-    cmds.connectAttr("Switch_Leg_L.IK_FK", "IK_Ball_L.ikBlend")
-    cmds.connectAttr("Switch_Leg_L.IK_FK", "IK_Toe_L.ikBlend")
+    cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"IK_Leg_{side}.ikBlend")
+    cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"IK_Ball_{side}.ikBlend")
+    cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"IK_Toe_{side}.ikBlend")
     
-    cmds.connectAttr("FK_Leg_L.rotate", "DrvJnt_Leg_L.rotate")
-    cmds.connectAttr("FK_Knee_L.rotate", "DrvJnt_Knee_L.rotate")
-    cmds.connectAttr("FK_Ankle_L.rotate", "DrvJnt_Ankle_L.rotate")
-    cmds.connectAttr("FK_Ball_L.rotate", "Bind_Ball_L.rotate")
-    cmds.connectAttr("FK_Toe_L.rotate", "Bind_Toe_L.rotate")
+    cmds.connectAttr(f"FK_Leg_{side}.rotate", f"DrvJnt_Leg_{side}.rotate")
+    cmds.connectAttr(f"FK_Knee_{side}.rotate", f"DrvJnt_Knee_{side}.rotate")
+    cmds.connectAttr(f"FK_Ankle_{side}.rotate", f"DrvJnt_Ankle_{side}.rotate")
+    cmds.connectAttr(f"FK_Ball_{side}.rotate", f"Bind_Ball_{side}.rotate")
+    cmds.connectAttr(f"FK_Toe_{side}.rotate", f"Bind_Toe_{side}.rotate")
     
-    cmds.createNode("reverse", n="Reverse_Leg_L")
-    cmds.connectAttr("Switch_Leg_L.IK_FK", "Reverse_Leg_L.inputX")
+    cmds.createNode("reverse", n="Reverse_Leg_{}".format(side))
+    cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"Reverse_Leg_{side}.inputX")
     
-    cmds.connectAttr("Reverse_Leg_L.outputX", "FK_Leg_L.visibility")
-    cmds.connectAttr("Switch_Leg_L.IK_FK", "IK_Leg_L.visibility")
-    cmds.connectAttr("Switch_Leg_L.IK_FK", "IK_Ball_L.visibility")
-    cmds.connectAttr("Switch_Leg_L.IK_FK", "IK_Toe_L.visibility")
-    cmds.connectAttr("Switch_Leg_L.IK_FK", "Bind_Foot_L.visibility")
-    cmds.connectAttr("Switch_Leg_L.IK_FK", "DrvJnt_Leg_L.visibility")
+    cmds.connectAttr(f"Reverse_Leg_{side}.outputX", f"FK_Leg_{side}.visibility")
+    cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"IK_Leg_{side}.visibility")
+    cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"IK_Ball_{side}.visibility")
+    cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"IK_Toe_{side}.visibility")
+    cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"Bind_Foot_{side}.visibility")
+    cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"DrvJnt_Leg_{side}.visibility")
     
     #Stretch Leg 
     
     #creatng locators for the stretch
-    cmds.spaceLocator(n="Locator_Hip_L")
-    cmds.setAttr("Locator_Hip_L.visibility", 0)
-    cmds.spaceLocator(n="Locator_Ankle_L")
-    cmds.setAttr("Locator_Ankle_L.visibility", 0)
-    cmds.parent("Locator_Hip_L", "Bind_Hip_L")
-    cmds.parent("Locator_Ankle_L", "Bind_Hip_L")
-    cmds.matchTransform("Locator_Hip_L", "Bind_Hip_L", pos=True)
-    cmds.matchTransform("Locator_Ankle_L", "Bind_Foot_L", pos=True)
-    cmds.matchTransform("Locator_Ankle_L", "Bind_Foot_L", pos=True)
-    cmds.matchTransform("Locator_Ankle_L", "Bind_Foot_L", pos=True)
-    CTRL_Foot_L = ["CTRL_Foot_L"]
-    MatrixConstrain.MatrixConstrain(CTRL_Foot_L, "Locator_Ankle_L", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    cmds.spaceLocator(n=f"Locator_Hip_{side}")
+    cmds.setAttr(f"Locator_Hip_{side}.visibility", 0)
+    cmds.spaceLocator(n=f"Locator_Ankle_{side}")
+    cmds.setAttr(f"Locator_Ankle_{side}.visibility", 0)
+    cmds.parent(f"Locator_Hip_{side}", f"Bind_Hip_{side}")
+    cmds.parent(f"Locator_Ankle_{side}", f"Bind_Hip_{side}")
+    cmds.matchTransform(f"Locator_Hip_{side}", f"Bind_Hip_{side}", pos=True)
+    cmds.matchTransform(f"Locator_Ankle_{side}", f"Bind_Foot_{side}", pos=True)
+    cmds.matchTransform(f"Locator_Ankle_{side}", f"Bind_Foot_{side}", pos=True)
+    cmds.matchTransform(f"Locator_Ankle_{side}", f"Bind_Foot_{side}", pos=True)
+    CTRL_Foot_L = [f"CTRL_Foot_{side}"]
+    MatrixConstrain.MatrixConstrain(CTRL_Foot_L, f"Locator_Ankle_{side}", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     
     #Creating the nodes for the stretch
-    cmds.createNode("distanceBetween", n="Distance_Leg_L")
-    cmds.createNode("multiplyDivide", n="MD_Distance_Leg_L_Divide")
-    cmds.setAttr("MD_Distance_Leg_L_Divide.operation", 2)
-    cmds.createNode("multiplyDivide", n="MD_Distance_Leg_L_Power")
-    cmds.setAttr("MD_Distance_Leg_L_Power.operation", 3)
-    cmds.setAttr("MD_Distance_Leg_L_Power.input2X", -0.5)
-    cmds.createNode("multiplyDivide", n="MD_Distance_Leg_L_GlobalRelativeScale")
-    cmds.createNode("condition", n="Cond_Distance_Leg_L")
-    cmds.createNode("condition", n="Cond_Boolean_Leg_L")
-    cmds.createNode("condition", n="Cond_FK_Leg_L")
+    cmds.createNode("distanceBetween", n=f"Distance_Leg_{side}")
+    cmds.createNode("multiplyDivide", n=f"MD_Distance_Leg_{side}_Divide")
+    cmds.setAttr(f"MD_Distance_Leg_{side}_Divide.operation", 2)
+    cmds.createNode("multiplyDivide", n=f"MD_Distance_Leg_{side}_Power")
+    cmds.setAttr(f"MD_Distance_Leg_{side}_Power.operation", 3)
+    cmds.setAttr(f"MD_Distance_Leg_{side}_Power.input2X", -0.5)
+    cmds.createNode("multiplyDivide", n=f"MD_Distance_Leg_{side}_GlobalRelativeScale")
+    cmds.createNode("condition", n=f"Cond_Distance_Leg_{side}")
+    cmds.createNode("condition", n=f"Cond_Boolean_Leg_{side}")
+    cmds.createNode("condition", n=f"Cond_FK_Leg_{side}")
     
     #Connecting the nodes
-    cmds.connectAttr("Locator_Hip_L.translate", "Distance_Leg_L.point1")
-    cmds.connectAttr("Locator_Ankle_L.translate", "Distance_Leg_L.point2")
+    cmds.connectAttr(f"Locator_Hip_{side}.translate", f"Distance_Leg_{side}.point1")
+    cmds.connectAttr(f"Locator_Ankle_{side}.translate", f"Distance_Leg_{side}.point2")
     
-    cmds.connectAttr("Distance_Leg_L.distance", "MD_Distance_Leg_L_GlobalRelativeScale.input1X")
-    cmds.connectAttr("GlobalMove_01.scaleY", "MD_Distance_Leg_L_GlobalRelativeScale.input2X")
-    cmds.connectAttr("MD_Distance_Leg_L_GlobalRelativeScale.outputX", "MD_Distance_Leg_L_Divide.input1X")
+    cmds.connectAttr(f"Distance_Leg_{side}.distance", f"MD_Distance_Leg_{side}_GlobalRelativeScale.input1X")
+    cmds.connectAttr("GlobalMove_01.scaleY", f"MD_Distance_Leg_{side}_GlobalRelativeScale.input2X")
+    cmds.connectAttr(f"MD_Distance_Leg_{side}_GlobalRelativeScale.outputX", f"MD_Distance_Leg_{side}_Divide.input1X")
     
-    cmds.connectAttr("GlobalMove_01.scaleY", "MD_Distance_Leg_L_GlobalRelativeScale.input2Y")
-    Dist_Leg_Tendu = cmds.getAttr("DrvJnt_Knee_L.translateX") +cmds.getAttr("DrvJnt_Ankle_L.translateX")
-    cmds.setAttr("MD_Distance_Leg_L_GlobalRelativeScale.input1Y", Dist_Leg_Tendu)
-    cmds.connectAttr("MD_Distance_Leg_L_GlobalRelativeScale.outputY", "MD_Distance_Leg_L_Divide.input2X")
+    cmds.connectAttr("GlobalMove_01.scaleY", f"MD_Distance_Leg_{side}_GlobalRelativeScale.input2Y")
+    Dist_Leg_Tendu = cmds.getAttr(f"DrvJnt_Knee_{side}.translateX") +cmds.getAttr(f"DrvJnt_Ankle_{side}.translateX")
+    cmds.setAttr(f"MD_Distance_Leg_{side}_GlobalRelativeScale.input1Y", Dist_Leg_Tendu)
+    cmds.connectAttr(f"MD_Distance_Leg_{side}_GlobalRelativeScale.outputY", f"MD_Distance_Leg_{side}_Divide.input2X")
     
-    cmds.connectAttr("MD_Distance_Leg_L_Divide.outputX", "MD_Distance_Leg_L_Power.input1X")
+    cmds.connectAttr(f"MD_Distance_Leg_{side}_Divide.outputX", f"MD_Distance_Leg_{side}_Power.input1X")
     
-    cmds.connectAttr("MD_Distance_Leg_L_Divide.outputX", "Cond_Distance_Leg_L.firstTerm")
-    cmds.setAttr("Cond_Distance_Leg_L.secondTerm", 1)
-    cmds.setAttr("Cond_Distance_Leg_L.operation", 2)
-    cmds.connectAttr("MD_Distance_Leg_L_Divide.outputX", "Cond_Distance_Leg_L.colorIfTrueR")
-    cmds.connectAttr("MD_Distance_Leg_L_Power.outputX", "Cond_Distance_Leg_L.colorIfTrueG")
-    cmds.connectAttr("MD_Distance_Leg_L_Power.outputX", "Cond_Distance_Leg_L.colorIfTrueB")
-    cmds.connectAttr("Cond_Distance_Leg_L.outColor", "Cond_Boolean_Leg_L.colorIfTrue")
-    cmds.connectAttr("CTRL_Foot_L.Stretch_Leg", "Cond_Boolean_Leg_L.firstTerm")
-    cmds.setAttr("Cond_Boolean_Leg_L.secondTerm", 1)
+    cmds.connectAttr(f"MD_Distance_Leg_{side}_Divide.outputX", f"Cond_Distance_Leg_{side}.firstTerm")
+    cmds.setAttr(f"Cond_Distance_Leg_{side}.secondTerm", 1)
+    cmds.setAttr(f"Cond_Distance_Leg_{side}.operation", 2)
+    cmds.connectAttr(f"MD_Distance_Leg_{side}_Divide.outputX", f"Cond_Distance_Leg_{side}.colorIfTrueR")
+    cmds.connectAttr(f"MD_Distance_Leg_{side}_Power.outputX", f"Cond_Distance_Leg_{side}.colorIfTrueG")
+    cmds.connectAttr(f"MD_Distance_Leg_{side}_Power.outputX", f"Cond_Distance_Leg_{side}.colorIfTrueB")
+    cmds.connectAttr(f"Cond_Distance_Leg_{side}.outColor", f"Cond_Boolean_Leg_{side}.colorIfTrue")
+    cmds.connectAttr(f"CTRL_Foot_{side}.Stretch_Leg", f"Cond_Boolean_Leg_{side}.firstTerm")
+    cmds.setAttr(f"Cond_Boolean_Leg_{side}.secondTerm", 1)
     
-    cmds.connectAttr("Cond_Boolean_Leg_L.outColor", "Cond_FK_Leg_L.colorIfTrue")
-    cmds.connectAttr("Switch_Leg_L.IK_FK", "Cond_FK_Leg_L.firstTerm")
-    cmds.setAttr("Cond_FK_Leg_L.secondTerm", 1)
+    cmds.connectAttr(f"Cond_Boolean_Leg_{side}.outColor", f"Cond_FK_Leg_{side}.colorIfTrue")
+    cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"Cond_FK_Leg_{side}.firstTerm")
+    cmds.setAttr(f"Cond_FK_Leg_{side}.secondTerm", 1)
     
-    cmds.connectAttr("Cond_FK_Leg_L.outColor", "DrvJnt_Knee_L.s")
-    cmds.connectAttr("Cond_FK_Leg_L.outColor", "DrvJnt_Leg_L.s")
+    cmds.connectAttr(f"Cond_FK_Leg_{side}.outColor", f"DrvJnt_Knee_{side}.s")
+    cmds.connectAttr(f"Cond_FK_Leg_{side}.outColor", f"DrvJnt_Leg_{side}.s")
     
     
     

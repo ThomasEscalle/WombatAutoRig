@@ -37,6 +37,10 @@ def createFoot(settings, side = "L"):
     if not cmds.objExists("Joints_Feets"):
         # Create the group "Joints_Feets"
         cmds.group(em=True, name="Joints_Feets")
+        # Move the Joints_Feets to the group Joints_01
+        cmds.parent("Joints_Feets", "Joints_01")
+
+        
     cmds.parent(f"Bind_Foot_{side}_Offset", "Joints_Feets") 
 
 
@@ -267,8 +271,7 @@ def createFoot(settings, side = "L"):
 
     # Move the CTRL_Foot_L to the group CTRLs_01
     cmds.parent(f"CTRL_Foot_{side}", "CTRLs_01")
-    # Move the Joints_Feets to the group Joints_01
-    cmds.parent("Joints_Feets", "Joints_01")
+
 
 
 

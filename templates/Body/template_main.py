@@ -164,4 +164,5 @@ class Template(TemplateBase.TemplateBase):
 
         # Remove the autorig folder
         AutorigHelper.removeDefaultAutorigFolder("autorig")
+        AutorigHelper.disableLocalRotationAxis()
         return True
