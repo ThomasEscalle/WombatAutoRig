@@ -70,6 +70,11 @@ def compute(settings):
     cmds.parent("FK_Leg_L_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_L".format(settings["name"]))
     cmds.parent("Preserve_Knee_L_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_L".format(settings["name"]))
     
+    #Creating a controller for the preserve Knee to be in
+    cmds.duplicate("PlacementCtrl_knee_L", n="CTRL_Preserve_Knee_L")
+    cmds.parent("CTRL_Preserve_Knee_L", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_L|Preserve_Knee_L_Offset|Preserve_Knee_L_Hook|Preserve_Knee_L_Move".format(settings["name"]))
+    cmds.parent("Preserve_Knee_L", "CTRL_Preserve_Knee_L")
+    
     #Creating the IK handle
     cmds.ikHandle(n="IK_Leg_L", sj="DrvJnt_Leg_L", ee="DrvJnt_Ankle_L", sol="ikRPsolver")
     cmds.parent("IK_Leg_L", "{}|GlobalMove_01|IKs_01".format(settings["name"]))
@@ -133,6 +138,13 @@ def compute(settings):
     cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Knee_L|CTRL_Global_Ribbon_Knee_L|IS_CONSTRAIN_BY___DrvJnt_Knee_L__".format(settings["name"]))
     cmds.rotate(90, 0, 0, "CTRL_Global_Ribbon_Knee_L", r=True, os=True)
     MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L_Ribbon, "CTRL_Global_Ribbon_Knee_L", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    
+    DrvJnt_Ankle_L = ["DrvJnt_Ankle_L"]
+    Preserve_Knee_L = ["Preserve_Knee_L"]
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "CTRL_End_Ribbon_Leg_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Ankle_L, "CTRL_Start_Ribbon_Knee_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(Preserve_Knee_L, "CTRL_End_Ribbon_Knee_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(Preserve_Knee_L, "CTRL_Start_Ribbon_Leg_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
 
     #endregion Leg L 
     
