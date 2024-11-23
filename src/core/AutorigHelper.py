@@ -60,6 +60,16 @@ def removeDefaultAutorigFolder(name):
         cmds.delete("AutoRig_Data")
 
 
+
+# Take all the joints in the scene and disable the local rotation axis
+def disableLocalRotationAxis():
+    joints = cmds.ls(type="joint")
+    for jnt in cmds.ls(type="joint"):
+        # Check if the LRA is visible
+        if cmds.getAttr(jnt + ".displayLocalAxis"):
+            cmds.setAttr(jnt + ".displayLocalAxis", 0)
+
+
 # Make the given list of elements template
 def makeTemplate(elements, state = 1):
     for element in elements:
