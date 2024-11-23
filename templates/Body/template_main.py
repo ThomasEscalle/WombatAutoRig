@@ -88,8 +88,9 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the joint placement is entered
     def onJointPlacementEntered(self, settings):
         print("onJointPlacementEntered")
-        AutorigHelper.makeTemplate(settings["geo"], 1)
         
+        AutorigHelper.makeTemplate(settings["geo"], 1)
+
         AutorigHelper.hideJointsPlacement(0)
 
         placement_joints.placeJoints(settings)
