@@ -138,6 +138,9 @@ importlib.reload(MatrixConstrain)
 from wombatAutoRig.src.core import AutorigHelper
 importlib.reload(AutorigHelper)
 
+from wombatAutoRig.templates.Body import placement_joints
+importlib.reload(placement_joints)
+
 
 wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
