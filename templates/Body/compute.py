@@ -8,7 +8,7 @@ from wombatAutoRig.src.core import MatrixConstrain
 
 
 def compute(settings):
-    computeThomas.compute(settings)
+
 
     #region Leg L
 
@@ -84,16 +84,29 @@ def compute(settings):
     MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, "Preserve_Knee_L_Hook", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     
     #Creating a switch for the IK FK
-    cmds.circle(n="Switch_Leg_L", nr=(0, 0, 1))
+    cmds.duplicate("PlacementCtrl_Switch_Leg_L", n="Switch_Leg_L")
+    cmds.parent("Switch_Leg_L", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     cmds.addAttr("Switch_Leg_L", ln="IK_FK", at="enum", en="IK:FK", k=True)
-    cmds.setAttr("Switch_Leg_L.t", "Bind_Hip_L.t"+(8,0,0))
+    cmds.setAttr("Switch_Leg_L.tx", keyable=False, channelBox=False)
+    cmds.setAttr("Switch_Leg_L.ty", keyable=False, channelBox=False)
+    cmds.setAttr("Switch_Leg_L.tz", keyable=False, channelBox=False)
+    cmds.setAttr("Switch_Leg_L.rx", keyable=False, channelBox=False)
+    cmds.setAttr("Switch_Leg_L.ry", keyable=False, channelBox=False)
+    cmds.setAttr("Switch_Leg_L.rz", keyable=False, channelBox=False)
+    cmds.setAttr("Switch_Leg_L.sx", keyable=False, channelBox=False)
+    cmds.setAttr("Switch_Leg_L.sy", keyable=False, channelBox=False)
+    cmds.setAttr("Switch_Leg_L.sz", keyable=False, channelBox=False)
     Color.setColor("Switch_Leg_L", "yellow")
     Offset.offset("Switch_Leg_L", nbr=2)
     MatrixConstrain.MatrixConstrain(Bind_Hip_L, "Switch_Leg_L_Move", Offset=True, sX=False, sY=False, sZ=False)
     
+    #Attach Ribbon to DrvJnt
+    
+    
     
     #endregion Leg L 
     
+    computeThomas.compute(settings)
     
     
     
