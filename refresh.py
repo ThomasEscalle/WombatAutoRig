@@ -141,6 +141,9 @@ importlib.reload(AutorigHelper)
 from wombatAutoRig.templates.Body import placement_joints
 importlib.reload(placement_joints)
 
+from wombatAutoRig.templates.Body import placement_controllers
+importlib.reload(placement_controllers)
+
 from wombatAutoRig.templates.Body import compute
 importlib.reload(compute)
 
