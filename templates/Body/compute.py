@@ -188,14 +188,17 @@ def compute(settings):
     
     #creatng locators for the stretch
     cmds.spaceLocator(n="Locator_Hip_L")
+    cmds.setAttr("Locator_Hip_L.visibility", 0)
     cmds.spaceLocator(n="Locator_Ankle_L")
+    cmds.setAttr("Locator_Ankle_L.visibility", 0)
     cmds.parent("Locator_Hip_L", "Bind_Hip_L")
     cmds.parent("Locator_Ankle_L", "Bind_Hip_L")
     cmds.matchTransform("Locator_Hip_L", "Bind_Hip_L", pos=True)
     cmds.matchTransform("Locator_Ankle_L", "Bind_Foot_L", pos=True)
     cmds.matchTransform("Locator_Ankle_L", "Bind_Foot_L", pos=True)
     cmds.matchTransform("Locator_Ankle_L", "Bind_Foot_L", pos=True)
-    MatrixConstrain.MatrixConstrain("CTRL_Foot_L", "Locator_Ankle_L", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    CTRL_Foot_L = ["CTRL_Foot_L"]
+    MatrixConstrain.MatrixConstrain(CTRL_Foot_L, "Locator_Ankle_L", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     
     #Creating the nodes for the stretch
     cmds.createNode("distanceBetween", n="Distance_Leg_L")
@@ -207,18 +210,19 @@ def compute(settings):
     cmds.createNode("multiplyDivide", n="MD_Distance_Leg_L_GlobalRelativeScale")
     cmds.createNode("condition", n="Cond_Distance_Leg_L")
     cmds.createNode("condition", n="Cond_Boolean_Leg_L")
+    cmds.createNode("condition", n="Cond_FK_Leg_L")
     
     #Connecting the nodes
     cmds.connectAttr("Locator_Hip_L.translate", "Distance_Leg_L.point1")
     cmds.connectAttr("Locator_Ankle_L.translate", "Distance_Leg_L.point2")
     
     cmds.connectAttr("Distance_Leg_L.distance", "MD_Distance_Leg_L_GlobalRelativeScale.input1X")
-    cmds.connectAttr("Global_Move_01.scaleY", "MD_Distance_Leg_L_GlobalRelativeScale.input2X")
+    cmds.connectAttr("GlobalMove_01.scaleY", "MD_Distance_Leg_L_GlobalRelativeScale.input2X")
     cmds.connectAttr("MD_Distance_Leg_L_GlobalRelativeScale.outputX", "MD_Distance_Leg_L_Divide.input1X")
     
-    cmds.connectAttr("Global_Move_01.scaleY", "MD_Distance_Leg_L_GlobalRelativeScale.input2Y")
+    cmds.connectAttr("GlobalMove_01.scaleY", "MD_Distance_Leg_L_GlobalRelativeScale.input2Y")
     Dist_Leg_Tendu = cmds.getAttr("DrvJnt_Knee_L.translateX") +cmds.getAttr("DrvJnt_Ankle_L.translateX")
-    cmds.setAttr("MD_Distance_Leg_L_GlobalRelativeScale.input2Y", Dist_Leg_Tendu)
+    cmds.setAttr("MD_Distance_Leg_L_GlobalRelativeScale.input1Y", Dist_Leg_Tendu)
     cmds.connectAttr("MD_Distance_Leg_L_GlobalRelativeScale.outputY", "MD_Distance_Leg_L_Divide.input2X")
     
     cmds.connectAttr("MD_Distance_Leg_L_Divide.outputX", "MD_Distance_Leg_L_Power.input1X")
@@ -231,5 +235,15 @@ def compute(settings):
     cmds.connectAttr("MD_Distance_Leg_L_Power.outputX", "Cond_Distance_Leg_L.colorIfTrueB")
     cmds.connectAttr("Cond_Distance_Leg_L.outColor", "Cond_Boolean_Leg_L.colorIfTrue")
     cmds.connectAttr("CTRL_Foot_L.Stretch_Leg", "Cond_Boolean_Leg_L.firstTerm")
+    cmds.setAttr("Cond_Boolean_Leg_L.secondTerm", 1)
+    
+    cmds.connectAttr("Cond_Boolean_Leg_L.outColor", "Cond_FK_Leg_L.colorIfTrue")
+    cmds.connectAttr("Switch_Leg_L.IK_FK", "Cond_FK_Leg_L.firstTerm")
+    cmds.setAttr("Cond_FK_Leg_L.secondTerm", 1)
+    
+    cmds.connectAttr("Cond_FK_Leg_L.outColor", "DrvJnt_Knee_L.s")
+    cmds.connectAttr("Cond_FK_Leg_L.outColor", "DrvJnt_Leg_L.s")
+    
+    
     
     
