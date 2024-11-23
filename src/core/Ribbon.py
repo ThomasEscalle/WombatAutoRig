@@ -166,16 +166,20 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5):
     cmds.wire(Ribbon_BlShp, w=Curve_Ribbon_BlShp, dds=[0,50], name="WireDeformer_{}_BlShp".format(Name))
 
     #Creation des CTRLs
-    CTRL_End = cmds.curve(p=[(-3,0,1),(-5,0,1),(-5,0,-1),(-3,0,-1),(-3,0,1)], d=1, name="CTRL_End_"+Name)
-    cmds.matchTransform(CTRL_End, "DrvJnt_Ribbon_BlShp_{}_End".format(Name), piv=True)
+    CTRL_End = cmds.curve(p=[(1,0,1),(-1,0,1),(-1,0,-1),(1,0,-1),(1,0,1)], d=1, name="CTRL_End_"+Name)
+    cmds.setAttr(CTRL_End + ".translateX", -4)
+    Offset_End = Offset.offset(CTRL_End, nbr=1)
     Color.setColor(obj=CTRL_End, color="yellow")
-    CTRL_Start = cmds.curve(p=[(3,0,1),(5,0,1),(5,0,-1),(3,0,-1),(3,0,1)], d=1, name="CTRL_Start_"+Name)
-    cmds.matchTransform(CTRL_Start, "DrvJnt_Ribbon_BlShp_{}_Start".format(Name), piv=True)
+    CTRL_Start = cmds.curve(p=[(1,0,1),(-1,0,1),(-1,0,-1),(1,0,-1),(1,0,1)], d=1, name="CTRL_Start_"+Name)
+    cmds.setAttr(CTRL_Start + ".translateX", 4)
+    Offset_Start = Offset.offset(CTRL_Start, nbr=1)
     Color.setColor(obj=CTRL_Start, color="yellow")
     CTRL_Mid = cmds.curve(p=[(1,0,1),(-1,0,1),(-1,0,-1),(1,0,-1),(1,0,1)], d=1, name="CTRL_Mid_"+Name)
     Color.setColor(obj=CTRL_Mid, color="yellow")
 
-    cmds.parent(CTRL_Mid, CTRL_End, CTRL_Start, group_CTRLs)
+    #parenter les Offset des CTRLs dans le group des CTRLs
+        
+    cmds.parent(CTRL_Mid, "CTRL_Start_{}_Offset".format(Name), "CTRL_End_{}_Offset".format(Name), group_CTRLs)
     Offset.offset(CTRL_Mid, nbr=1)
 
     #Link CTRLs to DrvJnt
