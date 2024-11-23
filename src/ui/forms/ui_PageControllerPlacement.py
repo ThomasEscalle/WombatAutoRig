@@ -49,6 +49,11 @@ class Ui_PageControllerPlacement(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
+        self.btnControllers = QPushButton(PageControllerPlacement)
+        self.btnControllers.setObjectName(u"btnControllers")
+
+        self.verticalLayout.addWidget(self.btnControllers)
+
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
@@ -65,5 +70,6 @@ class Ui_PageControllerPlacement(object):
         self.label_2.setText("")
         self.btnFkMode.setText(QCoreApplication.translate("PageControllerPlacement", u"Fk Mode", None))
         self.btnIkMode.setText(QCoreApplication.translate("PageControllerPlacement", u"Ik Mode", None))
+        self.btnControllers.setText(QCoreApplication.translate("PageControllerPlacement", u"Replace controllers", None))
     # retranslateUi
 

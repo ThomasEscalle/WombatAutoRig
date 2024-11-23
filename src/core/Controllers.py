@@ -97,8 +97,13 @@ def replaceController(controllerName):
 
     maximum = max(width, height, depth)
 
+    parent = cmds.listRelatives(selection, parent=True)
+
+    # Delete the old controller
+    cmds.delete(selection)
+
     # Create the new controller
-    newController = createController(controllerName, name=selection + "_new")
+    newController = createController(controllerName, name=selection)
 
     if newController is None:
         print("Error creating controller")
@@ -117,7 +122,12 @@ def replaceController(controllerName):
     # Rotate the new controller to match the rotation of the old one
     cmds.rotate(rotation[0], rotation[1], rotation[2], newController)
 
-    # Delete the old controller
-    cmds.delete(selection)
+    # Parent the new controller to the old parent
+    if parent is not None:
+        cmds.parent(newController, parent)
+
+    # Select the new controller
+    cmds.select(newController)
+
 
     pass

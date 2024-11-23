@@ -7,6 +7,8 @@ from maya import cmds
 
 from wombatAutoRig.src.ui.forms import ui_PageControllerPlacement
 
+from wombatAutoRig.src.ui import DlgControllers
+
 from wombatAutoRig.src.ui.PageBase import PageBase
 from wombatAutoRig.src.ui import IconLoader
 
@@ -22,6 +24,7 @@ class PageControllerPlacement(PageBase):
         # Connect signals
         self.ui.btnFkMode.clicked.connect(self.onFkModeClicked)
         self.ui.btnIkMode.clicked.connect(self.onIkModeClicked)
+        self.ui.btnControllers.clicked.connect(self.onControllersClicked)
 
         # Set icons
         self.ui.btnFkMode.setIcon(IconLoader.loadIcon("skull"))
@@ -58,5 +61,10 @@ class PageControllerPlacement(PageBase):
 
         cmds.showHidden("AutoRig_Data|ControllersPlacement|FK_Controllers")
         cmds.hide("AutoRig_Data|ControllersPlacement|IK_Controllers")
+
+    def onControllersClicked(self):
+        dlg = DlgControllers.DlgControllers()
+        dlg.setReplaceMode()
+        dlg.run()
 
 

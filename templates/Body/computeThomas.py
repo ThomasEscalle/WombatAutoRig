@@ -94,9 +94,9 @@ def createFoot(settings, side = "L"):
     cmds.select(f"CTRL_Foot_{side}")
     cmds.addAttr( ln="__________",sn = "__________", at="enum", en="__________", keyable=True)
 
-    # Add the attribute "Stretch_{side}eg_{side}eft"
+    # Add the attribute "Stretch_Leg"
     cmds.select(f"CTRL_Foot_{side}")
-    cmds.addAttr( ln=f"Stretch_Leg_{side}", at="bool", dv=False, k=True)
+    cmds.addAttr( ln=f"Stretch_Leg", at="bool", dv=False, k=True)
 
 
     # endregion Attributes
