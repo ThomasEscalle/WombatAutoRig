@@ -1,6 +1,7 @@
 from maya import cmds
 from wombatAutoRig.src.core import Color
 from wombatAutoRig.src.core import Offset
+from wombatAutoRig.src.core import MatrixConstrain
 
 
 # Compute the creation of the foot (left)
@@ -102,6 +103,7 @@ def compute(settings):
     IK_Toe_L = cmds.ikHandle( n="IK_Toe_L", sj="Bind_Ball_l", ee="Bind_Toe_L", sol="ikSCsolver")
 
 
+    # region Hierarchie
 
     # Add five locators (Loc_Bank_Int_L, Loc_Bank_Ext_L, Loc_Ball_L, Loc_Heel_L, Loc_Toe_L)
     cmds.spaceLocator(n="Loc_Bank_Int_L")
@@ -159,6 +161,36 @@ def compute(settings):
     cmds.parent("IK_Toe_L", "Pivot_Toe_L")
     # Parent the Ik_Ball_L inside of the Loc_Heel_L
     cmds.parent("IK_Ball_L", "Loc_Heel_L")
+
+    # Hide the CTRL_Foot_L|Loc_Bank_Int_L
+    cmds.setAttr("CTRL_Foot_L|Loc_Bank_Int_L.visibility", 0)
+    
+
+
+
+    # Connect the Pivot_Ball_L to the IK_Leg_L
+    pvBall = ["Pivot_Ball_L"]
+    MatrixConstrain.MatrixConstrain(pvBall, "IK_Leg_L", sX = True , sY = True, sZ = True)
+    # Connect the DrvJnt_Ankle_L to the Bind_Foot_L
+    drvAnkle = ["DrvJnt_Ankle_L"]
+    MatrixConstrain.MatrixConstrain(drvAnkle, "Bind_Foot_L", sX = True , sY = True, sZ = True)
+
+
+
+
+
+
+    # region Connections
+    # TODO : Bank
+
+    # Twist_Leg
+    # Connect the CTRL_Foot_L.Twist_Leg to the IK_Leg_L.twist
+    cmds.connectAttr("CTRL_Foot_L.Twist_Leg", "IK_Leg_L.twist", f=True)
+
+    # Twist Heel
+    maxTwistHeel = 75
+    remapValueTwistHeel = cmds.createNode("remapValue", n="RmV_Twist_Heel_L")
+    
 
 
 
