@@ -37,7 +37,7 @@ def placeControllers(settings):
     # PlacementCtrl_Switch_Leg_L
     cmds.select(clear=True)
     PlacementCtrl_Switch_Leg_L = cmds.circle(name="PlacementCtrl_Switch_Leg_L", normal=[0, 1, 0], radius=6)
-    cmds.move(24, 78, 0, PlacementCtrl_Switch_Leg_L)
+    cmds.move(   24, 78, 0, PlacementCtrl_Switch_Leg_L)
     cmds.parent(PlacementCtrl_Switch_Leg_L, "AutoRig_Data|ControllersPlacement|Global_Controllers")
     Color.setColor("PlacementCtrl_Switch_Leg_L", "yellow")
 

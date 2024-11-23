@@ -213,7 +213,7 @@ def createFoot(settings, side = "L"):
 
     # Twit Toe
     maxTwistToe = 75
-    remapValueTwistToe = cmds.createNode("remapValue", n="RmV_Twist_Toe_L")
+    remapValueTwistToe = cmds.createNode("remapValue", n=f"RmV_Twist_Toe_{side}")
     cmds.setAttr(remapValueTwistToe+".inputMin", -1)
     cmds.setAttr(remapValueTwistToe+".inputMax", 1)
     cmds.setAttr(remapValueTwistToe+".outputMin", -maxTwistToe)
