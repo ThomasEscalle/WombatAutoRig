@@ -4,6 +4,8 @@ from wombatAutoRig.src.core import Offset
 from maya import cmds
 
 from wombatAutoRig.templates.Body import placement_joints
+from wombatAutoRig.templates.Body import placement_controllers
+from wombatAutoRig.templates.Body import compute
 
 
 # Autorig template : Body
@@ -96,14 +98,6 @@ class Template(TemplateBase.TemplateBase):
         placement_joints.placeJoints(settings)
 
 
-
-
-
-        
-
-
-
-
     # This method is called when the joint placement is finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct
     # If the settings are correct, the method should return True and the next page will be shown
@@ -126,6 +120,9 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the controller placement is entered
     def onControllerPlacementEntered(self, settings):
         AutorigHelper.hideControllersPlacement(0)
+
+        placement_controllers.placeControllers(settings)
+        
         print("onControllerPlacementEntered")
 
     # This method is called when the controller placement is finished (when the user clicks the "Next" button)
@@ -156,6 +153,13 @@ class Template(TemplateBase.TemplateBase):
         print("onValidationAccepted")
         # Create the folder hierarchy
         AutorigHelper.createDefaultFolder(settings["name"])
+
+        ################################################################################################
+        ################### C O M P U T E   ############################################################s
+        ################################################################################################
+
+        # Compute the autorig
+        compute.compute(settings)
 
 
         # Remove the autorig folder
