@@ -12,13 +12,13 @@ def compute(settings):
     # Put the foot at the root of the scene
     cmds.parent("Bind_Foot_L", world=True)
     # Rename the joint "PlacementJnt_Toe_L" to "Bind_Toe_L"
-    cmds.rename("Bind_Foot_L|PlacementJnt_Ball_L", "Bind_Ball_l")
+    cmds.rename("Bind_Foot_L|PlacementJnt_Ball_L", "Bind_Ball_L")
     # Rename the joint "PlacementJnt_ToeEnd_L" to "Bind_ToeEnd_L"
-    cmds.rename("Bind_Foot_L|Bind_Ball_l|PlacementJnt_Toe_L", "Bind_Toe_L")
+    cmds.rename("Bind_Foot_L|Bind_Ball_L|PlacementJnt_Toe_L", "Bind_Toe_L")
 
     # Add the color to the foot
     Color.setColor("Bind_Foot_L", "white")
-    Color.setColor("Bind_Ball_l", "white")
+    Color.setColor("Bind_Ball_L", "white")
     Color.setColor("Bind_Toe_L", "white")
 
     # Freeze the transformation of the foot
@@ -98,9 +98,9 @@ def compute(settings):
 
 
     # Create Ik Single Chain from the foot to the ball
-    IK_Ball_L = cmds.ikHandle( n="IK_Ball_L", sj="Bind_Foot_L", ee="Bind_Ball_l", sol="ikSCsolver")
+    IK_Ball_L = cmds.ikHandle( n="IK_Ball_L", sj="Bind_Foot_L", ee="Bind_Ball_L", sol="ikSCsolver")
     # Create Ik Single Chain from the ball to the toe
-    IK_Toe_L = cmds.ikHandle( n="IK_Toe_L", sj="Bind_Ball_l", ee="Bind_Toe_L", sol="ikSCsolver")
+    IK_Toe_L = cmds.ikHandle( n="IK_Toe_L", sj="Bind_Ball_L", ee="Bind_Toe_L", sol="ikSCsolver")
 
 
     # region Hierarchie
@@ -122,16 +122,16 @@ def compute(settings):
     # Place the Loc_Bank_Ext_L at the position of the PlacementCtrl_Foot_Ext_L
     cmds.matchTransform("Loc_Bank_Ext_L", "PlacementCtrl_Foot_Ext_L", pos=True, rot=False, scl=False)
     # PLace the Loc_Ball_L at the position of the Bind_Ball_L
-    cmds.matchTransform("Loc_Ball_L", "Bind_Ball_l", pos=True, rot=False, scl=False)
+    cmds.matchTransform("Loc_Ball_L", "Bind_Ball_L", pos=True, rot=False, scl=False)
     # Place the Loc_Toe_L at the position of the Bind_Toe_L
     cmds.matchTransform("Loc_Toe_L", "Bind_Toe_L", pos=True, rot=False, scl=False)
     # Place the Loc_Heel_L at the position of the PlacementCtrl_Foot_Back_L
     cmds.matchTransform("Loc_Heel_L", "PlacementCtrl_Foot_Back_L", pos=True, rot=False, scl=False)
 
     # Place the groups at the position of the Bind_Ball_L
-    cmds.matchTransform("Pivot_Ball_L", "Bind_Ball_l", pos=False, rot=False, scl=False, piv=True)
-    cmds.matchTransform("Pivot_Toe_L", "Bind_Ball_l", pos=False, rot=False, scl=False, piv=True)
-    cmds.matchTransform("Pivot_Toe_L_Offset", "Bind_Ball_l", pos=False, rot=False, scl=False, piv=True)
+    cmds.matchTransform("Pivot_Ball_L", "Bind_Ball_L", pos=False, rot=False, scl=False, piv=True)
+    cmds.matchTransform("Pivot_Toe_L", "Bind_Ball_L", pos=False, rot=False, scl=False, piv=True)
+    cmds.matchTransform("Pivot_Toe_L_Offset", "Bind_Ball_L", pos=False, rot=False, scl=False, piv=True)
 
     # Freeze the transformation of the locators
     cmds.makeIdentity("Loc_Bank_Int_L", a=True, t=True, r=True, s=True)
@@ -168,12 +168,6 @@ def compute(settings):
 
 
 
-    # Connect the Pivot_Ball_L to the IK_Leg_L
-    pvBall = ["Pivot_Ball_L"]
-    MatrixConstrain.MatrixConstrain(pvBall, "IK_Leg_L", sX = False , sY = False, sZ = False, Offset = True)
-    # Connect the DrvJnt_Ankle_L to the Bind_Foot_L
-    drvAnkle = ["DrvJnt_Ankle_L"]
-    MatrixConstrain.MatrixConstrain(drvAnkle, "Bind_Foot_L", sX = False , sY = False, sZ = False , Offset = True)
 
 
 
@@ -270,6 +264,17 @@ def compute(settings):
     cmds.parent("CTRL_Foot_L", "CTRLs_01")
     # Move the Joints_Feets to the group Joints_01
     cmds.parent("Joints_Feets", "Joints_01")
+
+
+
+    # Connect the DrvJnt_Ankle_L to the Bind_Foot_L
+    drvAnkle = ["DrvJnt_Ankle_L"]
+    MatrixConstrain.MatrixConstrain(drvAnkle, "Bind_Foot_L_Move", sX = False , sY = False, sZ = False , Offset = True)
+
+    # Connect the Pivot_Ball_L to the IK_Leg_
+    pvBall = ["Pivot_Ball_L"]
+    MatrixConstrain.MatrixConstrain(pvBall, "IK_Leg_L", sX = False , sY = False, sZ = False , Offset = True, rX= False, rY= False, rZ= False)
+    
 
 
     return 42
