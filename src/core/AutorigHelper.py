@@ -68,7 +68,7 @@ def hideControllersPlacement(state = 1):
 
 
 def resizeJnts(bbox, size):
-    referenceSizeY = 87
+    referenceSizeY = 170
     sizeY = bbox[4] - bbox[1]
     
     sizeList = list(size)
