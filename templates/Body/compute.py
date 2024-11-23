@@ -30,6 +30,11 @@ def compute(settings):
     Color.setColor("FK_Knee_L", "blue")
     cmds.duplicate("PlacementJnt_Ankle_L", n="FK_Ankle_L", po=True)
     Color.setColor("FK_Ankle_L", "blue")
+    cmds.duplicate("PlacementJnt_Ball_L", n="FK_Ball_L", po=True)
+    Color.setColor("FK_Ball_L", "blue")
+    cmds.duplicate("PlacementJnt_Toe_L", n="FK_Toe_L", po=True)
+    Color.setColor("FK_Toe_L", "blue")
+    
     
     cmds.duplicate("PlacementJnt_Knee_L", n="Preserve_Knee_L", po=True)
     
@@ -95,7 +100,7 @@ def compute(settings):
     #Creating a switch for the IK FK
     cmds.duplicate("PlacementCtrl_Switch_Leg_L", n="Switch_Leg_L")
     cmds.parent("Switch_Leg_L", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
-    cmds.addAttr("Switch_Leg_L", ln="IK_FK", at="enum", en="IK:FK", k=True)
+    cmds.addAttr("Switch_Leg_L", ln="IK_FK", at="enum", en="FK:IK", k=True)
     cmds.setAttr("Switch_Leg_L.tx", keyable=False, channelBox=False)
     cmds.setAttr("Switch_Leg_L.ty", keyable=False, channelBox=False)
     cmds.setAttr("Switch_Leg_L.tz", keyable=False, channelBox=False)
@@ -145,9 +150,21 @@ def compute(settings):
     MatrixConstrain.MatrixConstrain(DrvJnt_Ankle_L, "CTRL_Start_Ribbon_Knee_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(Preserve_Knee_L, "CTRL_End_Ribbon_Knee_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(Preserve_Knee_L, "CTRL_Start_Ribbon_Leg_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    
 
     #endregion Leg L 
     
     computeThomas.compute(settings)
     
+    
+    #Connecting the FK and IK to the switch (FK rotate into DrvJnt rotate)
+    cmds.connectAttr("Switch_Leg_L.IK_FK", "IK_Leg_L.ikBlend")
+    cmds.connectAttr("Switch_Leg_L.IK_FK", "IK_Ball_L.ikBlend")
+    cmds.connectAttr("Switch_Leg_L.IK_FK", "IK_Toe_L.ikBlend")
+    
+    cmds.connectAttr("FK_Leg_L.rotate", "DrvJnt_Leg_L.rotate")
+    cmds.connectAttr("FK_Knee_L.rotate", "DrvJnt_Knee_L.rotate")
+    cmds.connectAttr("FK_Ankle_L.rotate", "DrvJnt_Ankle_L.rotate")
+    cmds.connectAttr("FK_Ball_L.rotate", "Bind_Ball_L.rotate")
+    cmds.connectAttr("FK_Toe_L.rotate", "Bind_Toe_L.rotate")
     
