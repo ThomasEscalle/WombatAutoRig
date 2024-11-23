@@ -4,6 +4,7 @@ from wombatAutoRig.src.core import Color
 from wombatAutoRig.src.core import Offset
 from wombatAutoRig.src.core import PoleVector
 from wombatAutoRig.src.core import MatrixConstrain
+from wombatAutoRig.src.core import Ribbon
 
 
 
@@ -101,9 +102,24 @@ def compute(settings):
     MatrixConstrain.MatrixConstrain(Bind_Hip_L, "Switch_Leg_L_Move", Offset=True, sX=False, sY=False, sZ=False)
     
     #Attach Ribbon to DrvJnt
+    Ribbon.Ribbon(Name="Ribbon_Leg_L", Span=5)
+    Ribbon.Ribbon(Name="Ribbon_Knee_L", Span=5)
     
+    cmds.group(n="Ribbons_Legs_Hide", em=True)
+    cmds.parent("Ribbons_Legs_Hide", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
+    cmds.parent("Grp_Ribbon_Leg_L|Grp_Extra_Nodes_Ribbon_Leg_L|Grp_Extra_Nodes_To_Hide_Ribbon_Leg_L", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01|Ribbons_Legs_Hide".format(settings["name"]))
     
+    cmds.group(n="Ribbons_Legs", em=True)
+    cmds.parent("Ribbons_Legs", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01".format(settings["name"]))
+    cmds.parent("Grp_Ribbon_Leg_L", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs".format(settings["name"]))
     
+    DrvJnt_Leg_L = ["DrvJnt_Leg_L"]
+    MatrixConstrain.MatrixConstrain(("DrvJnt_Leg_L", "DrvJnt_Knee_L"), "CTRL_Global_Ribbon_Leg_L", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "CTRL_Global_Ribbon_Leg_L", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    cmds.delete("IS_CONSTRAIN_BY___DrvJnt_Leg_L__")
+    cmds.rotate(90, 0, 0, "CTRL_Global_Ribbon_Leg_L", r=True)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "CTRL_Global_Ribbon_Leg_L", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+
     #endregion Leg L 
     
     computeThomas.compute(settings)
