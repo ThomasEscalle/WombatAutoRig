@@ -18,13 +18,23 @@ def createJoint(name, position, orientation, settings):
 
 
 def placeJointsLegs(settings):
-    #Creating Joints for the legs
+    # Creating the root joint
     createJoint("PlacementJnt_Root", (0, 97.699, 0), (180,0,90), settings)
+
+    # Creating Joints for the legs left
     createJoint("PlacementJnt_Hip_L", (7.636, 88.219, 0), (0,-1.767,-90), settings)
     createJoint("PlacementJnt_Knee_L", (7.636, 47.195, 1.265), (0,2.092,-90), settings)
     createJoint("PlacementJnt_Ankle_L", (7.636, 6.223, -0.231), (0,-80,-90), settings)
     createJoint("PlacementJnt_Ball_L", (7.636, 4.696, 8.428), (-90,-90,0), settings)
     createJoint("PlacementJnt_Toe_L", (7.636, 4.696, 16.486), (-90,-90,0), settings)
+
+    # Creating Joints for the legs right
+    createJoint("PlacementJnt_Hip_R", (-7.636, 88.219, 0), (0,-1.767,-90), settings)
+    createJoint("PlacementJnt_Knee_R", (-7.636, 47.195, 1.265), (0,2.092,-90), settings)
+    createJoint("PlacementJnt_Ankle_R", (-7.636, 6.223, -0.231), (0,-80,-90), settings)
+    createJoint("PlacementJnt_Ball_R", (-7.636, 4.696, 8.428), (-90,-90,0), settings)
+    createJoint("PlacementJnt_Toe_R", (-7.636, 4.696, 16.486), (-90,-90,0), settings)
+
     
     #Parenting Joints for the legs
     cmds.parent("PlacementJnt_Hip_L", "PlacementJnt_Root")
@@ -32,6 +42,13 @@ def placeJointsLegs(settings):
     cmds.parent("PlacementJnt_Ankle_L", "PlacementJnt_Knee_L")
     cmds.parent("PlacementJnt_Ball_L", "PlacementJnt_Ankle_L")
     cmds.parent("PlacementJnt_Toe_L", "PlacementJnt_Ball_L")
+
+    cmds.parent("PlacementJnt_Hip_R", "PlacementJnt_Root")
+    cmds.parent("PlacementJnt_Knee_R", "PlacementJnt_Hip_R")
+    cmds.parent("PlacementJnt_Ankle_R", "PlacementJnt_Knee_R")
+    cmds.parent("PlacementJnt_Ball_R", "PlacementJnt_Ankle_R")
+    cmds.parent("PlacementJnt_Toe_R", "PlacementJnt_Ball_R")
+
     
     # Create the placement controllers for the foot (front, left, right, back)
     sphereRadius = 0.3
@@ -44,6 +61,19 @@ def placeJointsLegs(settings):
     cmds.parent("PlacementCtrl_Foot_Int_L", "JointsPlacement")
     cmds.parent("PlacementCtrl_Foot_Ext_L", "JointsPlacement")
     cmds.parent("PlacementCtrl_Foot_Back_L", "JointsPlacement")
+
+
+    # Create the placement controllers for the foot (front, left, right, back)
+    JointPlacement.createControllerSphere((-7.636, 0, 16.905), sphereRadius, "PlacementCtrl_Foot_Front_R" )
+    JointPlacement.createControllerSphere((-2.969, 0, 8.428), sphereRadius, "PlacementCtrl_Foot_Int_R")
+    JointPlacement.createControllerSphere((-13.606, 0, 8.428), sphereRadius, "PlacementCtrl_Foot_Ext_R")
+    JointPlacement.createControllerSphere((-7.636, 0, -5.765), sphereRadius, "PlacementCtrl_Foot_Back_R")
+
+    cmds.parent("PlacementCtrl_Foot_Front_R", "JointsPlacement")
+    cmds.parent("PlacementCtrl_Foot_Int_R", "JointsPlacement")
+    cmds.parent("PlacementCtrl_Foot_Ext_R", "JointsPlacement")
+    cmds.parent("PlacementCtrl_Foot_Back_R", "JointsPlacement")
+
 
     return 'PlacementJnt_Root'
         

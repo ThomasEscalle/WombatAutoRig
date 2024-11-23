@@ -170,10 +170,10 @@ def compute(settings):
 
     # Connect the Pivot_Ball_L to the IK_Leg_L
     pvBall = ["Pivot_Ball_L"]
-    MatrixConstrain.MatrixConstrain(pvBall, "IK_Leg_L", sX = True , sY = True, sZ = True)
+    MatrixConstrain.MatrixConstrain(pvBall, "IK_Leg_L", sX = False , sY = False, sZ = False, Offset = True)
     # Connect the DrvJnt_Ankle_L to the Bind_Foot_L
     drvAnkle = ["DrvJnt_Ankle_L"]
-    MatrixConstrain.MatrixConstrain(drvAnkle, "Bind_Foot_L", sX = True , sY = True, sZ = True)
+    MatrixConstrain.MatrixConstrain(drvAnkle, "Bind_Foot_L", sX = False , sY = False, sZ = False , Offset = True)
 
 
 
