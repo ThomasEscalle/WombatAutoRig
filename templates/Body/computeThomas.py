@@ -181,7 +181,18 @@ def compute(settings):
 
 
     # region Connections
-    # TODO : Bank
+    # Bank
+    condBankInt = cmds.createNode("condition", n="Cond_Bank_Int_L")
+    cmds.setAttr(condBankInt+".operation", 2)
+    cmds.connectAttr("CTRL_Foot_L.Bank", condBankInt+".firstTerm", f=True)
+    cmds.connectAttr("CTRL_Foot_L.Bank", condBankInt+".colorIfTrueR", f=True)
+    cmds.connectAttr(condBankInt+".outColorR", "Loc_Bank_Int_L.rotateZ", f=True)
+    condBankExt = cmds.createNode("condition", n="Cond_Bank_Ext_L")
+    cmds.setAttr(condBankExt+".operation", 4)
+    cmds.connectAttr("CTRL_Foot_L.Bank", condBankExt+".firstTerm", f=True)
+    cmds.connectAttr("CTRL_Foot_L.Bank", condBankExt+".colorIfTrueR", f=True)
+    cmds.connectAttr(condBankExt+".outColorR", "Loc_Bank_Ext_L.rotateZ", f=True)
+
 
     # Twist_Leg
     # Connect the CTRL_Foot_L.Twist_Leg to the IK_Leg_L.twist
@@ -190,8 +201,75 @@ def compute(settings):
     # Twist Heel
     maxTwistHeel = 75
     remapValueTwistHeel = cmds.createNode("remapValue", n="RmV_Twist_Heel_L")
-    
+    cmds.setAttr(remapValueTwistHeel+".inputMin", -1)
+    cmds.setAttr(remapValueTwistHeel+".inputMax", 1)
+    cmds.setAttr(remapValueTwistHeel+".outputMin", -maxTwistHeel)
+    cmds.setAttr(remapValueTwistHeel+".outputMax", maxTwistHeel)
+    cmds.connectAttr("CTRL_Foot_L.Twist_Heel", remapValueTwistHeel+".inputValue", f=True)
+    cmds.connectAttr(remapValueTwistHeel+".outValue", "Loc_Heel_L.rotateY", f=True)
 
+    # Twit Toe
+    maxTwistToe = 75
+    remapValueTwistToe = cmds.createNode("remapValue", n="RmV_Twist_Toe_L")
+    cmds.setAttr(remapValueTwistToe+".inputMin", -1)
+    cmds.setAttr(remapValueTwistToe+".inputMax", 1)
+    cmds.setAttr(remapValueTwistToe+".outputMin", -maxTwistToe)
+    cmds.setAttr(remapValueTwistToe+".outputMax", maxTwistToe)
+    cmds.connectAttr("CTRL_Foot_L.Twist_Toe", remapValueTwistToe+".inputValue", f=True)
+    cmds.connectAttr(remapValueTwistToe+".outValue", "Loc_Toe_L.rotateY", f=True)
+
+    # Flex Toe (rotate X axis of the Pivot_Toe_L)
+    maxFlexToe = 55
+    remapValueFlexToe = cmds.createNode("remapValue", n="RmV_Flex_Toe_L")
+    cmds.setAttr(remapValueFlexToe+".inputMin", -1)
+    cmds.setAttr(remapValueFlexToe+".inputMax", 1)
+    cmds.setAttr(remapValueFlexToe+".outputMin", -maxFlexToe)
+    cmds.setAttr(remapValueFlexToe+".outputMax", maxFlexToe)
+    cmds.connectAttr("CTRL_Foot_L.Flex_Toe", remapValueFlexToe+".inputValue", f=True)
+    cmds.connectAttr(remapValueFlexToe+".outValue", "Pivot_Toe_L.rotateX", f=True)
+
+    # Foot Roll
+    maxFootRollHeel = -30
+    remapValueFootRollHeel = cmds.createNode("remapValue", n="RmV_Foot_Roll_Heel_L")
+    cmds.setAttr(remapValueFootRollHeel+".inputMin", -1)
+    cmds.setAttr(remapValueFootRollHeel+".inputMax", 0)
+    cmds.setAttr(remapValueFootRollHeel+".outputMin", 0)
+    cmds.setAttr(remapValueFootRollHeel+".outputMax", maxFootRollHeel)
+    cmds.setAttr(remapValueFootRollHeel+".value[0].value_FloatValue", 1)
+    cmds.setAttr(remapValueFootRollHeel+".value[1].value_FloatValue", 0)
+    cmds.connectAttr("CTRL_Foot_L.Foot_Roll", remapValueFootRollHeel+".inputValue", f=True)
+    cmds.connectAttr(remapValueFootRollHeel+".outValue", "Loc_Heel_L.rotateX", f=True)
+    maxFootRollBall = 50
+    remapValueFootRollBall = cmds.createNode("remapValue", n="RmV_Foot_Roll_Ball_L")
+    cmds.setAttr(remapValueFootRollBall+".inputMin", 0)
+    cmds.setAttr(remapValueFootRollBall+".inputMax", 1)
+    cmds.setAttr(remapValueFootRollBall+".outputMin", 0)
+    cmds.setAttr(remapValueFootRollBall+".outputMax", maxFootRollBall)
+    cmds.setAttr(remapValueFootRollBall+".value[1].value_Position", 0.5)
+    cmds.setAttr(remapValueFootRollBall+".value[2].value_Position", 1)
+    cmds.setAttr(remapValueFootRollBall+".value[2].value_FloatValue", 0)
+    cmds.connectAttr("CTRL_Foot_L.Foot_Roll", remapValueFootRollBall+".inputValue", f=True)
+    cmds.connectAttr(remapValueFootRollBall+".outValue", "Pivot_Ball_L.rotateX", f=True)
+    maxFootRollToe = 60
+    remapValueFootRollToe = cmds.createNode("remapValue", n="RmV_Foot_Roll_Toe_L")
+    cmds.setAttr(remapValueFootRollToe+".inputMin", 0.5)
+    cmds.setAttr(remapValueFootRollToe+".inputMax", 1)
+    cmds.setAttr(remapValueFootRollToe+".outputMin", 0)
+    cmds.setAttr(remapValueFootRollToe+".outputMax", maxFootRollToe)
+    cmds.connectAttr("CTRL_Foot_L.Foot_Roll", remapValueFootRollToe+".inputValue", f=True)
+    cmds.connectAttr(remapValueFootRollToe+".outValue", "Loc_Toe_L.rotateX", f=True)
+
+
+
+
+
+    # endregion Connections
+
+
+    # Move the CTRL_Foot_L to the group CTRLs_01
+    cmds.parent("CTRL_Foot_L", "CTRLs_01")
+    # Move the Joints_Feets to the group Joints_01
+    cmds.parent("Joints_Feets", "Joints_01")
 
 
     return 42
