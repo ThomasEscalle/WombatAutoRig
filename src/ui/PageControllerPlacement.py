@@ -3,6 +3,8 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
+from maya import cmds
+
 from wombatAutoRig.src.ui.forms import ui_PageControllerPlacement
 
 from wombatAutoRig.src.ui.PageBase import PageBase
@@ -28,6 +30,8 @@ class PageControllerPlacement(PageBase):
         # Set the default mode to Fk
         self.ui.btnFkMode.hide()
 
+
+    
     
     # Say if the user can go to the next page or not
     def canGoNext(self):
@@ -39,6 +43,9 @@ class PageControllerPlacement(PageBase):
         self.ui.btnIkMode.show()
         self.ui.btnFkMode.hide()
 
+        cmds.showHidden("AutoRig_Data|ControllersPlacement|IK_Controllers")
+        cmds.hide("AutoRig_Data|ControllersPlacement|FK_Controllers")
+
     def addDataToSettings(self,settings):
         print("Add the data to the settings")
         return settings
@@ -48,5 +55,8 @@ class PageControllerPlacement(PageBase):
     def onIkModeClicked(self):
         self.ui.btnFkMode.show()
         self.ui.btnIkMode.hide()
+
+        cmds.showHidden("AutoRig_Data|ControllersPlacement|FK_Controllers")
+        cmds.hide("AutoRig_Data|ControllersPlacement|IK_Controllers")
 
 

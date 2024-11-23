@@ -17,7 +17,7 @@ class Ui_PageJointPlacement(object):
     def setupUi(self, PageJointPlacement):
         if not PageJointPlacement.objectName():
             PageJointPlacement.setObjectName(u"PageJointPlacement")
-        PageJointPlacement.resize(400, 300)
+        PageJointPlacement.resize(723, 640)
         self.verticalLayout = QVBoxLayout(PageJointPlacement)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(PageJointPlacement)
@@ -34,6 +34,16 @@ class Ui_PageJointPlacement(object):
 
         self.verticalLayout.addWidget(self.label_2)
 
+        self.btnShowLRA = QPushButton(PageJointPlacement)
+        self.btnShowLRA.setObjectName(u"btnShowLRA")
+
+        self.verticalLayout.addWidget(self.btnShowLRA)
+
+        self.btnTemplate = QPushButton(PageJointPlacement)
+        self.btnTemplate.setObjectName(u"btnTemplate")
+
+        self.verticalLayout.addWidget(self.btnTemplate)
+
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
@@ -48,5 +58,7 @@ class Ui_PageJointPlacement(object):
         PageJointPlacement.setWindowTitle(QCoreApplication.translate("PageJointPlacement", u"Form", None))
         self.label.setText(QCoreApplication.translate("PageJointPlacement", u"Joints placement", None))
         self.label_2.setText("")
+        self.btnShowLRA.setText(QCoreApplication.translate("PageJointPlacement", u"Show LRA", None))
+        self.btnTemplate.setText(QCoreApplication.translate("PageJointPlacement", u"Toggle template geo", None))
     # retranslateUi
 
