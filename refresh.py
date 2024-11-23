@@ -144,6 +144,8 @@ importlib.reload(placement_joints)
 from wombatAutoRig.templates.Body import compute
 importlib.reload(compute)
 
+from wombatAutoRig.src.core import Ribbon
+importlib.reload(Ribbon)
 
 
 wombatAutoRig.run()  # Appeler la fonction run() après rechargement

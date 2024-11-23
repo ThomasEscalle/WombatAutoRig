@@ -9,6 +9,7 @@ import re
 
 from wombatAutoRig.src.core import Offset
 from wombatAutoRig.src.core import Color
+from wombatAutoRig.src.core import MatrixConstrain
 
 
 def build_Rivet(name, Nurbs):
@@ -187,8 +188,8 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5):
     cmds.connectAttr("CTRL_End_{}.r".format(Name), "DrvJnt_Ribbon_BlShp_{}_End.r".format(Name))
 
     #Contrainte sur Mid
-    cmds.parentConstraint(CTRL_Start, CTRL_End, "CTRL_Mid_{}_Offset".format(Name), sr="none")
-    cmds.parentConstraint("DrvJnt_Ribbon_BlShp_{}_Start".format(Name), "DrvJnt_Ribbon_BlShp_{}_End".format(Name), "DrvJnt_Ribbon_BlShp_{}_Mid_Move".format(Name), sr="none")
+    MatrixConstrain.MatrixConstrain((CTRL_Start, CTRL_End), "CTRL_Mid_{}_Offset".format(Name), rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False)
+    MatrixConstrain.MatrixConstrain(("DrvJnt_Ribbon_BlShp_{}_Start".format(Name), "DrvJnt_Ribbon_BlShp_{}_End".format(Name)), "DrvJnt_Ribbon_BlShp_{}_Mid_Move".format(Name), rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False)
 
 
 
