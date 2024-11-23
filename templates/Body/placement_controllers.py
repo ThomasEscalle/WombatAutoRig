@@ -29,9 +29,15 @@ def placeControllers(settings):
 
     # PlacementCtrl_Foot
     cmds.select(clear=True)
-    PlacementCtrl_Foot = cmds.circle(name="PlacementCtrl_Foot", normal=[0, 1, 0], radius=8)
+    PlacementCtrl_Foot = cmds.circle(name="PlacementCtrl_Foot_L", normal=[0, 1, 0], radius=8)
     cmds.matchTransform(PlacementCtrl_Foot, "PlacementJnt_Ball_L", pos=True, rotationY=False, scl=False)
     cmds.setAttr(PlacementCtrl_Foot[0] + ".translateY", 0)
     cmds.parent(PlacementCtrl_Foot, "AutoRig_Data|ControllersPlacement|IK_Controllers")
-    Color.setColor("PlacementCtrl_Foot", "yellow")
+    Color.setColor("PlacementCtrl_Foot_L", "yellow")
 
+    # PlacementCtrl_Switch_Leg_L
+    cmds.select(clear=True)
+    PlacementCtrl_Switch_Leg_L = cmds.circle(name="PlacementCtrl_Switch_Leg_L", normal=[0, 1, 0], radius=6)
+    cmds.move(24, 78, 0, PlacementCtrl_Switch_Leg_L)
+    cmds.parent(PlacementCtrl_Switch_Leg_L, "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    Color.setColor("PlacementCtrl_Switch_Leg_L", "yellow")

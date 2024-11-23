@@ -2,6 +2,7 @@ from wombatAutoRig.src.core import TemplateBase
 from wombatAutoRig.src.core import AutorigHelper
 from wombatAutoRig.src.core import Offset
 from wombatAutoRig.src.core import Color
+from wombatAutoRig.src.core import JointPlacement
 from maya import cmds
 
 
@@ -32,6 +33,18 @@ def placeJointsLegs(settings):
     cmds.parent("PlacementJnt_Ball_L", "PlacementJnt_Ankle_L")
     cmds.parent("PlacementJnt_Toe_L", "PlacementJnt_Ball_L")
     
+    # Create the placement controllers for the foot (front, left, right, back)
+    sphereRadius = 0.3
+    JointPlacement.createControllerSphere((7.636, 0, 16.905), sphereRadius, "PlacementCtrl_Foot_Front_L" )
+    JointPlacement.createControllerSphere((2.969, 0, 8.428), sphereRadius, "PlacementCtrl_Foot_Int_L")
+    JointPlacement.createControllerSphere((13.606, 0, 8.428), sphereRadius, "PlacementCtrl_Foot_Ext_L")
+    JointPlacement.createControllerSphere((7.636, 0, -5.765), sphereRadius, "PlacementCtrl_Foot_Back_L")
+    
+    cmds.parent("PlacementCtrl_Foot_Front_L", "JointsPlacement")
+    cmds.parent("PlacementCtrl_Foot_Int_L", "JointsPlacement")
+    cmds.parent("PlacementCtrl_Foot_Ext_L", "JointsPlacement")
+    cmds.parent("PlacementCtrl_Foot_Back_L", "JointsPlacement")
+
     return 'PlacementJnt_Root'
         
 

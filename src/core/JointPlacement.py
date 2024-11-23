@@ -46,7 +46,7 @@ def createMaterialsIfNotExists():
 
 
 
-def createControllerSphere(pos, scale = 1 ,name = "controller"):
+def createControllerSphere(pos, scale = 1.0 ,name = "controller"):
     print("Creating controller at position: {0}".format(pos))
 
     # Create a sphere of radius 1 at position 0,0,0 with 12 subdivisions

@@ -151,6 +151,10 @@ from wombatAutoRig.src.core import Ribbon
 importlib.reload(Ribbon)
 
 
+from wombatAutoRig.templates.Body import computeThomas
+importlib.reload(computeThomas)
+
+
 wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
 # dialog = DlgControllers.DlgControllers()
