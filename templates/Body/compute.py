@@ -116,7 +116,6 @@ def compute(settings):
     cmds.setAttr("Switch_Leg_L.sx", keyable=False, channelBox=False)
     cmds.setAttr("Switch_Leg_L.sy", keyable=False, channelBox=False)
     cmds.setAttr("Switch_Leg_L.sz", keyable=False, channelBox=False)
-    Color.setColor("Switch_Leg_L", "yellow")
     Offset.offset("Switch_Leg_L", nbr=2)
     MatrixConstrain.MatrixConstrain(Bind_Hip_L, "Switch_Leg_L_Move", Offset=True, sX=False, sY=False, sZ=False)
     cmds.setAttr("Switch_Leg_L.IK_FK", 1)
@@ -184,4 +183,53 @@ def compute(settings):
     cmds.connectAttr("Switch_Leg_L.IK_FK", "IK_Toe_L.visibility")
     cmds.connectAttr("Switch_Leg_L.IK_FK", "Bind_Foot_L.visibility")
     cmds.connectAttr("Switch_Leg_L.IK_FK", "DrvJnt_Leg_L.visibility")
+    
+    #Stretch Leg 
+    
+    #creatng locators for the stretch
+    cmds.spaceLocator(n="Locator_Hip_L")
+    cmds.spaceLocator(n="Locator_Ankle_L")
+    cmds.parent("Locator_Hip_L", "Bind_Hip_L")
+    cmds.parent("Locator_Ankle_L", "Bind_Hip_L")
+    cmds.matchTransform("Locator_Hip_L", "Bind_Hip_L", pos=True)
+    cmds.matchTransform("Locator_Ankle_L", "Bind_Foot_L", pos=True)
+    cmds.matchTransform("Locator_Ankle_L", "Bind_Foot_L", pos=True)
+    cmds.matchTransform("Locator_Ankle_L", "Bind_Foot_L", pos=True)
+    MatrixConstrain.MatrixConstrain("CTRL_Foot_L", "Locator_Ankle_L", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    
+    #Creating the nodes for the stretch
+    cmds.createNode("distanceBetween", n="Distance_Leg_L")
+    cmds.createNode("multiplyDivide", n="MD_Distance_Leg_L_Divide")
+    cmds.setAttr("MD_Distance_Leg_L_Divide.operation", 2)
+    cmds.createNode("multiplyDivide", n="MD_Distance_Leg_L_Power")
+    cmds.setAttr("MD_Distance_Leg_L_Power.operation", 3)
+    cmds.setAttr("MD_Distance_Leg_L_Power.input2X", -0.5)
+    cmds.createNode("multiplyDivide", n="MD_Distance_Leg_L_GlobalRelativeScale")
+    cmds.createNode("condition", n="Cond_Distance_Leg_L")
+    cmds.createNode("condition", n="Cond_Boolean_Leg_L")
+    
+    #Connecting the nodes
+    cmds.connectAttr("Locator_Hip_L.translate", "Distance_Leg_L.point1")
+    cmds.connectAttr("Locator_Ankle_L.translate", "Distance_Leg_L.point2")
+    
+    cmds.connectAttr("Distance_Leg_L.distance", "MD_Distance_Leg_L_GlobalRelativeScale.input1X")
+    cmds.connectAttr("Global_Move_01.scaleY", "MD_Distance_Leg_L_GlobalRelativeScale.input2X")
+    cmds.connectAttr("MD_Distance_Leg_L_GlobalRelativeScale.outputX", "MD_Distance_Leg_L_Divide.input1X")
+    
+    cmds.connectAttr("Global_Move_01.scaleY", "MD_Distance_Leg_L_GlobalRelativeScale.input2Y")
+    Dist_Leg_Tendu = cmds.getAttr("DrvJnt_Knee_L.translateX") +cmds.getAttr("DrvJnt_Ankle_L.translateX")
+    cmds.setAttr("MD_Distance_Leg_L_GlobalRelativeScale.input2Y", Dist_Leg_Tendu)
+    cmds.connectAttr("MD_Distance_Leg_L_GlobalRelativeScale.outputY", "MD_Distance_Leg_L_Divide.input2X")
+    
+    cmds.connectAttr("MD_Distance_Leg_L_Divide.outputX", "MD_Distance_Leg_L_Power.input1X")
+    
+    cmds.connectAttr("MD_Distance_Leg_L_Divide.outputX", "Cond_Distance_Leg_L.firstTerm")
+    cmds.setAttr("Cond_Distance_Leg_L.secondTerm", 1)
+    cmds.setAttr("Cond_Distance_Leg_L.operation", 2)
+    cmds.connectAttr("MD_Distance_Leg_L_Divide.outputX", "Cond_Distance_Leg_L.colorIfTrueR")
+    cmds.connectAttr("MD_Distance_Leg_L_Power.outputX", "Cond_Distance_Leg_L.colorIfTrueG")
+    cmds.connectAttr("MD_Distance_Leg_L_Power.outputX", "Cond_Distance_Leg_L.colorIfTrueB")
+    cmds.connectAttr("Cond_Distance_Leg_L.outColor", "Cond_Boolean_Leg_L.colorIfTrue")
+    cmds.connectAttr("CTRL_Foot_L.Stretch_Leg", "Cond_Boolean_Leg_L.firstTerm")
+    
     
