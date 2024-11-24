@@ -19,7 +19,7 @@ def compute(settings):
 def createLeg(settings, side = "L"):
 
 
-    #region Leg L
+    #region Leg 
 
     #Creating the joints 
     
@@ -45,7 +45,20 @@ def createLeg(settings, side = "L"):
     
     
     cmds.duplicate(f"PlacementJnt_Knee_{side}", n=f"Preserve_Knee_{side}", po=True)
-    
+
+    #Freeze the transform
+
+    cmds.makeIdentity(f"Bind_Hip_{side}", a=True, t=True, r=True, s=True)
+    cmds.makeIdentity(f"DrvJnt_Leg_{side}", a=True, t=True, r=True, s=True)
+    cmds.makeIdentity(f"DrvJnt_Knee_{side}", a=True, t=True, r=True, s=True)
+    cmds.makeIdentity(f"DrvJnt_Ankle_{side}", a=True, t=True, r=True, s=True)
+    cmds.makeIdentity(f"FK_Leg_{side}", a=True, t=True, r=True, s=True)
+    cmds.makeIdentity(f"FK_Knee_{side}", a=True, t=True, r=True, s=True)
+    cmds.makeIdentity(f"FK_Ankle_{side}", a=True, t=True, r=True, s=True)
+    cmds.makeIdentity(f"FK_Ball_{side}", a=True, t=True, r=True, s=True)
+    cmds.makeIdentity(f"FK_Toe_{side}", a=True, t=True, r=True, s=True)
+    cmds.makeIdentity(f"Preserve_Knee_{side}", a=True, t=True, r=True, s=True)
+
     #Unparenting the joints
     
     
@@ -119,8 +132,8 @@ def createLeg(settings, side = "L"):
     cmds.duplicate(f"PlacementCtrl_Switch_Leg_{side}", n=f"Switch_Leg_{side}")
     cmds.parent(f"Switch_Leg_{side}", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     cmds.addAttr(f"Switch_Leg_{side}", ln="IK_FK", at="enum", en="FK:IK", k=True)
-    cmds.addAttr(f"Switch_Leg_{side}", ln="Vis_Bend", at="boolean", nn="Vis Bend", k=True)
-    cmds.addAttr(f"Switch_Leg_{side}", ln="Vis_Pin", at="boolean", nn="Vis Pin", k=True)
+    cmds.addAttr(f"Switch_Leg_{side}", ln="Vis_Bend", at="bool", nn="Vis Bend", k=True)
+    cmds.addAttr(f"Switch_Leg_{side}", ln="Vis_Pin", at="bool", nn="Vis Pin", k=True)
     cmds.setAttr(f"Switch_Leg_{side}.tx", keyable=False, channelBox=False)
     cmds.setAttr(f"Switch_Leg_{side}.ty", keyable=False, channelBox=False)
     cmds.setAttr(f"Switch_Leg_{side}.tz", keyable=False, channelBox=False)
@@ -156,6 +169,8 @@ def createLeg(settings, side = "L"):
     cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Leg_{}|CTRL_Global_Ribbon_Leg_{}|IS_CONSTRAIN_BY___DrvJnt_Leg_{}__".format(settings["name"], side ,side ,side))
     cmds.rotate(90, 0, 0, f"CTRL_Global_Ribbon_Leg_{side}", r=True, os=True)
     MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"CTRL_Global_Ribbon_Leg_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    CTRL_Shape_Leg = cmds.listRelatives(f"CTRL_Global_Ribbon_Knee_{side}", shapes=True)
+    cmds.setAttr(CTRL_Shape_Leg[0] + ".lodVisibility", 0)
     
     cmds.parent(f"Grp_Ribbon_Knee_{side}|Grp_Extra_Nodes_Ribbon_Knee_{side}|Grp_Extra_Nodes_To_Hide_Ribbon_Knee_{side}", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01|Ribbons_Legs_Hide".format(settings["name"]))
     
@@ -167,6 +182,8 @@ def createLeg(settings, side = "L"):
     cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Knee_{}|CTRL_Global_Ribbon_Knee_{}|IS_CONSTRAIN_BY___DrvJnt_Knee_{}__".format(settings["name"], side , side ,side))
     cmds.rotate(90, 0, 0, f"CTRL_Global_Ribbon_Knee_{side}", r=True, os=True)
     MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, f"CTRL_Global_Ribbon_Knee_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    CTRL_Shape_Knee = cmds.listRelatives(f"CTRL_Global_Ribbon_Leg_{side}", shapes=True)
+    cmds.setAttr(CTRL_Shape_Knee[0] + ".lodVisibility", 0)
     
     DrvJnt_Ankle_L = [f"DrvJnt_Ankle_{side}"]
     Preserve_Knee_L = [f"Preserve_Knee_{side}"]
@@ -176,7 +193,7 @@ def createLeg(settings, side = "L"):
     MatrixConstrain.MatrixConstrain(Preserve_Knee_L, f"CTRL_Start_Ribbon_Leg_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     
 
-    #endregion Leg L 
+    #endregion Leg 
     
 
 
@@ -204,6 +221,30 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"IK_Toe_{side}.visibility")
     cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"Bind_Foot_{side}.visibility")
     cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"DrvJnt_Leg_{side}.visibility")
+    cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"PoleVector_{side}.visibility")
+    cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"CTRL_Foot_{side}.visibility")
+    cmds.connectAttr(f"Switch_Leg_{side}.Vis_Pin", f"CTRL_Preserve_Knee_{side}.visibility")
+
+    #Creating CTRL for the FK Joints
+    cmds.duplicate(f"PlacementCtrl_hip_{side}", n=f"CTRL_FK_Leg_{side}")
+    cmds.duplicate(f"PlacementCtrl_knee_{side}", n=f"CTRL_FK_Knee_{side}")
+    cmds.duplicate(f"PlacementCtrl_ankle_{side}", n=f"CTRL_FK_Ankle_{side}")
+    #Hierachy
+    Offset.offset(f"CTRL_FK_Leg_{side}", nbr=1)
+    Offset.offset(f"CTRL_FK_Knee_{side}", nbr=1)
+    Offset.offset(f"CTRL_FK_Ankle_{side}", nbr=1)
+    cmds.parent(f"CTRL_FK_Leg_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+    cmds.parent(f"CTRL_FK_Knee_{side}_Offset", f"CTRL_FK_Leg_{side}")
+    cmds.parent(f"CTRL_FK_Ankle_{side}_Offset", f"CTRL_FK_Knee_{side}")
+    #Connecting and constraining 
+    cmds.connectAttr(f"Reverse_Leg_{side}.outputX", f"CTRL_FK_Leg_{side}_Offset.visibility")
+    FK_Leg = [f"CTRL_FK_Leg_{side}"]
+    FK_Knee = [f"CTRL_FK_Knee_{side}"]
+    FK_Ankle = [f"CTRL_FK_Ankle_{side}"]
+    MatrixConstrain.MatrixConstrain(FK_Leg, f"FK_Leg_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+    MatrixConstrain.MatrixConstrain(FK_Knee, f"FK_Knee_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+    MatrixConstrain.MatrixConstrain(FK_Ankle, f"FK_Ankle_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+
     
     #Stretch Leg 
     
