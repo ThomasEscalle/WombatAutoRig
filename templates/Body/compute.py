@@ -115,10 +115,12 @@ def createLeg(settings, side = "L"):
     MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"FK_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False)
     MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"Preserve_Knee_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False)
     
-    #Creating a switch for the IK FK
+    #Creating a switch for the IK FK with Boolean attributes on it to show bend CTRL and pin CTRL 
     cmds.duplicate(f"PlacementCtrl_Switch_Leg_{side}", n=f"Switch_Leg_{side}")
     cmds.parent(f"Switch_Leg_{side}", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     cmds.addAttr(f"Switch_Leg_{side}", ln="IK_FK", at="enum", en="FK:IK", k=True)
+    cmds.addAttr(f"Switch_Leg_{side}", ln="Vis_Bend", at="boolean", nn="Vis Bend", k=True)
+    cmds.addAttr(f"Switch_Leg_{side}", ln="Vis_Pin", at="boolean", nn="Vis Pin", k=True)
     cmds.setAttr(f"Switch_Leg_{side}.tx", keyable=False, channelBox=False)
     cmds.setAttr(f"Switch_Leg_{side}.ty", keyable=False, channelBox=False)
     cmds.setAttr(f"Switch_Leg_{side}.tz", keyable=False, channelBox=False)
