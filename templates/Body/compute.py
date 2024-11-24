@@ -5,6 +5,7 @@ from wombatAutoRig.src.core import Offset
 from wombatAutoRig.src.core import PoleVector
 from wombatAutoRig.src.core import MatrixConstrain
 from wombatAutoRig.src.core import Ribbon
+from wombatAutoRig.src.core import TwistExtractor
 
 
 def compute(settings):
@@ -305,7 +306,31 @@ def createLeg(settings, side = "L"):
     
     cmds.connectAttr(f"Cond_FK_Leg_{side}.outColor", f"DrvJnt_Knee_{side}.s")
     cmds.connectAttr(f"Cond_FK_Leg_{side}.outColor", f"DrvJnt_Leg_{side}.s")
+
+
+    #Twist Ex 
+    TwistExtractor.create_twist_extractor(f"Leg_{side}")
+    TwistExtractor.create_twist_extractor(f"Knee_{side}")
+
+    cmds.parent(f"Twist_Leg_{side}_grp", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
+    cmds.parent(f"Twist_Knee_{side}_grp", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
+
+    cmds.createNode("multiplyDivide", n=f"Opposed_{side}")
+    cmds.setAttr(f"Opposed_{side}.input2X", -1)
+    cmds.setAttr(f"Opposed_{side}.input2Y", -1)
+    cmds.setAttr(f"Opposed_{side}.input2Z", -1)
     
+    cmds.connectAttr(f"Twist_Leg_{side}_00.TwistEx", f"Opposed_{side}.input1X")
+    cmds.connectAttr(f"Opposed_{side}.outputX", f"CTRL_End_Ribbon_Leg_{side}.rotateX")
+    cmds.connectAttr(f"Twist_Knee_{side}_00.TwistEx", f"CTRL_Start_Ribbon_Knee_{side}.rotateX")
+
+    cmds.connectAttr(f"DrvJnt_Leg_{side}.r", f"Twist_Leg_{side}_00.r")
+    cmds.connectAttr(f"Bind_Foot_{side}.rotateZ", f"Opposed_{side}.input1Y")
+    cmds.connectAttr(f"Opposed_{side}.outputY", f"Twist_Knee_{side}_00.rotateX")
+    cmds.connectAttr(f"Bind_Foot_{side}.rotateY", f"Opposed_{side}.input1Z")
+    cmds.connectAttr(f"Opposed_{side}.outputZ", f"Twist_Knee_{side}_00.rotateZ")
+    cmds.connectAttr(f"Bind_Foot_{side}.rotateX", f"Twist_Knee_{side}_00.rotateY")
+
     
     
     

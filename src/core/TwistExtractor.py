@@ -1,5 +1,6 @@
 ### Maya script to create a twist extractor system for rig setup
 import maya.cmds as cmds
+from wombatAutoRig.src.core import MatrixConstrain
 
 def create_twist_extractor(name):
     ### Create a Joint in the midle of the world
@@ -32,7 +33,7 @@ def create_twist_extractor(name):
     ### Add an orient constraint between the Twist_<name>_00 joint, the TwistEx_<name>_00 joint and the locator
     cmds.select(clear=True)
     cmds.select('Twist_' + name + '_00', 'TwistEx_' + name + '_00', 'ik_Twist_' + name, 'Loc_Twist_' + name)
-    cmds.orientConstraint('Twist_' + name + '_00', 'TwistEx_' + name + '_00', 'Loc_Twist_' + name, mo=False)
+    MatrixConstrain.MatrixConstrain(('Twist_' + name + '_00', 'TwistEx_' + name + '_00'), 'Loc_Twist_' + name, Offset=False, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
 
     ### Add a \"TwistEx\" attribute to the Twist_<name>_00 joint
     cmds.addAttr('Twist_' + name + '_00', longName='TwistEx', attributeType='float', keyable=True)
