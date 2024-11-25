@@ -44,49 +44,39 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         cmds.connectAttr(MultMatX+'.matrixSum',DecMatX+'.inputMatrix')
 
         if cmds.objectType(Slave) == "joint" :
-            PmaJointOrient = cmds.shadingNode("plusMinusAverage", asUtility=True, n='PmaJointOrient_'+Slave)
-            cmds.setAttr(PmaJointOrient+'.operation', 2)
-            cmds.connectAttr(DecMatX + ".outputRotate", PmaJointOrient + ".input3D[0]")
-            cmds.connectAttr(Slave + ".jointOrient", PmaJointOrient + ".input3D[1]")
-            if tX == True:
-                cmds.connectAttr(DecMatX+'.outputTranslateX',Slave+'.translateX')
-            if tY == True:
-                cmds.connectAttr(DecMatX+'.outputTranslateY',Slave+'.translateY')
-            if tZ == True:
-                cmds.connectAttr(DecMatX+'.outputTranslateZ',Slave+'.translateZ')
-            if rX == True:
-                cmds.connectAttr(PmaJointOrient+'.output3Dx',Slave+'.rotateX')
-            if rY == True:
-                cmds.connectAttr(PmaJointOrient+'.output3Dy',Slave+'.rotateY')
-            if rZ == True:
-                cmds.connectAttr(PmaJointOrient+'.output3Dz',Slave+'.rotateZ')
-            if sX == True:
-                cmds.connectAttr(DecMatX+'.outputScaleX',Slave+'.scaleX')
-            if sY == True:
-                cmds.connectAttr(DecMatX+'.outputScaleY',Slave+'.scaleY')
-            if sZ == True:
-                cmds.connectAttr(DecMatX+'.outputScaleZ',Slave+'.scaleZ')
+            ComposeMatX = cmds.shadingNode("composeMatrix", asUtility=True, n='ComposeMatX_'+Slave)
+            cmds.connectAttr(Slave + ".jointOrient", ComposeMatX + ".inputRotate")
+            MultMatX_Jnt_Parent = cmds.shadingNode("multMatrix", asUtility=True, n='MultMatX_Jnt_'+Slave)
+            cmds.connectAttr(ComposeMatX + ".outputMatrix", MultMatX_Jnt_Parent + ".matrixIn[0]")
+            cmds.connectAttr(Slave + ".parentMatrix[0]", MultMatX_Jnt_Parent + ".matrixIn[1]")
+            InverseMatX = cmds.shadingNode("inverseMatrix", asUtility=True, n='InverseMatX'+Slave)
+            cmds.connectAttr(MultMatX_Jnt_Parent + ".matrixSum", InverseMatX + ".inputMatrix")
+
+            cmds.disconnectAttr(Slave + ".parentInverseMatrix[0]", MultMatX+'.matrixIn[2]')
+            cmds.connectAttr(InverseMatX + ".outputMatrix", MultMatX+'.matrixIn[2]')
+
+
+
 
         # Connexion des outputs des Attribts du Decompose Matrix dans les input du Slave
-        else :
-            if tX == True:
-                cmds.connectAttr(DecMatX+'.outputTranslateX',Slave+'.translateX')
-            if tY == True:
-                cmds.connectAttr(DecMatX+'.outputTranslateY',Slave+'.translateY')
-            if tZ == True:
-                cmds.connectAttr(DecMatX+'.outputTranslateZ',Slave+'.translateZ')
-            if rX == True:
-                cmds.connectAttr(DecMatX+'.outputRotateX',Slave+'.rotateX')
-            if rY == True:
-                cmds.connectAttr(DecMatX+'.outputRotateY',Slave+'.rotateY')
-            if rZ == True:
-                cmds.connectAttr(DecMatX+'.outputRotateZ',Slave+'.rotateZ')
-            if sX == True:
-                cmds.connectAttr(DecMatX+'.outputScaleX',Slave+'.scaleX')
-            if sY == True:
-                cmds.connectAttr(DecMatX+'.outputScaleY',Slave+'.scaleY')
-            if sZ == True:
-                cmds.connectAttr(DecMatX+'.outputScaleZ',Slave+'.scaleZ')
+        if tX == True:
+            cmds.connectAttr(DecMatX+'.outputTranslateX',Slave+'.translateX')
+        if tY == True:
+            cmds.connectAttr(DecMatX+'.outputTranslateY',Slave+'.translateY')
+        if tZ == True:
+            cmds.connectAttr(DecMatX+'.outputTranslateZ',Slave+'.translateZ')
+        if rX == True:
+            cmds.connectAttr(DecMatX+'.outputRotateX',Slave+'.rotateX')
+        if rY == True:
+            cmds.connectAttr(DecMatX+'.outputRotateY',Slave+'.rotateY')
+        if rZ == True:
+            cmds.connectAttr(DecMatX+'.outputRotateZ',Slave+'.rotateZ')
+        if sX == True:
+            cmds.connectAttr(DecMatX+'.outputScaleX',Slave+'.scaleX')
+        if sY == True:
+            cmds.connectAttr(DecMatX+'.outputScaleY',Slave+'.scaleY')
+        if sZ == True:
+            cmds.connectAttr(DecMatX+'.outputScaleZ',Slave+'.scaleZ')
 
         locator = cmds.spaceLocator(name='IS_CONSTRAIN_BY_{}'.format(Master))[0]
 
@@ -96,7 +86,8 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         if Offset == True:
             afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
         if cmds.objectType(Slave) == 'joint' :
-            afterScript += 'cmds.delete("{}")\n'.format(PmaJointOrient)
+            afterScript += 'cmds.delete("{}")\n'.format(ComposeMatX)
+            afterScript += 'cmds.delete("{}")\n'.format(MultMatX_Jnt_Parent)
         Script = cmds.scriptNode(stp ='python', st = 1, afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
         cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
         cmds.parent(locator, Slave)
@@ -150,49 +141,37 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         cmds.connectAttr(MultMatX+'.matrixSum',DecMatXFin+'.inputMatrix')
 
         if cmds.objectType(Slave) == "joint" :
-            PmaJointOrient = cmds.shadingNode("plusMinusAverage", asUtility=True, n='PmaJointOrient_'+Slave)
-            cmds.setAttr(PmaJointOrient+'.operation', 2)
-            cmds.connectAttr(DecMatXFin + ".outputRotate", PmaJointOrient + ".input3D[0]")
-            cmds.connectAttr(Slave + ".jointOrient", PmaJointOrient + ".input3D[1]")
-            if tX == True:
-                cmds.connectAttr(DecMatXFin+'.outputTranslateX',Slave+'.translateX')
-            if tY == True:
-                cmds.connectAttr(DecMatXFin+'.outputTranslateY',Slave+'.translateY')
-            if tZ == True:
-                cmds.connectAttr(DecMatXFin+'.outputTranslateZ',Slave+'.translateZ')
-            if rX == True:
-                cmds.connectAttr(PmaJointOrient+'.output3Dx',Slave+'.rotateX')
-            if rY == True:
-                cmds.connectAttr(PmaJointOrient+'.output3Dy',Slave+'.rotateY')
-            if rZ == True:
-                cmds.connectAttr(PmaJointOrient+'.output3Dz',Slave+'.rotateZ')
-            if sX == True:
-                cmds.connectAttr(DecMatXFin+'.outputScaleX',Slave+'.scaleX')
-            if sY == True:
-                cmds.connectAttr(DecMatXFin+'.outputScaleY',Slave+'.scaleY')
-            if sZ == True:
-                cmds.connectAttr(DecMatXFin+'.outputScaleZ',Slave+'.scaleZ')
+            ComposeMatX = cmds.shadingNode("composeMatrix", asUtility=True, n='ComposeMatX_'+Slave)
+            cmds.connectAttr(Slave + ".jointOrient", ComposeMatX + ".inputRotate")
+            MultMatX_Jnt_Parent = cmds.shadingNode("multMatrix", asUtility=True, n='MultMatX_Jnt_'+Slave)
+            cmds.connectAttr(ComposeMatX + ".outputMatrix", MultMatX_Jnt_Parent + ".matrixIn[0]")
+            cmds.connectAttr(Slave + ".parentMatrix[0]", MultMatX_Jnt_Parent + ".matrixIn[1]")
+            InverseMatX = cmds.shadingNode("inverseMatrix", asUtility=True, n='InverseMatX'+Slave)
+            cmds.connectAttr(MultMatX_Jnt_Parent + ".matrixSum", InverseMatX + ".inputMatrix")
 
+            cmds.disconnectAttr(Slave + ".parentInverseMatrix[0]", MultMatX+'.matrixIn[2]')
+            cmds.connectAttr(InverseMatX + ".outputMatrix", MultMatX+'.matrixIn[2]')
+        
         # Connexion des outputs des Attribts du Decompose Matrix dans les input du Slave
-        else :
-            if tX == True:
-                cmds.connectAttr(DecMatXFin+'.outputTranslateX',Slave+'.translateX')
-            if tY == True:
-                cmds.connectAttr(DecMatXFin+'.outputTranslateY',Slave+'.translateY')
-            if tZ == True:
-                cmds.connectAttr(DecMatXFin+'.outputTranslateZ',Slave+'.translateZ')
-            if rX == True:
-                cmds.connectAttr(DecMatXFin+'.outputRotateX',Slave+'.rotateX')
-            if rY == True:
-                cmds.connectAttr(DecMatXFin+'.outputRotateY',Slave+'.rotateY')
-            if rZ == True:
-                cmds.connectAttr(DecMatXFin+'.outputRotateZ',Slave+'.rotateZ')
-            if sX == True:
-                cmds.connectAttr(DecMatXFin+'.outputScaleX',Slave+'.scaleX')
-            if sY == True:
-                cmds.connectAttr(DecMatXFin+'.outputScaleY',Slave+'.scaleY')
-            if sZ == True:
-                cmds.connectAttr(DecMatXFin+'.outputScaleZ',Slave+'.scaleZ')
+        
+        if tX == True:
+            cmds.connectAttr(DecMatXFin+'.outputTranslateX',Slave+'.translateX')
+        if tY == True:
+            cmds.connectAttr(DecMatXFin+'.outputTranslateY',Slave+'.translateY')
+        if tZ == True:
+            cmds.connectAttr(DecMatXFin+'.outputTranslateZ',Slave+'.translateZ')
+        if rX == True:
+            cmds.connectAttr(DecMatXFin+'.outputRotateX',Slave+'.rotateX')
+        if rY == True:
+            cmds.connectAttr(DecMatXFin+'.outputRotateY',Slave+'.rotateY')
+        if rZ == True:
+            cmds.connectAttr(DecMatXFin+'.outputRotateZ',Slave+'.rotateZ')
+        if sX == True:
+            cmds.connectAttr(DecMatXFin+'.outputScaleX',Slave+'.scaleX')
+        if sY == True:
+            cmds.connectAttr(DecMatXFin+'.outputScaleY',Slave+'.scaleY')
+        if sZ == True:
+            cmds.connectAttr(DecMatXFin+'.outputScaleZ',Slave+'.scaleZ')
 
         locator = cmds.spaceLocator(name='IS_CONSTRAIN_BY_{}'.format(Master))[0]
 
@@ -208,7 +187,8 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         if Offset == True:
             afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
         if cmds.objectType(Slave) == 'joint' :
-            afterScript += 'cmds.delete("{}")\n'.format(PmaJointOrient)
+            afterScript += 'cmds.delete("{}")\n'.format(ComposeMatX)
+            afterScript += 'cmds.delete("{}")\n'.format(MultMatX_Jnt_Parent)
         Script = cmds.scriptNode(stp ='python', st = 1, afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
         cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
         cmds.parent(locator, Slave)
