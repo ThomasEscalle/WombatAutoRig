@@ -22,7 +22,7 @@ def createLeg(settings, side = "L"):
 
     #region Leg 
 
-    #Creating the joints 
+    #region Creating the joints 
     
     cmds.duplicate(f"PlacementJnt_Hip_{side}", n=f"Bind_Hip_{side}", po = True)
     
@@ -103,7 +103,7 @@ def createLeg(settings, side = "L"):
     cmds.parent(f"FK_Leg_{side}_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_{}".format(settings["name"], side))
     cmds.parent(f"Preserve_Knee_{side}_Offset", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_{}".format(settings["name"], side))
     
-    #Creating a controller for the preserve Knee to be in
+    #region Creating CTRL Pin
     cmds.duplicate(f"PlacementCtrl_knee_{side}", n=f"CTRL_Preserve_Knee_{side}")
     cmds.parent(f"CTRL_Preserve_Knee_{side}", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_{}|Preserve_Knee_{}_Offset|Preserve_Knee_{}_Hook|Preserve_Knee_{}_Move".format(settings["name"], side, side, side, side))
     cmds.parent(f"Preserve_Knee_{side}", f"CTRL_Preserve_Knee_{side}")
@@ -112,7 +112,7 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"MD_Preserve_Knee_{side}.outputX", f"Preserve_Knee_{side}_Move.ry")
     cmds.setAttr(f"MD_Preserve_Knee_{side}.input2X", 0.5)
     
-    #Creating the IK handle
+    #region Creating the IK handle
     cmds.ikHandle(n=f"IK_Leg_{side}", sj=f"DrvJnt_Leg_{side}", ee=f"DrvJnt_Ankle_{side}", sol="ikRPsolver")
     cmds.parent(f"IK_Leg_{side}", "{}|GlobalMove_01|IKs_01".format(settings["name"]))
     Locator = cmds.spaceLocator(n=f"PoleVector_{side}")
@@ -122,14 +122,14 @@ def createLeg(settings, side = "L"):
     cmds.poleVectorConstraint(Locator, f"IK_Leg_{side}")
     cmds.parent(f"PoleVector_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     
-    #Attach Joints chain To Hip
+    #region Attach Joints 
     Bind_Hip_L = [f"Bind_Hip_{side}"]
     DrvJnt_Leg_L = [f"DrvJnt_Leg_{side}"]
     MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"DrvJnt_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False)
     MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"FK_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False)
     MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"Preserve_Knee_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False)
     
-    #Creating a switch for the IK FK with Boolean attributes on it to show bend CTRL and pin CTRL 
+    #region switch IK FK 
     cmds.duplicate(f"PlacementCtrl_Switch_Leg_{side}", n=f"Switch_Leg_{side}")
     cmds.parent(f"Switch_Leg_{side}", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     cmds.addAttr(f"Switch_Leg_{side}", ln="IK_FK", at="enum", en="FK:IK", k=True)
@@ -148,7 +148,7 @@ def createLeg(settings, side = "L"):
     MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"Switch_Leg_{side}_Move", Offset=True, sX=False, sY=False, sZ=False)
     cmds.setAttr(f"Switch_Leg_{side}.IK_FK", 1)
     
-    #Attach Ribbon to DrvJnt
+    #region Ribbon
     Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5)
     Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5)
     
@@ -202,14 +202,14 @@ def createLeg(settings, side = "L"):
     computeThomas.createFoot(settings, side)
     
     
-    #Connecting the FK and IK to the switch (FK rotate into DrvJnt rotate)
+    #region Connction IK/FK
     cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"IK_Leg_{side}.ikBlend")
     cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"IK_Ball_{side}.ikBlend")
     cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"IK_Toe_{side}.ikBlend")
     
     cmds.connectAttr(f"FK_Leg_{side}.rotate", f"DrvJnt_Leg_{side}.rotate")
     cmds.connectAttr(f"FK_Knee_{side}.rotate", f"DrvJnt_Knee_{side}.rotate")
-    cmds.connectAttr(f"FK_Ankle_{side}.rotate", f"DrvJnt_Ankle_{side}.rotate")
+    cmds.connectAttr(f"FK_Ankle_{side}.rotate", f"Bind_Foot_{side}.rotate")
     cmds.connectAttr(f"FK_Ball_{side}.rotate", f"Bind_Ball_{side}.rotate")
     cmds.connectAttr(f"FK_Toe_{side}.rotate", f"Bind_Toe_{side}.rotate")
     
@@ -226,7 +226,7 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"Switch_Leg_{side}.IK_FK", f"CTRL_Foot_{side}.visibility")
     cmds.connectAttr(f"Switch_Leg_{side}.Vis_Pin", f"CTRL_Preserve_Knee_{side}.visibility")
 
-    #Creating CTRL for the FK Joints
+    #region CTRL FK Joints
     cmds.duplicate(f"PlacementCtrl_hip_{side}", n=f"CTRL_FK_Leg_{side}")
     cmds.duplicate(f"PlacementCtrl_knee_{side}", n=f"CTRL_FK_Knee_{side}")
     cmds.duplicate(f"PlacementCtrl_ankle_{side}", n=f"CTRL_FK_Ankle_{side}")
@@ -247,7 +247,7 @@ def createLeg(settings, side = "L"):
     MatrixConstrain.MatrixConstrain(FK_Ankle, f"FK_Ankle_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
 
     
-    #Stretch Leg 
+    #region Stretch Leg 
     
     #creatng locators for the stretch
     cmds.spaceLocator(n=f"Locator_Hip_{side}")
@@ -308,7 +308,7 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"Cond_FK_Leg_{side}.outColor", f"DrvJnt_Leg_{side}.s")
 
 
-    #Twist Ex 
+    #region Twist Ex 
     TwistExtractor.create_twist_extractor(f"Leg_{side}")
     TwistExtractor.create_twist_extractor(f"Knee_{side}")
 
@@ -317,18 +317,15 @@ def createLeg(settings, side = "L"):
 
     cmds.createNode("multiplyDivide", n=f"Opposed_{side}")
     cmds.setAttr(f"Opposed_{side}.input2X", -1)
-    cmds.setAttr(f"Opposed_{side}.input2Y", -1)
-    cmds.setAttr(f"Opposed_{side}.input2Z", -1)
     
-    cmds.connectAttr(f"Twist_Leg_{side}_00.TwistEx", f"Opposed_{side}.input1X")
-    cmds.connectAttr(f"Opposed_{side}.outputX", f"CTRL_End_Ribbon_Leg_{side}.rotateX")
+    cmds.connectAttr(f"Bind_Foot_{side}.rotateZ", f"Opposed_{side}.input1X")
+    cmds.connectAttr(f"Twist_Leg_{side}_00.TwistEx", f"CTRL_End_Ribbon_Leg_{side}.rotateX")
     cmds.connectAttr(f"Twist_Knee_{side}_00.TwistEx", f"CTRL_Start_Ribbon_Knee_{side}.rotateX")
 
     cmds.connectAttr(f"DrvJnt_Leg_{side}.r", f"Twist_Leg_{side}_00.r")
-    cmds.connectAttr(f"Bind_Foot_{side}.rotateZ", f"Opposed_{side}.input1Y")
-    cmds.connectAttr(f"Opposed_{side}.outputY", f"Twist_Knee_{side}_00.rotateX")
-    cmds.connectAttr(f"Bind_Foot_{side}.rotateY", f"Opposed_{side}.input1Z")
-    cmds.connectAttr(f"Opposed_{side}.outputZ", f"Twist_Knee_{side}_00.rotateZ")
+
+    cmds.connectAttr(f"Opposed_{side}.outputX", f"Twist_Knee_{side}_00.rotateX")
+    cmds.connectAttr(f"Bind_Foot_{side}.rotateY", f"Twist_Knee_{side}_00.rotateZ")
     cmds.connectAttr(f"Bind_Foot_{side}.rotateX", f"Twist_Knee_{side}_00.rotateY")
 
     
