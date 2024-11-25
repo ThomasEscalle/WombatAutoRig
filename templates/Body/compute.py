@@ -317,8 +317,13 @@ def createLeg(settings, side = "L"):
 
     cmds.createNode("multiplyDivide", n=f"Opposed_{side}")
     cmds.setAttr(f"Opposed_{side}.input2X", -1)
+    cmds.setAttr(f"Opposed_{side}.input2Y", -1)
     
     cmds.connectAttr(f"Bind_Foot_{side}.rotateZ", f"Opposed_{side}.input1X")
+    cmds.connectAttr(f"DrvJnt_Leg_{side}.rotateX", f"Opposed_{side}.input1Y")
+    cmds.connectAttr(f"Opposed_{side}.outputY", f"Twist_Leg_{side}_00.rotateX")
+    cmds.connectAttr(f"DrvJnt_Leg_{side}.rotateY", f"Twist_Leg_{side}_00.rotateY")
+    cmds.connectAttr(f"DrvJnt_Leg_{side}.rotateZ", f"Twist_Leg_{side}_00.rotateZ")
     cmds.connectAttr(f"Twist_Leg_{side}_00.TwistEx", f"CTRL_End_Ribbon_Leg_{side}.rotateX")
     cmds.connectAttr(f"Twist_Knee_{side}_00.TwistEx", f"CTRL_Start_Ribbon_Knee_{side}.rotateX")
 

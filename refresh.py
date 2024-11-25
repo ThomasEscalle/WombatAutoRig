@@ -150,6 +150,8 @@ importlib.reload(compute)
 from wombatAutoRig.src.core import Ribbon
 importlib.reload(Ribbon)
 
+from wombatAutoRig.src.core import TwistExtractor
+importlib.reload(TwistExtractor)
 
 from wombatAutoRig.templates.Body import computeThomas
 importlib.reload(computeThomas)

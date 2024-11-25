@@ -33,7 +33,8 @@ def create_twist_extractor(name):
     ### Add an orient constraint between the Twist_<name>_00 joint, the TwistEx_<name>_00 joint and the locator
     cmds.select(clear=True)
     cmds.select('Twist_' + name + '_00', 'TwistEx_' + name + '_00', 'ik_Twist_' + name, 'Loc_Twist_' + name)
-    MatrixConstrain.MatrixConstrain(('Twist_' + name + '_00', 'TwistEx_' + name + '_00'), 'Loc_Twist_' + name, Offset=False, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+    Constraint = cmds.parentConstraint('Twist_' + name + '_00', 'TwistEx_' + name + '_00', 'Loc_Twist_' + name, mo=False, st='none')
+    cmds.setAttr(Constraint[0] + ".interpType", 0)
 
     ### Add a \"TwistEx\" attribute to the Twist_<name>_00 joint
     cmds.addAttr('Twist_' + name + '_00', longName='TwistEx', attributeType='float', keyable=True)
