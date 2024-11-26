@@ -6,6 +6,7 @@ from wombatAutoRig.src.core import PoleVector
 from wombatAutoRig.src.core import MatrixConstrain
 from wombatAutoRig.src.core import Ribbon
 from wombatAutoRig.src.core import NonRollMatrix
+from wombatAutoRig.src.core import TwistExtractor
 
 
 def compute(settings):
@@ -309,26 +310,9 @@ def createLeg(settings, side = "L"):
 
 
     #region Twist Ex 
-    #TwistExtractor.create_twist_extractor(f"Leg_{side}")
-    #TwistExtractor.create_twist_extractor(f"Knee_{side}")
+    TwistExtractor.create_twist_extractor(f"Leg_{side}")
+    TwistExtractor.create_twist_extractor(f"Knee_{side}")
 
-    #cmds.parent(f"Twist_Leg_{side}_grp", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
-    #cmds.parent(f"Twist_Knee_{side}_grp", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
-
-    #cmds.setAttr(f"Opposed_{side}.input2Y", -1)
-    
-    #cmds.connectAttr(f"DrvJnt_Leg_{side}.rotateX", f"Opposed_{side}.input1Y")
-    #cmds.connectAttr(f"Opposed_{side}.outputY", f"Twist_Leg_{side}_00.rotateX")
-    #cmds.connectAttr(f"DrvJnt_Leg_{side}.rotateY", f"Twist_Leg_{side}_00.rotateY")
-    #cmds.connectAttr(f"DrvJnt_Leg_{side}.rotateZ", f"Twist_Leg_{side}_00.rotateZ")
-    #cmds.connectAttr(f"Twist_Leg_{side}_00.TwistEx", f"CTRL_End_Ribbon_Leg_{side}.rotateX")
-    #cmds.connectAttr(f"Twist_Knee_{side}_00.TwistEx", f"CTRL_Start_Ribbon_Knee_{side}.rotateX")
-
-    #cmds.connectAttr(f"DrvJnt_Leg_{side}.r", f"Twist_Leg_{side}_00.r")
-
-    #cmds.connectAttr(f"Opposed_{side}.outputX", f"Twist_Knee_{side}_00.rotateX")
-    #cmds.connectAttr(f"Bind_Foot_{side}.rotateY", f"Twist_Knee_{side}_00.rotateZ")
-    #cmds.connectAttr(f"Bind_Foot_{side}.rotateX", f"Twist_Knee_{side}_00.rotateY")
     cmds.duplicate(f"DrvJnt_Ankle_{side}", n=f"DrvJnt_Ankle_{side}_NonRoll", po=True)
     Color.setColor(f"DrvJnt_Ankle_{side}", "orange")
     cmds.createNode("multiplyDivide", n=f"Opposed_{side}")
@@ -340,9 +324,17 @@ def createLeg(settings, side = "L"):
 
 
     cmds.connectAttr(NonRoll_Foot + ".outputRotateZ", f"Opposed_{side}.input1X")
-    cmds.connectAttr(f"Opposed_{side}.outputX", f"CTRL_Start_Ribbon_Knee_{side}.rotateX")
+    cmds.connectAttr(f"Opposed_{side}.outputX", f"Twist_Knee_{side}_00.rotateX")
     cmds.connectAttr(NonRoll_Leg + ".outputRotateX", f"Opposed_{side}.input1Y")
-    cmds.connectAttr(f"Opposed_{side}.outputY", f"CTRL_End_Ribbon_Leg_{side}.rotateX")
+    cmds.connectAttr(f"Opposed_{side}.outputY",f"Twist_Leg_{side}_00.rotateX")
+
+
+    cmds.parent(f"Twist_Leg_{side}_grp", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
+    cmds.parent(f"Twist_Knee_{side}_grp", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
+    
+    cmds.connectAttr(f"Twist_Leg_{side}_00.TwistEx", f"CTRL_End_Ribbon_Leg_{side}.rotateX")
+    cmds.connectAttr(f"Twist_Knee_{side}_00.TwistEx", f"CTRL_Start_Ribbon_Knee_{side}.rotateX")
+
 
 
     
