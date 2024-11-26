@@ -153,6 +153,9 @@ importlib.reload(Ribbon)
 from wombatAutoRig.src.core import TwistExtractor
 importlib.reload(TwistExtractor)
 
+from wombatAutoRig.src.core import NonRollMatrix
+importlib.reload(NonRollMatrix)
+
 from wombatAutoRig.templates.Body import computeThomas
 importlib.reload(computeThomas)
 

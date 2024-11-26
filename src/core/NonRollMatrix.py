@@ -9,19 +9,19 @@ def NonRollMatrix(JntStill, JntMove):
     cmds.parent(Loc_Still, JntStill)
     cmds.parent(Loc_Move, JntMove)
 
-    cmds.setAttr(Loc_Still + ".translateX", 0)
-    cmds.setAttr(Loc_Still + ".translateY", 0)
-    cmds.setAttr(Loc_Still + ".translateZ", 0)
-    cmds.setAttr(Loc_Still + ".rotateX", 0)
-    cmds.setAttr(Loc_Still + ".rotateY", 0)
-    cmds.setAttr(Loc_Still + ".rotateZ", 0)    
-    cmds.setAttr(Loc_Still + ".scaleX", 1)
-    cmds.setAttr(Loc_Still + ".scaleY", 1)
-    cmds.setAttr(Loc_Still + ".scaleZ", 1)
+    cmds.setAttr(Loc_Move + ".translateX", 0)
+    cmds.setAttr(Loc_Move + ".translateY", 0)
+    cmds.setAttr(Loc_Move + ".translateZ", 0)
+    cmds.setAttr(Loc_Move + ".rotateX", 0)
+    cmds.setAttr(Loc_Move + ".rotateY", 0)
+    cmds.setAttr(Loc_Move + ".rotateZ", 0)    
+    cmds.setAttr(Loc_Move + ".scaleX", 1)
+    cmds.setAttr(Loc_Move + ".scaleY", 1)
+    cmds.setAttr(Loc_Move + ".scaleZ", 1)
 
-    cmds.matchTransform(Loc_Move, Loc_Still, pos=True, rot=True, scl=True)
+    cmds.matchTransform(Loc_Still, Loc_Move, pos=True, rot=True, scl=True)
 
-    Offset.offset(Loc_Move, nbr=1)
+    Offset.offset(Loc_Still, nbr=1)
 
 
     #Nodale 
@@ -29,10 +29,12 @@ def NonRollMatrix(JntStill, JntMove):
     DecMatX = cmds.shadingNode("decomposeMatrix", asUtility=True, n="DecMatX_NonRoll_{}".format(JntMove))
     QuatToE = cmds.shadingNode("quatToEuler", asUtility=True, n="QuatToE_NonRoll_{}".format(JntMove))
 
-    cmds.connectAttr(Loc_Move+".worldInverseMatrix[0]", MultMatX+".matrixIn[0]")
-    cmds.connectAttr(Loc_Still+".worldMatrix[0]", MultMatX+".matrixIn[1]")
+    cmds.connectAttr(Loc_Move+".worldMatrix[0]", MultMatX+".matrixIn[0]")
+    cmds.connectAttr(Loc_Still+".worldInverseMatrix[0]", MultMatX+".matrixIn[1]")
 
     cmds.connectAttr(MultMatX + ".matrixSum", DecMatX + ".inputMatrix")
 
     cmds.connectAttr(DecMatX + ".outputQuat", QuatToE + ".inputQuat")
+
+    return QuatToE
 
