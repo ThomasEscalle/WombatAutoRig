@@ -38,6 +38,7 @@ class DlgAddToShelf(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.ui.btn_close.clicked.connect(self.close)
 
         self.ui.comboBox.addItem("Color")
+        self.ui.comboBox.addItem("Controllers")
         self.ui.comboBox.addItem("Hook")
         self.ui.comboBox.addItem("Matrix Constraint")
         self.ui.comboBox.addItem("Ribbon")
@@ -62,6 +63,9 @@ class DlgAddToShelf(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         if(selectedItem == "Color"):
             name = "Color"
             command = "import wombatAutoRig.src.ui.DlgColor as DlgColor\\nDialog = DlgColor.DlgColor()\\nDialog.run()"
+        elif(selectedItem == "Controllers"):
+            name = "Controllers"
+            command = "import wombatAutoRig.src.ui.DlgControllers as DlgControllers\\nDialog = DlgControllers.DlgControllers()\\nDialog.run()"
         elif(selectedItem == "Matrix Constraint"):
             name = "Matrix Constraint"
             command = "import wombatAutoRig.src.ui.DlgMatrixConstraint as DlgMatrixConstraint\\nDialog = DlgMatrixConstraint.DlgMatrixConstraint()\\nDialog.run()"

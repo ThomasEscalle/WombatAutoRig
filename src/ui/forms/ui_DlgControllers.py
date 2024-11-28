@@ -26,24 +26,24 @@ class Ui_DlgControllers(object):
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer)
 
-        self.pushButton = QPushButton(DlgControllers)
-        self.pushButton.setObjectName(u"pushButton")
+        self.btnOptions = QPushButton(DlgControllers)
+        self.btnOptions.setObjectName(u"btnOptions")
 
-        self.horizontalLayout_2.addWidget(self.pushButton)
+        self.horizontalLayout_2.addWidget(self.btnOptions)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
 
         self.scrollArea = QScrollArea(DlgControllers)
         self.scrollArea.setObjectName(u"scrollArea")
-        self.scrollArea.setFrameShape(QFrame.Shape.NoFrame)
-        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.scrollArea.setSizeAdjustPolicy(QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
+        self.scrollArea.setFrameShape(QFrame.NoFrame)
+        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.scrollArea.setSizeAdjustPolicy(QAbstractScrollArea.AdjustIgnored)
         self.scrollArea.setWidgetResizable(True)
         self.scroll_area_widget = QWidget()
         self.scroll_area_widget.setObjectName(u"scroll_area_widget")
-        self.scroll_area_widget.setGeometry(QRect(0, 0, 452, 330))
+        self.scroll_area_widget.setGeometry(QRect(0, 0, 458, 294))
         self.gridLayout = QGridLayout(self.scroll_area_widget)
         self.gridLayout.setObjectName(u"gridLayout")
         self.scrollArea.setWidget(self.scroll_area_widget)
@@ -78,7 +78,7 @@ class Ui_DlgControllers(object):
 
     def retranslateUi(self, DlgControllers):
         DlgControllers.setWindowTitle(QCoreApplication.translate("DlgControllers", u"Dialog", None))
-        self.pushButton.setText(QCoreApplication.translate("DlgControllers", u"...", None))
+        self.btnOptions.setText(QCoreApplication.translate("DlgControllers", u"...", None))
         self.btn_apply.setText(QCoreApplication.translate("DlgControllers", u"Apply", None))
         self.btn_create.setText(QCoreApplication.translate("DlgControllers", u"Create", None))
         self.btn_cancel.setText(QCoreApplication.translate("DlgControllers", u"Cancel", None))

@@ -32,10 +32,11 @@ class DlgControllers(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.ui.setupUi(self)
 
         self.setWindowTitle("Create Controllers")
-
         self.mode = "create"
 
         self.setup()
+
+        self.ui.btnOptions.clicked.connect(self.showOptions)
 
 
     def setCreateMode(self):
@@ -45,7 +46,22 @@ class DlgControllers(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     def setReplaceMode(self):
         self.mode = "replace"
         self.setWindowTitle("Replace Controllers")
-        
+
+    def showOptions(self):
+        # Show a menu with the options
+        menu = QtWidgets.QMenu(self)
+        createAction = menu.addAction("Create controller")
+        createAction.triggered.connect(self.createAction)
+
+        # Show the menu at the cursor position
+        action = menu.exec_(QtGui.QCursor.pos())
+
+
+    def createAction(self):
+        # Ask the user for the controller name
+        controllerName, ok = QtWidgets.QInputDialog.getText(self, 'Create controller', 'Enter the controller name:')
+        if ok:
+            Controllers.saveController(controllerName)
 
     # Load the controllers from the controllers directory
     # And add the buttons to the UI

@@ -3,6 +3,7 @@ import maya.mel as mel
 import os
 from wombatAutoRig.src.core import FileHelper
 
+from PySide2.QtGui import QImage
 
 
 
@@ -38,6 +39,16 @@ def saveController(controllerName):
     with open(controllerPath, "w") as file:
         for command in commands:
             file.write(command + "\n")
+
+
+    # Create a 96x96 icon for the controller and save it to a file
+    iconPath = controllerPath + ".png"
+    # Create a empty 96x96 icon for the controller
+    icon = QImage(96, 96, QImage.Format_ARGB32) 
+    # Save the icon to a file
+    icon.save(iconPath, "PNG")
+
+
 
     print("Controller saved: " + controllerPath)
 
