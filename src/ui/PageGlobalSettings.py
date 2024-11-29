@@ -22,9 +22,11 @@ class PageGlobalSettings(PageBase):
         settings["identifier"] = self.ui.leIdentifier.text()
         settings["version"] = self.ui.leVersion.text()
         settings["author"] = self.ui.leAuthor.text()
+        return settings
 
 
-
+    def setPageTitle(name):
+        pass
 
     def addLabel(name , identifier):
         pass
@@ -42,7 +44,6 @@ class PageGlobalSettings(PageBase):
 
 
 
-        return settings
     # Say if the user can go to the next page or not
     def canGoNext(self):
 
