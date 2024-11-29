@@ -24,14 +24,26 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
 
         MultMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_'+Slave)
         DecMatX = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_'+Slave)
+        ComPivMatX = cmds.shadingNode('composeMatrix', asUtility=True, n='ComPivMatX_'+Master[0])
+        MultPivMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultPivMatX_'+Slave)
+
+        cmds.connectAttr(Master[0]+'.rotatePivot',ComPivMatX+'.inputTranslate')
+        cmds.connectAttr(ComPivMatX+'.outputMatrix',MultPivMatX+'.matrixIn[0]')
+        cmds.connectAttr(Master[0]+'.worldMatrix[0]',MultPivMatX+'.matrixIn[1]')
+        cmds.connectAttr(MultPivMatX+'.matrixSum',MultMatX+'.matrixIn[1]')
+        cmds.connectAttr(Slave+'.parentInverseMatrix[0]',MultMatX+'.matrixIn[2]')
+        cmds.connectAttr(MultMatX+'.matrixSum',DecMatX+'.inputMatrix')
+
         if Offset == True:
             MultMatX_Offset = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_Offset_'+Slave)
             DecMatX_Offset = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_Offset_'+Slave)
+            InversePivMatX = cmds.shadingNode('inverseMatrix', asUtility=True, n='InversePiv_MatX_Offset_'+Master[0])
 
             # Creation et recuperation de l'Offset
 
+            cmds.connectAttr(MultPivMatX+'.matrixSum',InversePivMatX+'.inputMatrix')
             cmds.connectAttr(Slave+'.worldMatrix[0]',MultMatX_Offset+'.matrixIn[0]')
-            cmds.connectAttr(Master[0]+'.worldInverseMatrix[0]',MultMatX_Offset+'.matrixIn[1]')
+            cmds.connectAttr(InversePivMatX+'.outputMatrix',MultMatX_Offset+'.matrixIn[1]')
             cmds.connectAttr(MultMatX_Offset+'.matrixSum',DecMatX_Offset+'.inputMatrix')
             cmds.disconnectAttr (MultMatX_Offset+'.matrixSum',DecMatX_Offset+'.inputMatrix')
             cmds.delete(MultMatX_Offset)
@@ -39,9 +51,7 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
             # Connexion de l'Offset, du Slave et du Master dans le Multiply Matrix puis dans le Decompose Matrix
 
             cmds.connectAttr(DecMatX_Offset+'.inputMatrix',MultMatX+'.matrixIn[0]')
-        cmds.connectAttr(Master[0]+'.worldMatrix[0]',MultMatX+'.matrixIn[1]')
-        cmds.connectAttr(Slave+'.parentInverseMatrix[0]',MultMatX+'.matrixIn[2]')
-        cmds.connectAttr(MultMatX+'.matrixSum',DecMatX+'.inputMatrix')
+        
 
         if cmds.objectType(Slave) == "joint" :
             ComposeMatX = cmds.shadingNode("composeMatrix", asUtility=True, n='ComposeMatX_'+Slave)
@@ -83,8 +93,12 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         afterScript = 'import maya.cmds as cmds\n'
 
         afterScript += 'cmds.delete("{}")\n'.format(MultMatX, DecMatX)
+        afterScript += 'cmds.delete("{}")\n'.format(ComPivMatX)
+        afterScript += 'cmds.delete("{}")\n'.format(MultPivMatX)
+        
         if Offset == True:
             afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
+            afterScript += 'cmds.delete("{}")\n'.format(InversePivMatX)
         if cmds.objectType(Slave) == 'joint' :
             afterScript += 'cmds.delete("{}")\n'.format(ComposeMatX)
             afterScript += 'cmds.delete("{}")\n'.format(MultMatX_Jnt_Parent)
@@ -96,6 +110,8 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         DecMatXFin = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_'+Slave)
         for i in range (len(Master)):
             DecMatX = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_{}'.format(i)+Slave)
+            ComPivMatX = cmds.shadingNode('composeMatrix', asUtility=True, n='ComPivMatX_{}'.format(i)+Slave)
+            MultPivMatX = cmds.shadingNode('multMatrix', asUtility=True, n='MultPivMatX_{}'.format(i)+Slave)
         PmaTranslate = cmds.shadingNode('plusMinusAverage', asUtility=True, n='PmaTranslate_'+Slave)
         cmds.setAttr(PmaTranslate+'.operation', 3)
         PmaRotate = cmds.shadingNode('plusMinusAverage', asUtility=True, n='PmaRotate_'+Slave)
@@ -106,7 +122,10 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
 
         #Connect Master and DecomposeMatX
         for i in range (len(Master)):
-            cmds.connectAttr(Master[i]+'.worldMatrix[0]','DecMatX_{}'.format(i)+Slave+'.inputMatrix')
+            cmds.connectAttr(Master[i]+'.worldMatrix[0]','MultPivMatX_{}{}.matrixIn[0]'.format(i, Slave))
+            cmds.connectAttr(Master[i]+'.rotatePivot','ComPivMatX_{}{}.inputTranslate'.format(i, Slave))
+            cmds.connectAttr('ComPivMatX_{}'.format(i)+Slave+'.outputMatrix','MultPivMatX_{}'.format(i)+Slave+'.matrixIn[1]')
+            cmds.connectAttr('MultPivMatX_{}'.format(i)+Slave+'.matrixSum','DecMatX_{}'.format(i)+Slave+'.inputMatrix')
 
         #Connect decomposeMatX to plusMinusAverage
         for i in range (len(Master)):
@@ -184,6 +203,8 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         afterScript += 'cmds.delete("{}")\n'.format(PmaTranslate)
         for i in range (len(Master)):
             afterScript += 'cmds.delete("{}")\n'.format('DecMatX_{}'.format(i)+Slave)
+            afterScript += 'cmds.delete("{}")\n'.format('ComPivMatX_{}'.format(i)+Slave)
+            afterScript += 'cmds.delete("{}")\n'.format('MultPivMatX_{}'.format(i)+Slave)
         if Offset == True:
             afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
         if cmds.objectType(Slave) == 'joint' :
