@@ -15,8 +15,6 @@ def getTemplatesPath():
 
     createFolderIfNotExists(filePath)
 
-    print("Templates folder path: " + filePath)
-
     return filePath
 
 # Return the path of the controllers
@@ -28,8 +26,6 @@ def getControllersPath():
 
     createFolderIfNotExists(filePath)
 
-    print("Controllers folder path: " + filePath)
-
     return filePath
 
 # Return the path of the preferences file (preferences.json)    
@@ -38,8 +34,6 @@ def getPreferencesPath():
     filePath = filePath.replace("\\", "/")
     filePath = filePath.replace("/src/core/FileHelper.py", "")
     filePath += "/preferences.json"
-
-    print("Preferences folder path: " + filePath)
 
     return filePath
 
@@ -51,8 +45,6 @@ def getRcPath():
     filePath += "/rc"
 
     createFolderIfNotExists(filePath)
-
-    print("Rc folder path: " + filePath)
 
     return filePath
 

@@ -31,7 +31,7 @@ class PageGlobalSettings(PageBase):
     def addLabel(name , identifier):
         pass
     
-    def addTextInput(name , identifier, canBeEmpty = False)
+    def addTextInput(name , identifier, canBeEmpty = False):
         pass
 
     def addSeparator():
