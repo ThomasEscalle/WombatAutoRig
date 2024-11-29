@@ -24,6 +24,8 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
 
         MultMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_'+Slave)
         DecMatX = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_'+Slave)
+        ComPivMatX = cmds.shadingNode('composeMatrix', asUtility=True, n='ComPivMatX_'+Master[0])
+        MultPivMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultPivMatX_'+Slave)
         if Offset == True:
             MultMatX_Offset = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_Offset_'+Slave)
             DecMatX_Offset = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_Offset_'+Slave)
@@ -39,7 +41,11 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
             # Connexion de l'Offset, du Slave et du Master dans le Multiply Matrix puis dans le Decompose Matrix
 
             cmds.connectAttr(DecMatX_Offset+'.inputMatrix',MultMatX+'.matrixIn[0]')
-        cmds.connectAttr(Master[0]+'.worldMatrix[0]',MultMatX+'.matrixIn[1]')
+        
+        cmds.connectAttr(Master[0]+'.rotatePivot',ComPivMatX+'.inputTranslate')
+        cmds.connectAttr(ComPivMatX+'.outputMatrix',MultPivMatX+'.matrixIn[0]')
+        cmds.connectAttr(Master[0]+'.worldMatrix[0]',MultPivMatX+'.matrixIn[1]')
+        cmds.connectAttr(MultPivMatX+'.matrixSum',MultMatX+'.matrixIn[1]')
         cmds.connectAttr(Slave+'.parentInverseMatrix[0]',MultMatX+'.matrixIn[2]')
         cmds.connectAttr(MultMatX+'.matrixSum',DecMatX+'.inputMatrix')
 
