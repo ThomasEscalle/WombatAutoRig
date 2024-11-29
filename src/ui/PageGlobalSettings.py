@@ -24,6 +24,24 @@ class PageGlobalSettings(PageBase):
         settings["author"] = self.ui.leAuthor.text()
 
 
+
+
+    def addLabel(name , identifier):
+        pass
+    
+    def addTextInput(name , identifier, canBeEmpty = False)
+        pass
+
+    def addSeparator():
+        pass
+
+    def addSpacer():
+        pass
+
+
+
+
+
         return settings
     # Say if the user can go to the next page or not
     def canGoNext(self):

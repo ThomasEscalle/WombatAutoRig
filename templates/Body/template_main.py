@@ -22,6 +22,9 @@ class Template(TemplateBase.TemplateBase):
         self.identifier = "Body"
         self.version = "0.0.1"
         self.author = "ThomasEsc"
+        self.pages = [
+            
+        ]
         
 
     # This method is called when the template is initialized
