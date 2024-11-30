@@ -97,6 +97,9 @@ def replaceController(controllerName):
         print("No controller selected")
         return
 
+    
+
+
     selection = selection[0]
 
     # Get the bounding box of the controller
@@ -110,8 +113,7 @@ def replaceController(controllerName):
 
     parent = cmds.listRelatives(selection, parent=True)
 
-    # Delete the old controller
-    cmds.delete(selection)
+
 
     # Create the new controller
     newController = createController(controllerName, name=selection)
@@ -119,9 +121,25 @@ def replaceController(controllerName):
     if newController is None:
         print("Error creating controller")
         return
+
+    # Get the BBox of the created controller
+    createdBBox = cmds.xform(newController, query=True, boundingBox=True)
+    # Get the width, height and depth of the created controller
+    createdWidth = createdBBox[3] - createdBBox[0]
+    createdHeight = createdBBox[4] - createdBBox[1]
+    createdDepth = createdBBox[5] - createdBBox[2]
+
+    createdMaximum = max(createdWidth, createdHeight, createdDepth)
+
+
+
+
+
     
     # Scale the new controller to match the size of the old one
-    cmds.scale(maximum / 2, maximum / 2, maximum / 2, newController)
+    scaleValue = maximum / createdMaximum
+    cmds.scale(scaleValue, scaleValue, scaleValue, newController)
+    
 
     # Get the position of the old controller from the center of the bounding box
     position = bbox[0] + width / 2, bbox[1] + height / 2, bbox[2] + depth / 2
@@ -136,6 +154,10 @@ def replaceController(controllerName):
     # Parent the new controller to the old parent
     if parent is not None:
         cmds.parent(newController, parent)
+
+
+    # Delete the old controller
+    cmds.delete(selection)
 
     # Select the new controller
     cmds.select(newController)
