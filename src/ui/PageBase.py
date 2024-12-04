@@ -19,3 +19,6 @@ class PageBase(QWidget):
     def addDataToSettings(self,settings):
         print("Add the data to the settings")
         return settings
+    
+    def autoFill(self):
+        print("Auto fill the data")

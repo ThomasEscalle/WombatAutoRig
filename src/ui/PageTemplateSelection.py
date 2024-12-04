@@ -39,6 +39,10 @@ class PageTemplateSelection(PageBase):
         print("Add the data to the settings")
         return settings
 
+    def autoFill(self):
+        pass
+
+
     # Say if the user can go to the next page or not
     def canGoNext(self):
         # Check if the selected template's name is not empty

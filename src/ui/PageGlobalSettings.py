@@ -40,6 +40,12 @@ class PageGlobalSettings(PageBase):
     def addSpacer():
         pass
 
+    def autoFill(self):
+        self.ui.leName.setText("MyRig")
+        self.ui.leIdentifier.setText("MyRig")
+        self.ui.leVersion.setText("1.0")
+        self.ui.leAuthor.setText("MyName")
+        pass
 
 
 

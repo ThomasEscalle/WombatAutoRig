@@ -52,6 +52,9 @@ class PageValidation(PageBase):
         print("Add the data to the settings")
         return settings
         
+    def autoFill(self):
+        pass
+
     # When the user clicks the No button
     def onNoClicked(self):
         self.noClicked.emit()

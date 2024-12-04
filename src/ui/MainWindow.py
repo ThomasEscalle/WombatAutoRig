@@ -84,8 +84,10 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         self.ui.actionTemplate_Folder.triggered.connect(self.openTemplateFolder)
         self.ui.actionPreferences.triggered.connect(self.preferences)
         self.ui.actionAdd_to_shelf.triggered.connect(self.addToShelf)
+        self.ui.actionAuto_Fill.triggered.connect(self.autoFill)
         self.pageValidation.yesClicked.connect(self.nextPage)
         self.pageValidation.noClicked.connect(self.cancel)
+
 
         # Set icons
         self.ui.btnNext.setIcon(IconLoader.loadIcon("arrow_forward.png"))
@@ -98,12 +100,13 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         self.ui.actionTemplate_Folder.setIcon(IconLoader.loadIcon("folder.png"))
         self.ui.actionPreferences.setIcon(IconLoader.loadIcon("settings.png"))
         self.ui.actionAdd_to_shelf.setIcon(IconLoader.loadIcon("shelf.png"))
-
+        self.ui.actionAuto_Fill.setIcon(IconLoader.loadIcon("skip.png"))
 
 
     # Show window with docking ability
     def run(self):
         self.show(dockable = True)
+        
 
     def nextPage(self):
         
@@ -226,6 +229,12 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         dlg.exec()
 
     
+    def autoFill(self):
+        # Call the autoFill method of the current page
+        self.ui.stackedWidget.currentWidget().autoFill()
+
+        self.nextPage()
+        pass
 
     # When the cancel button is pressed
     def cancel(self):

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>516</width>
-    <height>670</height>
+    <width>1056</width>
+    <height>1020</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -71,7 +71,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>516</width>
+     <width>1056</width>
      <height>29</height>
     </rect>
    </property>
@@ -81,6 +81,7 @@
     </property>
     <addaction name="actionNew_template"/>
     <addaction name="actionNext"/>
+    <addaction name="actionAuto_Fill"/>
     <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -159,6 +160,14 @@
   <action name="actionAdd_to_shelf">
    <property name="text">
     <string>Add to shelf</string>
+   </property>
+  </action>
+  <action name="actionAuto_Fill">
+   <property name="text">
+    <string>Auto Fill</string>
+   </property>
+   <property name="shortcut">
+    <string>F</string>
    </property>
   </action>
  </widget>

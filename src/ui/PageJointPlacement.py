@@ -49,4 +49,6 @@ class PageJointPlacement(PageBase):
     def templateButtonClicked(self):
         print("Template button clicked")
 
+    def autoFill(self):
+        pass
     

@@ -27,7 +27,11 @@ class PageGeometrySelection(PageBase):
         self.ui.btnAdd.setIcon(IconLoader.loadIcon("add.png"))
         self.ui.btnRemove.setIcon(IconLoader.loadIcon("remove.png"))
     
-    
+
+    def autoFill(self):
+        self.ui.listWidget.clear()
+        self.ui.listWidget.addItem("group_Harley_0000_Harley_Queen_Geo_Harley_0000_Harley_Queen_Geo")
+
     # Say if the user can go to the next page or not
     def canGoNext(self):
         # Check if there is at least one item in the list widget

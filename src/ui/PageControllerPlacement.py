@@ -35,6 +35,8 @@ class PageControllerPlacement(PageBase):
 
 
     
+    def autoFill(self):
+        pass
     
     # Say if the user can go to the next page or not
     def canGoNext(self):
