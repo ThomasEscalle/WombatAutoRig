@@ -30,6 +30,23 @@ class PageTemplateSelection(PageBase):
         # Refresh the page
         self.refresh()
 
+    # Signal to create the rig
+    canceled = Signal()
+    accepted = Signal()
+    entered = Signal()
+    
+    # Triggers the signals
+    def onCanceled(self):
+        self.canceled.emit()
+
+    # Triggers the signals
+    def onAccepted(self):
+        self.accepted.emit()
+
+    # Triggers the signals
+    def onEntered(self):
+        self.entered.emit()
+
     # Get the selected template
     def getSelectedTemplate(self):
         template = TemplateManager.TemplateManager().getTemplate(self.ui.cbSelectTemplate.currentText())

@@ -33,7 +33,24 @@ class PageControllerPlacement(PageBase):
         # Set the default mode to Fk
         self.ui.btnFkMode.hide()
 
+    # Signal to create the rig
+    canceled = Signal()
+    accepted = Signal()
+    entered = Signal()
+    
+    # Triggers the signals
+    def onCanceled(self):
+        self.canceled.emit()
 
+    # Triggers the signals
+    def onAccepted(self):
+        self.accepted.emit()
+
+    # Triggers the signals
+    def onEntered(self):
+        self.entered.emit()
+
+    
     
     def autoFill(self):
         pass

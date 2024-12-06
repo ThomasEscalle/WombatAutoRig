@@ -56,6 +56,7 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         self.pageTemplateSelection = PageTemplateSelection.PageTemplateSelection()
         self.ui.stackedWidget.addWidget(self.pageTemplateSelection)
 
+        """
         self.pageGlobalSettings = PageGlobalSettings.PageGlobalSettings()
         self.ui.stackedWidget.addWidget(self.pageGlobalSettings)
 
@@ -67,7 +68,9 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
 
         self.pageControllerPlacement = PageControllerPlacement.PageControllerPlacement()
         self.ui.stackedWidget.addWidget(self.pageControllerPlacement)
+        """
 
+        
         self.pageValidation = PageValidation.PageValidation()
         self.ui.stackedWidget.addWidget(self.pageValidation)
 
@@ -87,6 +90,7 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         self.ui.actionAuto_Fill.triggered.connect(self.autoFill)
         self.pageValidation.yesClicked.connect(self.nextPage)
         self.pageValidation.noClicked.connect(self.cancel)
+        
 
 
         # Set icons
@@ -102,11 +106,16 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         self.ui.actionAdd_to_shelf.setIcon(IconLoader.loadIcon("shelf.png"))
         self.ui.actionAuto_Fill.setIcon(IconLoader.loadIcon("skip.png"))
 
+    validationAccepted = Signal()
+    validationEntered = Signal()
 
     # Show window with docking ability
     def run(self):
         self.show(dockable = True)
         
+
+    def getSettings(self):
+        return self.settings
 
     def nextPage(self):
         
@@ -128,11 +137,24 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
             if self.template == None:
                 return
 
+            # Set the main window of the template
+            self.template.setMainwindow(self)
+
+            # Get the array of pages from the template
+            pages = self.template.getPages()
+
+            # Add the pages to the stacked widget (between the template selection page and the validation page)
+            for page in pages:
+                print("Adding page")
+                self.ui.stackedWidget.insertWidget(self.ui.stackedWidget.count() - 1, page)
+
+
 
 
         ################################################################
         ##################### Finished events ##########################
         ################################################################
+        """
         if self.template != None and currentIndex == 1:
             # Global settings
             if not self.template.onGlobalSettingsFinished(self.settings):
@@ -149,6 +171,7 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
             # Controller placement
             if not self.template.onControllerPlacementFinished(self.settings):
                 return
+        """
         ################################################################
         ################################################################
         ################################################################
@@ -161,21 +184,11 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         ################################################################
         ##################### Accepted events ##########################
         ################################################################
-        if self.template != None and currentIndex == 1:
-            # Global settings
-            self.template.onGlobalSettingsAccepted(self.settings)
-        if self.template != None and currentIndex == 2:
-            # Geometry selection
-            self.template.onGeometrySelectionAccepted(self.settings)
-        if self.template != None and currentIndex == 3:
-            # Joint placement
-            self.template.onJointPlacementAccepted(self.settings)
-        if self.template != None and currentIndex == 4:
-            # Controller placement
-            self.template.onControllerPlacementAccepted(self.settings)
-        if self.template != None and currentIndex == 5:
-            # Validation
-            self.template.onValidationAccepted(self.settings)
+        self.ui.stackedWidget.currentWidget().onAccepted()
+
+        # if the page is the last one, emit the validation accepted signal
+        if currentIndex == self.ui.stackedWidget.count() - 1:
+            self.validationAccepted.emit()
         ################################################################
         ################################################################
         ################################################################
@@ -198,25 +211,15 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         currentIndex = self.ui.stackedWidget.currentIndex()
 
 
-
         ################################################################
         ##################### Entered events ###########################
         ################################################################
-        if self.template != None and currentIndex == 1:
-            # Global settings
-            self.template.onGlobalSettingsEntered(self.settings)
-        if self.template != None and currentIndex == 2:
-            # Geometry selection
-            self.template.onGeometrySelectionEntered(self.settings)
-        if self.template != None and currentIndex == 3:
-            # Joint placement
-            self.template.onJointPlacementEntered(self.settings)
-        if self.template != None and currentIndex == 4:
-            # Controller placement
-            self.template.onControllerPlacementEntered(self.settings)
-        if self.template != None and currentIndex == 5:
-            # Validation
-            self.template.onValidationEntered(self.settings)
+        self.ui.stackedWidget.currentWidget().onEntered()
+
+        # if the page is the last one, emit the validation entered signal
+        if currentIndex == self.ui.stackedWidget.count() - 1:
+            self.validationEntered.emit()
+
         ################################################################
         ################################################################
         ################################################################
