@@ -17,7 +17,7 @@ class Ui_PageGlobalSettings(object):
     def setupUi(self, PageGlobalSettings):
         if not PageGlobalSettings.objectName():
             PageGlobalSettings.setObjectName(u"PageGlobalSettings")
-        PageGlobalSettings.resize(643, 632)
+        PageGlobalSettings.resize(581, 454)
         self.verticalLayout = QVBoxLayout(PageGlobalSettings)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(PageGlobalSettings)
@@ -26,7 +26,7 @@ class Ui_PageGlobalSettings(object):
         font.setPointSize(12)
         font.setBold(True)
         self.label.setFont(font)
-        self.label.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
 
         self.verticalLayout.addWidget(self.label)
 
@@ -35,52 +35,20 @@ class Ui_PageGlobalSettings(object):
 
         self.verticalLayout.addWidget(self.label_2)
 
-        self.formLayout = QFormLayout()
+        self.scrollArea = QScrollArea(PageGlobalSettings)
+        self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setFrameShape(QFrame.Shape.NoFrame)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 563, 68))
+        self.formLayout = QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName(u"formLayout")
-        self.labelName = QLabel(PageGlobalSettings)
-        self.labelName.setObjectName(u"labelName")
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.labelName)
+        self.verticalLayout.addWidget(self.scrollArea)
 
-        self.labelIdentifier = QLabel(PageGlobalSettings)
-        self.labelIdentifier.setObjectName(u"labelIdentifier")
-
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.labelIdentifier)
-
-        self.labelVersion = QLabel(PageGlobalSettings)
-        self.labelVersion.setObjectName(u"labelVersion")
-
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.labelVersion)
-
-        self.labelAuthor = QLabel(PageGlobalSettings)
-        self.labelAuthor.setObjectName(u"labelAuthor")
-
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.labelAuthor)
-
-        self.leName = QLineEdit(PageGlobalSettings)
-        self.leName.setObjectName(u"leName")
-
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.leName)
-
-        self.leIdentifier = QLineEdit(PageGlobalSettings)
-        self.leIdentifier.setObjectName(u"leIdentifier")
-
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.leIdentifier)
-
-        self.leVersion = QLineEdit(PageGlobalSettings)
-        self.leVersion.setObjectName(u"leVersion")
-
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.leVersion)
-
-        self.leAuthor = QLineEdit(PageGlobalSettings)
-        self.leAuthor.setObjectName(u"leAuthor")
-
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.leAuthor)
-
-
-        self.verticalLayout.addLayout(self.formLayout)
-
-        self.verticalSpacer = QSpacerItem(20, 363, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 363, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
@@ -94,9 +62,5 @@ class Ui_PageGlobalSettings(object):
         PageGlobalSettings.setWindowTitle(QCoreApplication.translate("PageGlobalSettings", u"Form", None))
         self.label.setText(QCoreApplication.translate("PageGlobalSettings", u"Global Settings", None))
         self.label_2.setText("")
-        self.labelName.setText(QCoreApplication.translate("PageGlobalSettings", u"Name :", None))
-        self.labelIdentifier.setText(QCoreApplication.translate("PageGlobalSettings", u"Identifier :", None))
-        self.labelVersion.setText(QCoreApplication.translate("PageGlobalSettings", u"Version :", None))
-        self.labelAuthor.setText(QCoreApplication.translate("PageGlobalSettings", u"Author", None))
     # retranslateUi
 

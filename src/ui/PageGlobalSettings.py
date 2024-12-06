@@ -15,6 +15,8 @@ class PageGlobalSettings(PageBase):
 
         self.ui = ui_PageGlobalSettings.Ui_PageGlobalSettings()
         self.ui.setupUi(self)
+
+        self.inputs = []
         
 
     # Signal to create the rig
@@ -36,35 +38,74 @@ class PageGlobalSettings(PageBase):
 
     def addDataToSettings(self,settings):
         print("Add the data to the settings")
+        """
         settings["name"] = self.ui.leName.text()
         settings["identifier"] = self.ui.leIdentifier.text()
         settings["version"] = self.ui.leVersion.text()
         settings["author"] = self.ui.leAuthor.text()
+        """
+
+        for input in self.inputs:
+            # if the input is a QLineEdit
+            if isinstance(input, QLineEdit):
+                settings[input.whatsThis()] = input.text()            
+            # if the input is a QCheckBox
+            if isinstance(input, QCheckBox):
+                settings[input.whatsThis()] = input.isChecked()
+        print(settings)
         return settings
 
 
 
+    # Set the title of the page
+    def setPageTitle(self, name):
+        self.ui.label.setText(name)
 
-    def setPageTitle(name):
-        pass
-
-    def addLabel(name , identifier):
+    # Add a label to the page
+    def addLabel(self, name , identifier):
+        # Add a label to the formLayout
+        label = QLabel(name)
+        self.ui.formLayout.addRow("", label)
         pass
     
-    def addTextInput(name , identifier, canBeEmpty = False):
+    # Add a text input to the page
+    def addTextInput(self, name , identifier, canBeEmpty = False):
+        # Add a label to the formLayout
+        lineEdit = QLineEdit()
+        lineEdit.setWhatsThis(identifier)
+        self.ui.formLayout.addRow(name, lineEdit)
+        self.inputs.append(lineEdit)
+
+    # Add a checkbox to the page
+    def addCheckbox(self, name , identifier):
+        # Add a label to the formLayout
+        checkBox = QCheckBox()
+        checkBox.setText(name)
+        checkBox.setWhatsThis(identifier)
+        self.ui.formLayout.addRow("", checkBox)
+        self.inputs.append(checkBox)
+    
+    # Add a separator to the page
+    def addSeparator(self):
+        frame = QFrame()
+        frame.setFrameShape(QFrame.HLine)
+        frame.setFrameShadow(QFrame.Sunken)
+        self.ui.formLayout.addRow("", frame)
         pass
 
-    def addSeparator():
-        pass
+    # Add a spacer to the page
+    def addSpacer(self):
+        self.ui.formLayout.addRow("", QLabel())
 
-    def addSpacer():
-        pass
+
+
+
+
+
+
+
 
     def autoFill(self):
-        self.ui.leName.setText("MyRig")
-        self.ui.leIdentifier.setText("MyRig")
-        self.ui.leVersion.setText("1.0")
-        self.ui.leAuthor.setText("MyName")
         pass
 
 
@@ -75,34 +116,7 @@ class PageGlobalSettings(PageBase):
 
         ########################################################
         #### Check if all the required fields are filled in ####
-        ########################################################.
-
-        """
-        # Check if the user has entered a name for the rig
-        if self.ui.leName.text() == "":
-            # Warn the user
-            QtWidgets.QMessageBox.warning(self, "Warning", "Please enter a name for the rig.")
-            return False
-        
-        # Check if the user entered an identifier for the rig
-        if self.ui.leIdentifier.text() == "":
-            # Warn the user
-            QtWidgets.QMessageBox.warning(self, "Warning", "Please enter an identifier for the rig.")
-            return False
-        
-        # Check if the user entered a version for the rig
-        if self.ui.leVersion.text() == "":
-            # Warn the user
-            QtWidgets.QMessageBox.warning(self, "Warning", "Please enter a version for the rig.")
-            return False
-        
-        # Check if the user entered a author for the rig
-        if self.ui.leAuthor.text() == "":
-            # Warn the user
-            QtWidgets.QMessageBox.warning(self, "Warning", "Please enter an author for the rig.")
-            return False
-
-        """
+        ########################################################
 
 
         return True

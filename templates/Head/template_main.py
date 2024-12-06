@@ -1,64 +1,22 @@
 from wombatAutoRig.src.core import TemplateBase
-from wombatAutoRig.src.core import AutorigHelper
-from wombatAutoRig.src.core import Offset
+from wombatAutoRig.src.core import DefaultFolders
 from maya import cmds
 
 
-from wombatAutoRig.src.ui import PageGlobalSettings
-from wombatAutoRig.src.ui import PageGeometrySelection
-from wombatAutoRig.src.ui import PageJointPlacement
-from wombatAutoRig.src.ui import PageControllerPlacement
-
-
-from wombatAutoRig.templates.Body import placement_joints
-from wombatAutoRig.templates.Body import placement_controllers
-from wombatAutoRig.templates.Body import compute
-
-
-
-# Autorig template : Body
-# Version : 0.0.1
-# Author : ThomasEsc
-# Identifier : Body
+# Autorig template : Head
+# Version : eqdz&z
+# Author : zd
+# Identifier : zqdqa�
 # Description : This is a template for an autorig
 class Template(TemplateBase.TemplateBase):
 
     def __init__(self):
         super(Template, self).__init__()
 
-        self.name = "Body"
-        self.identifier = "Body"
-        self.version = "0.0.1"
-        self.author = "ThomasEsc"
-
-        # The pages of the template
-        self.pages = [
-            PageGlobalSettings.PageGlobalSettings(),
-            PageGeometrySelection.PageGeometrySelection(),
-            PageJointPlacement.PageJointPlacement(),
-            PageControllerPlacement.PageControllerPlacement(),
-        ]
-
-        self.pages[0].entered.connect(self.onGlobalSettingsEntered)
-        self.pages[0].accepted.connect(self.onGlobalSettingsAccepted)
-
-        self.pages[1].entered.connect(self.onGeometrySelectionEntered)
-        self.pages[1].accepted.connect(self.onGeometrySelectionAccepted)
-
-        self.pages[2].entered.connect(self.onJointPlacementEntered)
-        self.pages[2].accepted.connect(self.onJointPlacementAccepted)
-
-        self.pages[3].entered.connect(self.onControllerPlacementEntered)
-        self.pages[3].accepted.connect(self.onControllerPlacementAccepted)
-
-
-        self.pages[0].setPageTitle("Global Settings")
-        self.pages[0].addTextInput("Name", "name")
-        self.pages[0].addTextInput("Identifier", "identifier")
-        self.pages[0].addTextInput("Version", "version")
-        self.pages[0].addTextInput("Author", "author")
-        self.pages[0].addCheckbox("Create a new folder", "createFolder")
-
+        self.name = "Head"
+        self.identifier = "zqd"
+        self.version = "eqdz&z"
+        self.author = "zd"
         
 
     # This method is called when the template is initialized
@@ -71,21 +29,6 @@ class Template(TemplateBase.TemplateBase):
     def onCanceled(self):
         print("onCanceled")
 
-    # This method set the mainwindow
-    def setMainwindow(self, mainwindow):
-        self.mw = mainwindow
-
-        self.mw.validationAccepted.connect(self.onValidationAccepted)
-        self.mw.validationEntered.connect(self.onValidationEntered)
-
-
-
-
-
-
-
-
-
 
     ################################################################################################
     ################### G L O B A L   S E T T I N G S   P A G E ####################################
@@ -93,20 +36,20 @@ class Template(TemplateBase.TemplateBase):
     # region 0 - Global Settings
 
     # This method is called when the global settings are entered
-    def onGlobalSettingsEntered(self):
+    def onGlobalSettingsEntered(self, settings):
         print("onGlobalSettingsEntered")
-        AutorigHelper.createDefaultAutorigFolder("autorig")
+        DefaultFolders.createDefaultAutorigFolder("autorig")
     
     # This method is called when the global settings are finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct
     # If the settings are correct, the method should return True and the next page will be shown
     # If the settings are incorrect, the method should return False, and the next page will not be shown
-    def onGlobalSettingsFinished(self):
+    def onGlobalSettingsFinished(self, settings):
         print("onGlobalSettingsFinished")
         return True
     
     # This method is called when the global settings are accepted
-    def onGlobalSettingsAccepted(self):
+    def onGlobalSettingsAccepted(self, settings):
         print("onGlobalSettingsAccepted")
 
 
@@ -118,18 +61,18 @@ class Template(TemplateBase.TemplateBase):
     # region 1 - Geometry
 
     # This method is called when the geometry selection is entered
-    def onGeometrySelectionEntered(self):
+    def onGeometrySelectionEntered(self, settings):
         print("onGeometrySelectionEntered")
 
     # This method is called when the geometry selection is finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct
     # If the settings are correct, the method should return True and the next page will be shown
-    def onGeometrySelectionFinished(self):
+    def onGeometrySelectionFinished(self, settings):
         print("onGeometrySelectionFinished")
         return True
     
     # This method is called when the geometry selection is accepted
-    def onGeometrySelectionAccepted(self):
+    def onGeometrySelectionAccepted(self, settings):
         print("onGeometrySelectionAccepted")
 
 
@@ -140,31 +83,19 @@ class Template(TemplateBase.TemplateBase):
     # region 2 - Joint
 
     # This method is called when the joint placement is entered
-    def onJointPlacementEntered(self):
+    def onJointPlacementEntered(self, settings):
         print("onJointPlacementEntered")
-
-        settings = self.mw.getSettings()
-        
-        AutorigHelper.makeTemplate(settings["geo"], 1)
-
-        AutorigHelper.hideJointsPlacement(0)
-
-        placement_joints.placeJoints(settings)
-
 
     # This method is called when the joint placement is finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct
     # If the settings are correct, the method should return True and the next page will be shown
-    def onJointPlacementFinished(self):
+    def onJointPlacementFinished(self, settings):
         print("onJointPlacementFinished")
         return True
     
     # This method is called when the joint placement is accepted
-    def onJointPlacementAccepted(self):
+    def onJointPlacementAccepted(self, settings):
         print("onJointPlacementAccepted")
-        settings = self.mw.getSettings()
-        AutorigHelper.hideJointsPlacement(1)
-        AutorigHelper.makeTemplate(settings["geo"], 0)
 
 
     ################################################################################################
@@ -173,24 +104,18 @@ class Template(TemplateBase.TemplateBase):
     # region 3 - Controller
 
     # This method is called when the controller placement is entered
-    def onControllerPlacementEntered(self):
-        settings = self.mw.getSettings()
-        AutorigHelper.hideControllersPlacement(0)
-
-        placement_controllers.placeControllers(settings)
-        
+    def onControllerPlacementEntered(self, settings):
         print("onControllerPlacementEntered")
 
     # This method is called when the controller placement is finished (when the user clicks the "Next" button)
     # It is used to verify that the settings are correct
     # If the settings are correct, the method should return True and the next page will be shown
-    def onControllerPlacementFinished(self):
+    def onControllerPlacementFinished(self, settings):
         print("onControllerPlacementFinished")
         return True
     
     # This method is called when the controller placement is accepted
-    def onControllerPlacementAccepted(self):
-        AutorigHelper.hideControllersPlacement(1)
+    def onControllerPlacementAccepted(self, settings):
         print("onControllerPlacementAccepted")
 
 
@@ -201,27 +126,18 @@ class Template(TemplateBase.TemplateBase):
     # region 4 - Validation
 
     # This method is called when the joint limits are entered
-    def onValidationEntered(self):
+    def onValidationEntered(self, settings):
         print("onValidationEntered")
 
     # This method is called when the joint limits are finished (when the user clicks the "Next" button)
-    def onValidationAccepted(self):
+    def onValidationAccepted(self, settings):
         print("onValidationAccepted")
-
-        settings = self.mw.getSettings()
-
+        
         # Create the folder hierarchy
-        AutorigHelper.createDefaultFolder(settings["name"])
-
-        ################################################################################################
-        ################### C O M P U T E   ############################################################s
-        ################################################################################################
-
-        # Compute the autorig
-        compute.compute(settings)
+        DefaultFolders.createDefaultFolder(settings["name"])
 
 
         # Remove the autorig folder
-        AutorigHelper.removeDefaultAutorigFolder("autorig")
-        AutorigHelper.disableLocalRotationAxis()
+        DefaultFolders.removeDefaultAutorigFolder("autorig")
+
         return True
