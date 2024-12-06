@@ -18,7 +18,6 @@ addNodeToBookmark("MyBookmark", "pCube3", column=1)
 # Add another node to the bookmark in a specific row and column
 addNodeToBookmark("MyBookmark", "pCube4", row=1, column=1)
 
-
 """
 
 
