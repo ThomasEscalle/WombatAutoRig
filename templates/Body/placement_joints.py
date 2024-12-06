@@ -76,6 +76,12 @@ def placeJointsLegs(settings):
 
 
     return 'PlacementJnt_Root'
+
+def placeJointsArm(settings):
+    createJoint("PlacementJnt_Arm_L", (15.215, 134.727, -3.639), (180,10.360,-45.005), settings)
+    createJoint("PlacementJnt_Elbow_L", (32.256, 117.684, -8.045), (180,-8.329,-43.347), settings)
+    createJoint("PlacementJnt_Wrist_L", (49.884, 101.044, -4.496), (180,-8.329,-43.347), settings)
+
         
 
 # Place the placement joints for the body
