@@ -61,11 +61,14 @@ def saveController(controllerName):
 # @return: The created controller
 def createController(controllerName , name = ""):
     # Check if the controller exists
-    controllerPath = FileHelper.getControllersPath() + "/" + controllerName + ".ctrl.txt"
+    controllerPath = controllerName
 
     if not os.path.exists(controllerPath):
-        print("Controller not found: " + controllerPath)
-        return
+        controllerPath = FileHelper.getControllersPath() + "/" + controllerName + ".ctrl.txt"
+        
+        if not os.path.exists(controllerPath):
+            print("Controller not found: " + controllerName)
+            return
     
     commands = []
     # Load the controller from the file

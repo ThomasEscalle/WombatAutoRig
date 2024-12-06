@@ -22,9 +22,10 @@ class Ui_DlgControllers(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.comboBox = QComboBox(DlgControllers)
+        self.comboBox.setObjectName(u"comboBox")
 
-        self.horizontalLayout_2.addItem(self.horizontalSpacer)
+        self.horizontalLayout_2.addWidget(self.comboBox)
 
         self.btnOptions = QPushButton(DlgControllers)
         self.btnOptions.setObjectName(u"btnOptions")
@@ -34,21 +35,10 @@ class Ui_DlgControllers(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
 
-        self.scrollArea = QScrollArea(DlgControllers)
-        self.scrollArea.setObjectName(u"scrollArea")
-        self.scrollArea.setFrameShape(QFrame.NoFrame)
-        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.scrollArea.setSizeAdjustPolicy(QAbstractScrollArea.AdjustIgnored)
-        self.scrollArea.setWidgetResizable(True)
-        self.scroll_area_widget = QWidget()
-        self.scroll_area_widget.setObjectName(u"scroll_area_widget")
-        self.scroll_area_widget.setGeometry(QRect(0, 0, 458, 294))
-        self.gridLayout = QGridLayout(self.scroll_area_widget)
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.scrollArea.setWidget(self.scroll_area_widget)
+        self.stackedWidget = QStackedWidget(DlgControllers)
+        self.stackedWidget.setObjectName(u"stackedWidget")
 
-        self.verticalLayout.addWidget(self.scrollArea)
+        self.verticalLayout.addWidget(self.stackedWidget)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
