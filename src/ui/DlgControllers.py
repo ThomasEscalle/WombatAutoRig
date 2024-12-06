@@ -38,6 +38,9 @@ class DlgControllers(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         self.ui.btnOptions.clicked.connect(self.showOptions)
 
+        # Connect the combo box to the stacked widget
+        self.ui.comboBox.currentIndexChanged.connect(self.ui.stackedWidget.setCurrentIndex)
+
 
     def setCreateMode(self):
         self.mode = "create"
@@ -70,49 +73,67 @@ class DlgControllers(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         controllersPath = FileHelper.getControllersPath()
 
         # Get all the controllers files in the directory
-        files = FileHelper.getAllFilesInFolder(controllersPath)
+        folders = FileHelper.getAllFoldersInFolder(controllersPath)
 
-        btnNumber = 0
+        for folder in folders:
+            files = FileHelper.getAllFilesInFolder(folder)
 
-        # Loop through the files
-        for file in files:
-            # Check if the file contains the .ctrl.txt extension
-            if file.endswith(".ctrl.txt"):
-                print("Controller found: " + file)
+            # Create a page in the stacked widget for each folder
+            # Add a scroll area to the page
+            # Add a grid layout to the scroll area
 
-                # Create a button for each controller
-                button = QtWidgets.QPushButton()
+            page = QtWidgets.QWidget()
+            scrollArea = QtWidgets.QScrollArea()
+            scrollArea.setWidget(page)
+            scrollArea.setWidgetResizable(True)
 
-                # Get the position of the button in the grid layout
-                row = btnNumber // 4
-                col = btnNumber % 4
+            gridLayout = QtWidgets.QGridLayout()
+            page.setLayout(gridLayout)
+            
+            self.ui.stackedWidget.addWidget(scrollArea)
 
-                # Set the button text
-                # button.setText("Ctrl")
+            # Add the page to the combo box
+            self.ui.comboBox.addItem(folder.split("/")[-1])
 
-                self.ui.gridLayout.addWidget(button, row, col)
 
-                # Increment the button number
-                btnNumber += 1
+            btnNumber = 0
 
-                # Connect the button to the execFile function
-                button.clicked.connect(lambda self=self, file=file: self.execFile(file))
-                # Check if there is a file named "file".png
-                # If so, set the button icon
-                iconPath = file + ".png"
-                if FileHelper.fileExists(iconPath):
-                    button.setIcon(QIcon(iconPath))
-                    button.setIconSize(QSize(32, 32))
+            # Loop through the files
+            for file in files:
+                # Check if the file contains the .ctrl.txt extension
+                if file.endswith(".ctrl.txt"):
+
+                    # Create a button for each controller
+                    button = QtWidgets.QPushButton()
+
+                    # Get the position of the button in the grid layout
+                    row = btnNumber // 4
+                    col = btnNumber % 4
+
+                    # Set the button text
+                    # button.setText("Ctrl")
+
+                    gridLayout.addWidget(button, row, col)
+
+                    # Increment the button number
+                    btnNumber += 1
+
+                    # Connect the button to the execFile function
+                    button.clicked.connect(lambda self=self, file=file: self.execFile(file))
+                    # Check if there is a file named "file".png
+                    # If so, set the button icon
+                    iconPath = file + ".png"
+                    if FileHelper.fileExists(iconPath):
+                        button.setIcon(QIcon(iconPath))
+                        button.setIconSize(QSize(32, 32))
 
 
     def execFile(self, file):
-        file = file.replace("\\", "/")
-        fileName = file.split("/")[-1].split(".")[0]
 
         if self.mode == "create":
-            Controllers.createController(fileName)
+            Controllers.createController(file)
         elif self.mode == "replace":
-            Controllers.replaceController(fileName)
+            Controllers.replaceController(file)
         
 
     # Show window with docking ability

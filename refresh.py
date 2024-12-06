@@ -160,7 +160,7 @@ from wombatAutoRig.templates.Body import computeThomas
 importlib.reload(computeThomas)
 
 
-wombatAutoRig.run()  # Appeler la fonction run() après rechargement
+#wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
-# dialog = DlgControllers.DlgControllers()
-# dialog.run()  # Appeler la fonction run() après rechargement
+dialog = DlgControllers.DlgControllers()
+dialog.run()  # Appeler la fonction run() après rechargement

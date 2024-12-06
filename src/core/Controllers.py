@@ -61,11 +61,14 @@ def saveController(controllerName):
 # @return: The created controller
 def createController(controllerName , name = ""):
     # Check if the controller exists
-    controllerPath = FileHelper.getControllersPath() + "/" + controllerName + ".ctrl.txt"
+    controllerPath = controllerName
 
     if not os.path.exists(controllerPath):
-        print("Controller not found: " + controllerPath)
-        return
+        controllerPath = FileHelper.getControllersPath() + "/" + controllerName + ".ctrl.txt"
+        
+        if not os.path.exists(controllerPath):
+            print("Controller not found: " + controllerName)
+            return
     
     commands = []
     # Load the controller from the file
@@ -96,10 +99,7 @@ def replaceController(controllerName):
     if len(selection) == 0:
         print("No controller selected")
         return
-
     
-
-
     selection = selection[0]
 
     # Get the bounding box of the controller
@@ -108,15 +108,25 @@ def replaceController(controllerName):
     width = bbox[3] - bbox[0]
     height = bbox[4] - bbox[1]
     depth = bbox[5] - bbox[2]
-
+    # Get the maximum of the width, height and depth
     maximum = max(width, height, depth)
 
+    # Get the parent of the old controller
     parent = cmds.listRelatives(selection, parent=True)
 
+    # Get the color of the shape of the old controller
+    shapes = cmds.listRelatives(selection, shapes=True)
+    color = cmds.getAttr(shapes[0] + ".overrideColorRGB")
 
+    # Get the rotation of the old controller
+    rotation = cmds.xform(selection, query=True, rotation=True)
 
+    # Delete the old controller
+    selectionName = selection.split("|")[-1]
+    cmds.delete(selection)
+    
     # Create the new controller
-    newController = createController(controllerName, name=selection)
+    newController = createController(controllerName, name=selectionName)
 
     if newController is None:
         print("Error creating controller")
@@ -128,10 +138,7 @@ def replaceController(controllerName):
     createdWidth = createdBBox[3] - createdBBox[0]
     createdHeight = createdBBox[4] - createdBBox[1]
     createdDepth = createdBBox[5] - createdBBox[2]
-
     createdMaximum = max(createdWidth, createdHeight, createdDepth)
-
-
 
 
 
@@ -146,8 +153,19 @@ def replaceController(controllerName):
     # Move the new controller to the position of the old one
     cmds.move(position[0], position[1], position[2], newController)
 
-    # Get the rotation of the old controller
-    rotation = cmds.xform(selection, query=True, rotation=True)
+    color = list(color)
+    color = list(color[0])
+
+    # Set the color of the shape of the new controller
+    shapes = cmds.listRelatives(newController, shapes=True)
+    for shape in shapes:
+        cmds.setAttr(shape + ".overrideEnabled", 1)
+        cmds.setAttr(shape + ".overrideRGBColors", 1)
+        cmds.setAttr(shape + ".overrideColorRGB", color[0], color[1], color[2])
+    
+
+
+
     # Rotate the new controller to match the rotation of the old one
     cmds.rotate(rotation[0], rotation[1], rotation[2], newController)
 
@@ -156,8 +174,7 @@ def replaceController(controllerName):
         cmds.parent(newController, parent)
 
 
-    # Delete the old controller
-    cmds.delete(selection)
+
 
     # Select the new controller
     cmds.select(newController)
