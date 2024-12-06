@@ -98,7 +98,6 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         
         if Offset == True:
             afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
-            afterScript += 'cmds.delete("{}")\n'.format(InversePivMatX)
         if cmds.objectType(Slave) == 'joint' :
             afterScript += 'cmds.delete("{}")\n'.format(ComposeMatX)
             afterScript += 'cmds.delete("{}")\n'.format(MultMatX_Jnt_Parent)
