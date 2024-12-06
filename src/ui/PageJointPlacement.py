@@ -25,6 +25,22 @@ class PageJointPlacement(PageBase):
         self.ui.btnTemplate.clicked.connect(self.templateButtonClicked)
         self.ui.btnTemplate.setIcon(IconLoader.loadIcon("eye"))
 
+    # Signal to create the rig
+    canceled = Signal()
+    accepted = Signal()
+    entered = Signal()
+    
+    # Triggers the signals
+    def onCanceled(self):
+        self.canceled.emit()
+
+    # Triggers the signals
+    def onAccepted(self):
+        self.accepted.emit()
+
+    # Triggers the signals
+    def onEntered(self):
+        self.entered.emit()
 
     # Say if the user can go sto the next page or not
     def canGoNext(self):

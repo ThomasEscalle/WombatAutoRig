@@ -16,6 +16,13 @@ class TemplateBase :
     def onCanceled(self):
         print("onCanceled")
 
+    # This method return the pages of the autorig
+    def getPages(self):
+        return self.pages
+
+    # This method set the mainwindow
+    def setMainwindow(self, mainwindow):
+        self.mw = mainwindow
 
     ################################################################################################
     ################### G L O B A L   S E T T I N G S   P A G E ####################################

@@ -16,6 +16,24 @@ class PageGlobalSettings(PageBase):
         self.ui = ui_PageGlobalSettings.Ui_PageGlobalSettings()
         self.ui.setupUi(self)
         
+
+    # Signal to create the rig
+    canceled = Signal()
+    accepted = Signal()
+    entered = Signal()
+    
+    # Triggers the signals
+    def onCanceled(self):
+        self.canceled.emit()
+
+    # Triggers the signals
+    def onAccepted(self):
+        self.accepted.emit()
+
+    # Triggers the signals
+    def onEntered(self):
+        self.entered.emit()
+
     def addDataToSettings(self,settings):
         print("Add the data to the settings")
         settings["name"] = self.ui.leName.text()
@@ -23,6 +41,8 @@ class PageGlobalSettings(PageBase):
         settings["version"] = self.ui.leVersion.text()
         settings["author"] = self.ui.leAuthor.text()
         return settings
+
+
 
 
     def setPageTitle(name):

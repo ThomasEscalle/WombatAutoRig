@@ -30,6 +30,22 @@ class PageValidation(PageBase):
     # Signal to create the rig
     yesClicked = Signal()
     noClicked = Signal()
+    
+    canceled = Signal()
+    accepted = Signal()
+    entered = Signal()
+    
+    # Triggers the signals
+    def onCanceled(self):
+        self.canceled.emit()
+
+    # Triggers the signals
+    def onAccepted(self):
+        self.accepted.emit()
+    
+    # Triggers the signals
+    def onEntered(self):
+        self.entered.emit()
 
 
     def hideNextAndCancel(self):
