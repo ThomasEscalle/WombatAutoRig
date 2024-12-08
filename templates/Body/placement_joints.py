@@ -117,6 +117,9 @@ def placeJointsArm(side="L", settings={}):
     end_ring = createJoint(f"PlacementJnt_Ring_end_{side}", (sign * 56.271, 89.990, -3.863), (-114.047- offset,sign * -15.307,sign * -85.696), settings)
     end_pimky = createJoint(f"PlacementJnt_Pimky_end_{side}", (sign * 53.845, 89.431, -6.045), (-117.764- offset,sign * -10.735,sign * -85.330), settings)
 
+    clavicle = createJoint(f"PlacementJnt_Clavicle_{side}", (sign * 2.214, 133.598, 0.001), (4.028- offset,sign * 20.182,sign *11.537), settings)
+    clavicle_end = createJoint(f"PlacementJnt_Clavicle_end_{side}", (sign * 15.682, 136.347, -5.051), (4.028- offset,sign * 20.182,sign *11.537), settings)
+
 
     #parenting
     cmds.parent(end_index, three_index)
@@ -151,7 +154,10 @@ def placeJointsArm(side="L", settings={}):
     cmds.parent(wrist, elbow)
     cmds.parent(elbow, arm)
 
+    cmds.parent(clavicle_end, clavicle)
+
     cmds.parent(arm, "JointsPlacement")
+    cmds.parent(clavicle, "JointsPlacement")
 
 
 
