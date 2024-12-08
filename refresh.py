@@ -160,6 +160,12 @@ from wombatAutoRig.templates.Body import computeThomas
 importlib.reload(computeThomas)
 
 
+from wombatAutoRig.src.ui import WidgetSelectComponent
+importlib.reload(WidgetSelectComponent)
+
+from wombatAutoRig.src.ui.forms import ui_WidgetSelectComponent
+importlib.reload(ui_WidgetSelectComponent)
+
 wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
 #dialog = DlgControllers.DlgControllers()

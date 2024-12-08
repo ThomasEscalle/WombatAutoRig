@@ -7,6 +7,8 @@ from wombatAutoRig.src.ui.PageBase import PageBase
 
 from wombatAutoRig.src.ui.forms import ui_PageGlobalSettings
 
+from wombatAutoRig.src.ui import WidgetSelectComponent
+
 # Page to set the global settings for the rig
 class PageGlobalSettings(PageBase):
 
@@ -62,7 +64,7 @@ class PageGlobalSettings(PageBase):
         self.ui.label.setText(name)
 
     # Add a label to the page
-    def addLabel(self, name , identifier):
+    def addLabel(self, name ):
         # Add a label to the formLayout
         label = QLabel(name)
         self.ui.formLayout.addRow("", label)
@@ -98,7 +100,29 @@ class PageGlobalSettings(PageBase):
         self.ui.formLayout.addRow("", QLabel())
 
 
+    def addVertexSelection(self, name, identifier):
+        widget = WidgetSelectComponent.WidgetSelectComponent()
+        widget.setMode("vertex")
+        widget.setWhatsThis(identifier)
+        self.ui.formLayout.addRow(name, widget)
 
+    def addEdgeSelection(self, name, identifier):
+        widget = WidgetSelectComponent.WidgetSelectComponent()
+        widget.setMode("edge")
+        widget.setWhatsThis(identifier)
+        self.ui.formLayout.addRow(name, widget)
+
+    def addFaceSelection(self, name, identifier):
+        widget = WidgetSelectComponent.WidgetSelectComponent()
+        widget.setMode("face")
+        widget.setWhatsThis(identifier)
+        self.ui.formLayout.addRow(name, widget)
+
+    def addObjectSelection(self, name, identifier):
+        widget = WidgetSelectComponent.WidgetSelectComponent()
+        widget.setMode("object")
+        widget.setWhatsThis(identifier)
+        self.ui.formLayout.addRow(name, widget)
 
 
 
