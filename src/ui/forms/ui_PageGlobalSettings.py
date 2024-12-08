@@ -17,7 +17,7 @@ class Ui_PageGlobalSettings(object):
     def setupUi(self, PageGlobalSettings):
         if not PageGlobalSettings.objectName():
             PageGlobalSettings.setObjectName(u"PageGlobalSettings")
-        PageGlobalSettings.resize(581, 454)
+        PageGlobalSettings.resize(581, 574)
         self.verticalLayout = QVBoxLayout(PageGlobalSettings)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(PageGlobalSettings)
@@ -26,7 +26,6 @@ class Ui_PageGlobalSettings(object):
         font.setPointSize(12)
         font.setBold(True)
         self.label.setFont(font)
-        self.label.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
 
         self.verticalLayout.addWidget(self.label)
 
@@ -37,20 +36,16 @@ class Ui_PageGlobalSettings(object):
 
         self.scrollArea = QScrollArea(PageGlobalSettings)
         self.scrollArea.setObjectName(u"scrollArea")
-        self.scrollArea.setFrameShape(QFrame.Shape.NoFrame)
+        self.scrollArea.setFrameShape(QFrame.NoFrame)
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 563, 68))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 555, 474))
         self.formLayout = QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName(u"formLayout")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
         self.verticalLayout.addWidget(self.scrollArea)
-
-        self.verticalSpacer = QSpacerItem(20, 363, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.verticalLayout.addItem(self.verticalSpacer)
 
 
         self.retranslateUi(PageGlobalSettings)
