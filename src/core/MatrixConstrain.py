@@ -196,7 +196,6 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         afterScript = 'import maya.cmds as cmds\n'
 
         afterScript += 'cmds.delete("{}")\n'.format(MultMatX)
-        afterScript += 'cmds.delete("{}")\n'.format(ComMatX)
         afterScript += 'cmds.delete("{}")\n'.format(PmaScale)
         afterScript += 'cmds.delete("{}")\n'.format(PmaRotate)
         afterScript += 'cmds.delete("{}")\n'.format(PmaTranslate)
