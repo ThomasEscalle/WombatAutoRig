@@ -8,9 +8,9 @@ from maya import cmds
 
 
 # fonction that clear the selection and create a joint at the given position and orientation
-def createJoint(name, position, orientation, settings):
+def createJoint(name, position, orientation, settings, ro="xyz"):
     cmds.select(clear=True)
-    joint = cmds.joint(name=name, p=AutorigHelper.resizeJnts(bbox = settings["bbox"] , size = position))
+    joint = cmds.joint(name=name, p=AutorigHelper.resizeJnts(bbox = settings["bbox"] , size = position), roo=ro)
     cmds.joint(joint, e=True, o=orientation, ch=True, zso=True)
     cmds.setAttr(joint+ ".displayLocalAxis", 1)
     Color.setColor(joint, "white")
@@ -19,7 +19,7 @@ def createJoint(name, position, orientation, settings):
 
 def placeJointsLegs(settings):
     # Creating the root joint
-    createJoint("PlacementJnt_Root", (0, 97.699, 0), (180,0,90), settings)
+    createJoint("PlacementJnt_Root", (0, 97.699, 0), (0,0,0), settings, ro="xzy")
 
     # Creating Joints for the legs left
     createJoint("PlacementJnt_Hip_L", (7.636, 88.219, 0), (0,-1.767,-90), settings)
