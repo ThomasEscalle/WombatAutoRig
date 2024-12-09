@@ -339,6 +339,11 @@ def createLeg(settings, side = "L"):
 def createArm(settings, side = "L"):
     #region Creating the joints 
         
+    cmds.duplicate(f"PlacementJnt_Clavicle_{side}", n=f"Bind_Clavicle_{side}", po=True)
+    Color.setColor(f"Bind_Clavicle_{side}", "white")
+    cmds.duplicate(f"PlacementJnt_Clavicle_end_{side}", n=f"Bind_Clavicle_end_{side}", po=True)
+    Color.setColor(f"Bind_Clavicle_end_{side}", "white")
+
     cmds.duplicate(f"PlacementJnt_Arm_{side}", n=f"DrvJnt_Arm_{side}", po=True)
     Color.setColor(f"DrvJnt_Arm_{side}", "yellow")
     cmds.duplicate(f"PlacementJnt_Elbow_{side}", n=f"DrvJnt_Elbow_{side}", po=True)
@@ -357,6 +362,8 @@ def createArm(settings, side = "L"):
 
     #Freeze the transform
 
+    cmds.makeIdentity(f"Bind_Clavicle_{side}", a=True, t=True, r=True, s=True)
+    cmds.makeIdentity(f"Bind_Clavicle_end_{side}", a=True, t=True, r=True, s=True)
     cmds.makeIdentity(f"DrvJnt_Elbow_{side}", a=True, t=True, r=True, s=True)
     cmds.makeIdentity(f"DrvJnt_Arm_{side}", a=True, t=True, r=True, s=True)
     cmds.makeIdentity(f"DrvJnt_Wrist_{side}", a=True, t=True, r=True, s=True)
@@ -367,6 +374,8 @@ def createArm(settings, side = "L"):
 
     #Unparenting the joints
 
+    cmds.parent(f"Bind_Clavicle_{side}", world=True)
+    cmds.parent(f"Bind_Clavicle_end_{side}", world=True)
     cmds.parent(f"DrvJnt_Arm_{side}", world=True)
     cmds.parent(f"DrvJnt_Elbow_{side}", world=True)
     cmds.parent(f"DrvJnt_Wrist_{side}", world=True)
