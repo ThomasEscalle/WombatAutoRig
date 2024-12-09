@@ -55,10 +55,6 @@ class Template(TemplateBase.TemplateBase):
         self.pages[0].setPageTitle("Global Settings")
         self.pages[0].addTextInput("Name", "name")
         self.pages[0].addTextInput("Identifier", "identifier")
-        self.pages[0].addSpacer()
-        self.pages[0].addLabel("Select the vertices : " )
-        self.pages[0].addVertexSelection("", "geo")
-        self.pages[0].addCheckbox("Create a mirror", "mirror")
 
         
 
