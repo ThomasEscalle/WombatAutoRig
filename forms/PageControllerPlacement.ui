@@ -60,9 +60,23 @@
     </layout>
    </item>
    <item>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QPushButton" name="btnControllers">
      <property name="text">
       <string>Replace controllers</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnColors">
+     <property name="text">
+      <string>Colors</string>
      </property>
     </widget>
    </item>

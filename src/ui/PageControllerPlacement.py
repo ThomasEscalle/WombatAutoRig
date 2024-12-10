@@ -8,6 +8,7 @@ from maya import cmds
 from wombatAutoRig.src.ui.forms import ui_PageControllerPlacement
 
 from wombatAutoRig.src.ui import DlgControllers
+from wombatAutoRig.src.ui import DlgColor
 
 from wombatAutoRig.src.ui.PageBase import PageBase
 from wombatAutoRig.src.ui import IconLoader
@@ -26,11 +27,14 @@ class PageControllerPlacement(PageBase):
         self.ui.btnIkMode.clicked.connect(self.onIkModeClicked)
         self.ui.btnOther.clicked.connect(self.onOtherClicked)
         self.ui.btnControllers.clicked.connect(self.onControllersClicked)
+        self.ui.btnColors.clicked.connect(self.onColorsClicked)
 
         # Set icons
         self.ui.btnFkMode.setIcon(IconLoader.loadIcon("skull"))
         self.ui.btnIkMode.setIcon(IconLoader.loadIcon("skeleton"))
         self.ui.btnOther.setIcon(IconLoader.loadIcon("other"))
+        self.ui.btnColors.setIcon(IconLoader.loadIcon("colors"))
+        self.ui.btnControllers.setIcon(IconLoader.loadIcon("controller"))
 
         # Set the default mode to Fk
         self.ui.btnFkMode.hide()
@@ -109,6 +113,10 @@ class PageControllerPlacement(PageBase):
     def onControllersClicked(self):
         dlg = DlgControllers.DlgControllers()
         dlg.setReplaceMode()
+        dlg.run()
+
+    def onColorsClicked(self):
+        dlg = DlgColor.DlgColor()
         dlg.run()
 
 

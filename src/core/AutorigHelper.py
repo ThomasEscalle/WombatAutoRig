@@ -53,6 +53,7 @@ def createDefaultAutorigFolder(name):
     cmds.hide("AutoRig_Data|ControllersPlacement")
     # Hide the Fk controllers by default
     cmds.hide("AutoRig_Data|ControllersPlacement|FK_Controllers")
+    cmds.hide("AutoRig_Data|ControllersPlacement|Other_Controllers")
 
 
 # Remove the Autorig folder
