@@ -22,6 +22,9 @@ def compute(settings):
     createLeg(settings, "L")
     createLeg(settings, "R")
 
+    createArm(settings, "L")
+    createArm(settings, "R")
+
 def createLeg(settings, side = "L"):
 
 
@@ -364,7 +367,7 @@ def createArm(settings, side = "L"):
     cmds.duplicate(f"PlacementJnt_Arm_{side}", n=f"FK_Arm_{side}", po=True)
     Color.setColor(f"FK_Arm_{side}", "blue")
     cmds.duplicate(f"PlacementJnt_Elbow_{side}", n=f"FK_Elbow_{side}", po=True)
-    Color.setColor(f"FK_Elobw_{side}", "blue")
+    Color.setColor(f"FK_Elbow_{side}", "blue")
     cmds.duplicate(f"PlacementJnt_Wrist_{side}", n=f"FK_Wrist_{side}", po=True)
     Color.setColor(f"FK_Wrist_{side}", "blue")
     
@@ -424,21 +427,27 @@ def createArm(settings, side = "L"):
 
     if not cmds.objExists("Joints_Clavicles"):
         cmds.group(n="Joints_Clavicles", em=True)
-        cmds.parent("Joints_Clavicles", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
+        cmds.parent("Joints_Clavicles", "{}|GlobalMove_01|Joints_01|Joints_Arms".format(settings["name"]))
 
     cmds.group(n=f"Joints_Clavicle_{side}", em=True)
     cmds.parent(f"Joints_Clavicle_{side}", "Joints_Clavicles")
-    cmds.parent(f"Bind_Clavicle_{side}_Offset", "{}|GlobalMove_01|Joints_01|Joints_Arms|Joints_Clavicle_{}".format(settings["name"], side))
+    cmds.parent(f"Bind_Clavicle_{side}_Offset", "{}|GlobalMove_01|Joints_01|Joints_Arms|Joints_Clavicles|Joints_Clavicle_{}".format(settings["name"], side))
     
     #region Creating CTRL Pin
-    cmds.duplicate(f"PlacementCtrl_Elbow_{side}", n=f"CTRL_Preserve_Elbow_{side}")
-    cmds.parent(f"CTRL_Preserve_Elbow_{side}", "{}|GlobalMove_01|Joints_01|Joints_Arms|Joints_Arm_{}|Preserve_Elbow_{}_Offset|Preserve_Elbow_{}_Hook|Preserve_Elbow_{}_Move".format(settings["name"], side, side, side, side))
-    cmds.parent(f"Preserve_Elbow_{side}", f"CTRL_Preserve_Elbow_{side}")
+    cmds.duplicate(f"PlacementCtrl_Pin_Elbow_{side}", n=f"CTRL_Pin_Elbow_{side}")
+    cmds.parent(f"CTRL_Pin_Elbow_{side}", "{}|GlobalMove_01|Joints_01|Joints_Arms|Joints_Arm_{}|Preserve_Elbow_{}_Offset|Preserve_Elbow_{}_Hook|Preserve_Elbow_{}_Move".format(settings["name"], side, side, side, side))
+    cmds.parent(f"Preserve_Elbow_{side}", f"CTRL_Pin_Elbow_{side}")
     cmds.createNode('multiplyDivide', n=f"MD_Preserve_Elbow_{side}")
     cmds.connectAttr(f"DrvJnt_Elbow_{side}.ry", f"MD_Preserve_Elbow_{side}.input1X")
     cmds.connectAttr(f"MD_Preserve_Elbow_{side}.outputX", f"Preserve_Elbow_{side}_Move.ry")
     cmds.setAttr(f"MD_Preserve_Elbow_{side}.input2X", 0.5)
     
+    #region Creating The Wrist CTRL
+    cmds.duplicate(f"PlacementCtrl_Ik_Arm_{side}", n=f"CTRL_Wrist_{side}")
+    cmds.parent(f"CTRL_Wrist_{side}", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+    cmds.addAttr(f"CTRL_Wrist_{side}", ln=f"Stretch_Arm", at="bool", dv=False, k=True)
+
+
     #region Creating the IK handle
     cmds.ikHandle(n=f"IK_Arm_{side}", sj=f"DrvJnt_Arm_{side}", ee=f"DrvJnt_Wrist_{side}", sol="ikRPsolver")
     cmds.parent(f"IK_Arm_{side}", "{}|GlobalMove_01|IKs_01".format(settings["name"]))
@@ -448,6 +457,8 @@ def createArm(settings, side = "L"):
     Offset.offset(f"PoleVector_Arm_{side}", nbr=1)
     cmds.poleVectorConstraint(Locator, f"IK_Arm_{side}")
     cmds.parent(f"PoleVector_Arm_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+    CTRL_Wrist_L = [f"CTRL_Wrist_{side}"]  
+    MatrixConstrain.MatrixConstrain(CTRL_Wrist_L, f"IK_Arm_{side}")
     
     #region Attach Joints 
     DrvJnt_Arm_L = [f"DrvJnt_Arm_{side}"]
@@ -457,23 +468,23 @@ def createArm(settings, side = "L"):
     MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, f"Preserve_Elbow_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False)
     
     #region switch IK FK 
-    cmds.duplicate(f"PlacementCtrl_Switch_Arm_{side}", n=f"Switch_Arm_{side}")
-    cmds.parent(f"Switch_Arm_{side}", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
-    cmds.addAttr(f"Switch_Arm_{side}", ln="IK_FK", at="enum", en="FK:IK", k=True)
-    cmds.addAttr(f"Switch_Arm_{side}", ln="Vis_Bend", at="bool", nn="Vis Bend", k=True)
-    cmds.addAttr(f"Switch_Arm_{side}", ln="Vis_Pin", at="bool", nn="Vis Pin", k=True)
-    cmds.setAttr(f"Switch_Arm_{side}.tx", keyable=False, channelBox=False)
-    cmds.setAttr(f"Switch_Arm_{side}.ty", keyable=False, channelBox=False)
-    cmds.setAttr(f"Switch_Arm_{side}.tz", keyable=False, channelBox=False)
-    cmds.setAttr(f"Switch_Arm_{side}.rx", keyable=False, channelBox=False)
-    cmds.setAttr(f"Switch_Arm_{side}.ry", keyable=False, channelBox=False)
-    cmds.setAttr(f"Switch_Arm_{side}.rz", keyable=False, channelBox=False)
-    cmds.setAttr(f"Switch_Arm_{side}.sx", keyable=False, channelBox=False)
-    cmds.setAttr(f"Switch_Arm_{side}.sy", keyable=False, channelBox=False)
-    cmds.setAttr(f"Switch_Arm_{side}.sz", keyable=False, channelBox=False)
-    Offset.offset(f"Switch_Arm_{side}", nbr=2)
-    MatrixConstrain.MatrixConstrain(Bind_Clavicle_end, f"Switch_Arm_{side}_Move", Offset=True, sX=False, sY=False, sZ=False)
-    cmds.setAttr(f"Switch_Arm_{side}.IK_FK", 1)
+    cmds.duplicate(f"PlacementCtrl_Settings_Arm_{side}", n=f"Settings_Arm_{side}")
+    cmds.parent(f"Settings_Arm_{side}", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+    cmds.addAttr(f"Settings_Arm_{side}", ln="IK_FK", at="enum", en="FK:IK", k=True)
+    cmds.addAttr(f"Settings_Arm_{side}", ln="Vis_Bend", at="bool", nn="Vis Bend", k=True)
+    cmds.addAttr(f"Settings_Arm_{side}", ln="Vis_Pin", at="bool", nn="Vis Pin", k=True)
+    cmds.setAttr(f"Settings_Arm_{side}.tx", keyable=False, channelBox=False)
+    cmds.setAttr(f"Settings_Arm_{side}.ty", keyable=False, channelBox=False)
+    cmds.setAttr(f"Settings_Arm_{side}.tz", keyable=False, channelBox=False)
+    cmds.setAttr(f"Settings_Arm_{side}.rx", keyable=False, channelBox=False)
+    cmds.setAttr(f"Settings_Arm_{side}.ry", keyable=False, channelBox=False)
+    cmds.setAttr(f"Settings_Arm_{side}.rz", keyable=False, channelBox=False)
+    cmds.setAttr(f"Settings_Arm_{side}.sx", keyable=False, channelBox=False)
+    cmds.setAttr(f"Settings_Arm_{side}.sy", keyable=False, channelBox=False)
+    cmds.setAttr(f"Settings_Arm_{side}.sz", keyable=False, channelBox=False)
+    Offset.offset(f"Settings_Arm_{side}", nbr=2)
+    MatrixConstrain.MatrixConstrain(Bind_Clavicle_end, f"Settings_Arm_{side}_Move", Offset=True, sX=False, sY=False, sZ=False)
+    cmds.setAttr(f"Settings_Arm_{side}.IK_FK", 1)
     
     #region Ribbon
     Ribbon.Ribbon(Name=f"Ribbon_Arm_{side}", Span=5)
@@ -524,25 +535,25 @@ def createArm(settings, side = "L"):
     
     
     #region Connection IK/FK
-    cmds.connectAttr(f"Switch_Arm_{side}.IK_FK", f"IK_Arm_{side}.ikBlend")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"IK_Arm_{side}.ikBlend")
     
     cmds.connectAttr(f"FK_Arm_{side}.rotate", f"DrvJnt_Arm_{side}.rotate")
     cmds.connectAttr(f"FK_Elbow_{side}.rotate", f"DrvJnt_Elbow_{side}.rotate")
     cmds.connectAttr(f"FK_Wrist_{side}.rotate", f"DrvJnt_Wrist_{side}.rotate")
     
     cmds.createNode("reverse", n="Reverse_Arm_{}".format(side))
-    cmds.connectAttr(f"Switch_Arm_{side}.IK_FK", f"Reverse_Arm_{side}.inputX")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Reverse_Arm_{side}.inputX")
     
     cmds.connectAttr(f"Reverse_Arm_{side}.outputX", f"FK_Arm_{side}.visibility")
-    cmds.connectAttr(f"Switch_Arm_{side}.IK_FK", f"IK_Arm_{side}.visibility")
-    cmds.connectAttr(f"Switch_Arm_{side}.IK_FK", f"DrvJnt_Arm_{side}.visibility")
-    cmds.connectAttr(f"Switch_Arm_{side}.IK_FK", f"PoleVector_{side}.visibility")
-    cmds.connectAttr(f"Switch_Arm_{side}.Vis_Pin", f"CTRL_Preserve_Elbow_{side}.visibility")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"IK_Arm_{side}.visibility")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"DrvJnt_Arm_{side}.visibility")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"PoleVector_Arm_{side}.visibility")
+    cmds.connectAttr(f"Settings_Arm_{side}.Vis_Pin", f"CTRL_Pin_Elbow_{side}.visibility")
 
     #region CTRL FK Joints
-    cmds.duplicate(f"PlacementCtrl_Arm_{side}", n=f"CTRL_FK_Arm_{side}")
-    cmds.duplicate(f"PlacementCtrl_Elbow_{side}", n=f"CTRL_FK_Elbow_{side}")
-    cmds.duplicate(f"PlacementCtrl_Wrist_{side}", n=f"CTRL_FK_Wrist_{side}")
+    cmds.duplicate(f"PlacementCtrl_Fk_Shoulder_{side}", n=f"CTRL_FK_Arm_{side}")
+    cmds.duplicate(f"PlacementCtrl_Fk_Elbow_{side}", n=f"CTRL_FK_Elbow_{side}")
+    cmds.duplicate(f"PlacementCtrl_Fk_Wrist_{side}", n=f"CTRL_FK_Wrist_{side}")
     #Hierachy
     Offset.offset(f"CTRL_FK_Arm_{side}", nbr=1)
     Offset.offset(f"CTRL_FK_Elbow_{side}", nbr=1)
@@ -571,7 +582,7 @@ def createArm(settings, side = "L"):
     cmds.parent(f"Locator_Wrist_{side}", f"Bind_Clavicle_{side}")
     cmds.matchTransform(f"Locator_Hip_{side}", f"Bind_Clavicle_{side}", pos=True)
     cmds.matchTransform(f"Locator_Wrist_{side}", f"DrvJnt_Wrist_{side}", pos=True)
-    CTRL_Wrist_L = [f"CTRL_Wrsit_{side}"]  #___________________________________________________Need CTRL Wrist___________________________________________
+    #___________________________________________________Need CTRL Wrist___________________________________________
     MatrixConstrain.MatrixConstrain(CTRL_Wrist_L, f"Locator_Wrist_{side}", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     
     #Creating the nodes for the stretch
@@ -612,7 +623,7 @@ def createArm(settings, side = "L"):
     cmds.setAttr(f"Cond_Boolean_Arm_{side}.secondTerm", 1)
     
     cmds.connectAttr(f"Cond_Boolean_Arm_{side}.outColor", f"Cond_FK_Arm_{side}.colorIfTrue")
-    cmds.connectAttr(f"Switch_Arm_{side}.IK_FK", f"Cond_FK_Arm_{side}.firstTerm")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_FK_Arm_{side}.firstTerm")
     cmds.setAttr(f"Cond_FK_Arm_{side}.secondTerm", 1)
     
     cmds.connectAttr(f"Cond_FK_Arm_{side}.outColor", f"DrvJnt_Elbow_{side}.s")
@@ -625,17 +636,17 @@ def createArm(settings, side = "L"):
 
     cmds.duplicate(f"DrvJnt_Wrist_{side}", n=f"DrvJnt_Wrist_{side}_NonRoll", po=True)
     Color.setColor(f"DrvJnt_Wrist_{side}", "orange")
-    cmds.createNode("multiplyDivide", n=f"Opposed_{side}")
+    cmds.createNode("multiplyDivide", n=f"OpposedArm_{side}")
     cmds.setAttr(f"OpposedArm_{side}.input2X", -1)
     cmds.setAttr(f"OpposedArm_{side}.input2Y", -1)
 
     NonRoll_Arm = NonRollMatrix.NonRollMatrix(f"Bind_Clavicle_{side}", f"DrvJnt_Arm_{side}")
-    NonRoll_Foot = NonRollMatrix.NonRollMatrix(f"DrvJnt_Wrist_{side}_NonRoll", f"Bind_Hand_{side}")
+    #NonRoll_Foot = NonRollMatrix.NonRollMatrix(f"DrvJnt_Wrist_{side}_NonRoll", f"Bind_Hand_{side}")
 
 
-    cmds.connectAttr(NonRoll_Foot + ".outputRotateZ", f"Opposed_{side}.input1X")
+    #cmds.connectAttr(NonRoll_Foot + ".outputRotateZ", f"Opposed_{side}.input1X")
     cmds.connectAttr(f"OpposedArm_{side}.outputX", f"Twist_Elbow_{side}_00.rotateX")
-    cmds.connectAttr(NonRoll_Arm + ".outputRotateX", f"Opposed_{side}.input1Y")
+    cmds.connectAttr(NonRoll_Arm + ".outputRotateX", f"OpposedArm_{side}.input1Y")
     cmds.connectAttr(f"OpposedArm_{side}.outputY",f"Twist_Arm_{side}_00.rotateX")
 
 
