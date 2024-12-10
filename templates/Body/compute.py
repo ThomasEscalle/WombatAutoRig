@@ -9,18 +9,29 @@ from wombatAutoRig.src.core import NonRollMatrix
 from wombatAutoRig.src.core import TwistExtractor
 
 
+#replacer clavicle
+#fix bras droit (ribbon)
+#rendre twist fonctionnel (link Bind Hand au DrvJnt_Wrist)
+#Corriger cette histoire de matchPivot qui marche pas
+#Faire les doigts
+
+
 def compute(settings):
     cmds.duplicate("PlacementJnt_Root", n="Bind_Root", po = True)
     cmds.parent(f"Bind_Root", world=True)
     Offset.offset("Bind_Root", nbr=3)
+    cmds.parent("Bind_Root_Offset", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
 
     #CTRL Settings
-    cmds.duplicate("PlacementCtrl_Settings", n="CTRL_Settings", po = True)
+    cmds.duplicate("PlacementCtrl_Settings", n="CTRL_Settings")
     cmds.parent("CTRL_Settings", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
 
 
     createLeg(settings, "L")
     createLeg(settings, "R")
+
+    createHand(settings, "L")
+    createHand(settings, "R")
 
     createArm(settings, "L")
     createArm(settings, "R")
@@ -347,7 +358,24 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"Twist_Leg_{side}_00.TwistEx", f"CTRL_End_Ribbon_Leg_{side}.rotateX")
     cmds.connectAttr(f"Twist_Knee_{side}_00.TwistEx", f"CTRL_Start_Ribbon_Knee_{side}.rotateX")
 
+def createHand(settings, side = "L"):
+    #region Creating the joints
+    cmds.duplicate(f"PlacementJnt_Wrist_{side}", n=f"Bind_Hand_{side}", po=True)
+    Color.setColor(f"Bind_Hand_{side}", "white")
 
+    #freeze transform
+    cmds.makeIdentity(f"Bind_Hand_{side}", a=True, t=True, r=True, s=True)
+
+    #offset
+    Offset.offset(f"Bind_Hand_{side}", nbr=3)
+
+    # Check if "Joints_Arms" exists, if not create it
+    if not cmds.objExists("Joints_Hands"):
+        cmds.group(n="Joints_Hands", em=True)
+        cmds.parent("Joints_Hands", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
+
+    #rangement
+    cmds.parent(f"Bind_Hand_{side}_Offset", "{}|GlobalMove_01|Joints_01|Joints_Hands".format(settings["name"]))
 
 def createArm(settings, side = "L"):
     #region Creating the joints 
@@ -446,6 +474,8 @@ def createArm(settings, side = "L"):
     cmds.duplicate(f"PlacementCtrl_Ik_Arm_{side}", n=f"CTRL_Wrist_{side}")
     cmds.parent(f"CTRL_Wrist_{side}", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     cmds.addAttr(f"CTRL_Wrist_{side}", ln=f"Stretch_Arm", at="bool", dv=False, k=True)
+    cmds.matchTransform(f"CTRL_Wrist_{side}", f"DrvJnt_Wrist_{side}", piv=True)
+    Offset.offset(f"CTRL_Wrist_{side}", nbr=1)
 
 
     #region Creating the IK handle
@@ -469,7 +499,7 @@ def createArm(settings, side = "L"):
     
     #region switch IK FK 
     cmds.duplicate(f"PlacementCtrl_Settings_Arm_{side}", n=f"Settings_Arm_{side}")
-    cmds.parent(f"Settings_Arm_{side}", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+    cmds.parent(f"Settings_Arm_{side}", "{}|GlobalMove_01|CTRLs_01|CTRL_Settings".format(settings["name"]))
     cmds.addAttr(f"Settings_Arm_{side}", ln="IK_FK", at="enum", en="FK:IK", k=True)
     cmds.addAttr(f"Settings_Arm_{side}", ln="Vis_Bend", at="bool", nn="Vis Bend", k=True)
     cmds.addAttr(f"Settings_Arm_{side}", ln="Vis_Pin", at="bool", nn="Vis Pin", k=True)
@@ -550,10 +580,14 @@ def createArm(settings, side = "L"):
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"PoleVector_Arm_{side}.visibility")
     cmds.connectAttr(f"Settings_Arm_{side}.Vis_Pin", f"CTRL_Pin_Elbow_{side}.visibility")
 
-    #region CTRL FK Joints
+    #region CTRL FK
     cmds.duplicate(f"PlacementCtrl_Fk_Shoulder_{side}", n=f"CTRL_FK_Arm_{side}")
     cmds.duplicate(f"PlacementCtrl_Fk_Elbow_{side}", n=f"CTRL_FK_Elbow_{side}")
     cmds.duplicate(f"PlacementCtrl_Fk_Wrist_{side}", n=f"CTRL_FK_Wrist_{side}")
+    #MatchPivot
+    cmds.matchTransform(f"CTRL_FK_Arm_{side}", f"FK_Arm_{side}", piv=True)
+    cmds.matchTransform(f"CTRL_FK_Elbow_{side}", f"FK_Elbow_{side}", piv=True)
+    cmds.matchTransform(f"CTRL_FK_Wrist_{side}", f"FK_Wrist_{side}", piv=True)
     #Hierachy
     Offset.offset(f"CTRL_FK_Arm_{side}", nbr=1)
     Offset.offset(f"CTRL_FK_Elbow_{side}", nbr=1)
@@ -580,9 +614,8 @@ def createArm(settings, side = "L"):
     cmds.setAttr(f"Locator_Wrist_{side}.visibility", 0)
     cmds.parent(f"Locator_Arm_{side}", f"Bind_Clavicle_{side}")
     cmds.parent(f"Locator_Wrist_{side}", f"Bind_Clavicle_{side}")
-    cmds.matchTransform(f"Locator_Hip_{side}", f"Bind_Clavicle_{side}", pos=True)
+    cmds.matchTransform(f"Locator_Arm_{side}", f"Bind_Clavicle_end_{side}", pos=True)
     cmds.matchTransform(f"Locator_Wrist_{side}", f"DrvJnt_Wrist_{side}", pos=True)
-    #___________________________________________________Need CTRL Wrist___________________________________________
     MatrixConstrain.MatrixConstrain(CTRL_Wrist_L, f"Locator_Wrist_{side}", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     
     #Creating the nodes for the stretch
@@ -641,10 +674,10 @@ def createArm(settings, side = "L"):
     cmds.setAttr(f"OpposedArm_{side}.input2Y", -1)
 
     NonRoll_Arm = NonRollMatrix.NonRollMatrix(f"Bind_Clavicle_{side}", f"DrvJnt_Arm_{side}")
-    #NonRoll_Foot = NonRollMatrix.NonRollMatrix(f"DrvJnt_Wrist_{side}_NonRoll", f"Bind_Hand_{side}")
+    NonRoll_Hand = NonRollMatrix.NonRollMatrix(f"DrvJnt_Wrist_{side}_NonRoll", f"Bind_Hand_{side}")
 
 
-    #cmds.connectAttr(NonRoll_Foot + ".outputRotateZ", f"Opposed_{side}.input1X")
+    cmds.connectAttr(NonRoll_Hand + ".outputRotateX", f"OpposedArm_{side}.input1X")
     cmds.connectAttr(f"OpposedArm_{side}.outputX", f"Twist_Elbow_{side}_00.rotateX")
     cmds.connectAttr(NonRoll_Arm + ".outputRotateX", f"OpposedArm_{side}.input1Y")
     cmds.connectAttr(f"OpposedArm_{side}.outputY",f"Twist_Arm_{side}_00.rotateX")
