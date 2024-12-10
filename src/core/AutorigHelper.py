@@ -94,3 +94,15 @@ def resizeJnts(bbox, size):
     sizeList[2] = sizeList[2] * (sizeY / referenceSizeY)
 
     return tuple(sizeList)
+
+def resizeCtrl(bbox, size):
+    referenceSizeY = 166
+    sizeY = bbox[4] - bbox[1]
+
+    sizeList = list(size)
+
+    sizeList[0] = sizeList[0] * (sizeY / referenceSizeY)
+    sizeList[1] = sizeList[1] * (sizeY / referenceSizeY)
+    sizeList[2] = sizeList[2] * (sizeY / referenceSizeY)
+
+    return tuple(sizeList)
