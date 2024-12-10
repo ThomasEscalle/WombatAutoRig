@@ -256,19 +256,19 @@ def placeLegsControllers(settings) :
     PlacementCtrl_Ribbon_Leg_R = cmds.circle(name="PlacementCtrl_Ribbon_Leg_R", normal=[0, 1, 0], radius=1)
     transformRelative("PlacementCtrl_Ribbon_Leg_R", [-9.621, 67, -0.8], [0, 0, 0], [8.4, 8.4, 8.4] , settings)
     Color.setColor("PlacementCtrl_Ribbon_Leg_R", "red")
-    cmds.parent("PlacementCtrl_Ribbon_Leg_R", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Ribbon_Leg_R", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Ribbon_Knee_R
     PlacementCtrl_Ribbon_Knee_R = cmds.circle(name="PlacementCtrl_Ribbon_Knee_R", normal=[0, 1, 0], radius=1)
     transformRelative("PlacementCtrl_Ribbon_Knee_R", [-8.677, 30, -4], [0, 0, 0], [6.4, 6.4, 6.4] , settings)
     Color.setColor("PlacementCtrl_Ribbon_Knee_R", "red")
-    cmds.parent("PlacementCtrl_Ribbon_Knee_R", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Ribbon_Knee_R", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Pin_Knee_R
     PlacementCtrl_Pin_Knee_R = cmds.circle(name="PlacementCtrl_Pin_Knee_R", normal=[0, 1, 0], radius=1)
     transformRelative("PlacementCtrl_Pin_Knee_R", [-8.677, 49, -1.5], [0, 0, 0], [5.4, 5.4, 5.4] , settings)
     Color.setColor("PlacementCtrl_Pin_Knee_R", "red")
-    cmds.parent("PlacementCtrl_Pin_Knee_R", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Pin_Knee_R", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
 
     ##############################
@@ -320,19 +320,19 @@ def placeLegsControllers(settings) :
     PlacementCtrl_Ribbon_Leg_L = cmds.circle(name="PlacementCtrl_Ribbon_Leg_L", normal=[0, 1, 0], radius=1)
     transformRelative("PlacementCtrl_Ribbon_Leg_L", [9.621, 67, -0.8], [0, 0, 0], [8.4, 8.4, 8.4] , settings)
     Color.setColor("PlacementCtrl_Ribbon_Leg_L", "turquoise")
-    cmds.parent("PlacementCtrl_Ribbon_Leg_L", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Ribbon_Leg_L", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Ribbon_Knee_L
     PlacementCtrl_Ribbon_Knee_L = cmds.circle(name="PlacementCtrl_Ribbon_Knee_L", normal=[0, 1, 0], radius=1)
     transformRelative("PlacementCtrl_Ribbon_Knee_L", [8.677, 30, -4], [0, 0, 0], [6.4, 6.4, 6.4] , settings)
     Color.setColor("PlacementCtrl_Ribbon_Knee_L", "turquoise")
-    cmds.parent("PlacementCtrl_Ribbon_Knee_L", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Ribbon_Knee_L", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Pin_Knee_L
     PlacementCtrl_Pin_Knee_L = cmds.circle(name="PlacementCtrl_Pin_Knee_L", normal=[0, 1, 0], radius=1)
     transformRelative("PlacementCtrl_Pin_Knee_L", [8.677, 49, -1.5], [0, 0, 0], [5.4, 5.4, 5.4] , settings)
     Color.setColor("PlacementCtrl_Pin_Knee_L", "turquoise")
-    cmds.parent("PlacementCtrl_Pin_Knee_L", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Pin_Knee_L", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
 
 
@@ -405,19 +405,19 @@ def placeArmsControllers(settings):
     PlacementCtrl_Ribbon_Arm_R = cmds.circle(name="PlacementCtrl_Ribbon_Arm_R", normal=[0, 1, 0], radius=1)
     transformRelative("PlacementCtrl_Ribbon_Arm_R", [-22, 123,-6.5], [7.1,0,-51], [6, 6, 6] , settings)
     Color.setColor("PlacementCtrl_Ribbon_Arm_R", "red")
-    cmds.parent("PlacementCtrl_Ribbon_Arm_R", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Ribbon_Arm_R", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Ribbon_Elbow_R
     PlacementCtrl_Ribbon_Elbow_R = cmds.circle(name="PlacementCtrl_Ribbon_Elbow_R", normal=[0, 1, 0], radius=1)
     transformRelative("PlacementCtrl_Ribbon_Elbow_R", [-40, 106 , -6.5], [-6, 0 , -51], [5, 5, 5] , settings)
     Color.setColor("PlacementCtrl_Ribbon_Elbow_R", "red")
-    cmds.parent("PlacementCtrl_Ribbon_Elbow_R", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Ribbon_Elbow_R", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Pin_Elbow_R
     PlacementCtrl_Pin_Elbow_R = cmds.circle(name="PlacementCtrl_Pin_Elbow_R", normal=[0, 1, 0], radius=1)
     transformRelative("PlacementCtrl_Pin_Elbow_R", [-30,116,-8.4], [0, 0, -51], [5.2, 5.2, 5.2] , settings)
     Color.setColor("PlacementCtrl_Pin_Elbow_R", "red")
-    cmds.parent("PlacementCtrl_Pin_Elbow_R", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Pin_Elbow_R", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
 
     ##############################
@@ -468,16 +468,16 @@ def placeArmsControllers(settings):
     PlacementCtrl_Ribbon_Arm_L = cmds.circle(name="PlacementCtrl_Ribbon_Arm_L", normal=[0, 1, 0], radius=1)
     transformRelative("PlacementCtrl_Ribbon_Arm_L", [22, 123, -6.5], [-7.1, 0, 51], [6, 6, 6] , settings)
     Color.setColor("PlacementCtrl_Ribbon_Arm_L", "turquoise")
-    cmds.parent("PlacementCtrl_Ribbon_Arm_L", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Ribbon_Arm_L", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Ribbon_Elbow_L
     PlacementCtrl_Ribbon_Elbow_L = cmds.circle(name="PlacementCtrl_Ribbon_Elbow_L", normal=[0, 1, 0], radius=1)
     transformRelative("PlacementCtrl_Ribbon_Elbow_L", [40, 106, -6.5], [6, 0, 51], [5, 5, 5] , settings)
     Color.setColor("PlacementCtrl_Ribbon_Elbow_L", "turquoise")
-    cmds.parent("PlacementCtrl_Ribbon_Elbow_L", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Ribbon_Elbow_L", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Pin_Elbow_L
     PlacementCtrl_Pin_Elbow_L = cmds.circle(name="PlacementCtrl_Pin_Elbow_L", normal=[0, 1, 0], radius=1)
     transformRelative("PlacementCtrl_Pin_Elbow_L", [30, 116, -8.4], [0, 0, 51], [5.2, 5.2, 5.2] , settings)
     Color.setColor("PlacementCtrl_Pin_Elbow_L", "turquoise")
-    cmds.parent("PlacementCtrl_Pin_Elbow_L", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Pin_Elbow_L", "AutoRig_Data|ControllersPlacement|Other_Controllers")
