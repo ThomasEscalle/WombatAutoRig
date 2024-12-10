@@ -46,6 +46,11 @@ class Ui_PageControllerPlacement(object):
 
         self.horizontalLayout.addWidget(self.btnIkMode)
 
+        self.btnOther = QPushButton(PageControllerPlacement)
+        self.btnOther.setObjectName(u"btnOther")
+
+        self.horizontalLayout.addWidget(self.btnOther)
+
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
@@ -70,6 +75,7 @@ class Ui_PageControllerPlacement(object):
         self.label_2.setText("")
         self.btnFkMode.setText(QCoreApplication.translate("PageControllerPlacement", u"Fk Mode", None))
         self.btnIkMode.setText(QCoreApplication.translate("PageControllerPlacement", u"Ik Mode", None))
+        self.btnOther.setText(QCoreApplication.translate("PageControllerPlacement", u"Other", None))
         self.btnControllers.setText(QCoreApplication.translate("PageControllerPlacement", u"Replace controllers", None))
     # retranslateUi
 

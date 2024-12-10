@@ -50,6 +50,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="btnOther">
+       <property name="text">
+        <string>Other</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
