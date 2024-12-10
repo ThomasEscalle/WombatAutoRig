@@ -130,7 +130,12 @@ class PageGlobalSettings(PageBase):
 
 
     def autoFill(self):
-        pass
+        # Loop through the inputs, if it is a QLineEdit, fill it with "AutoRig"
+        for input in self.inputs:
+            if isinstance(input, QLineEdit):
+                input.setText("AutoRig")
+            if isinstance(input, QCheckBox):
+                input.setChecked(True)
 
 
 
