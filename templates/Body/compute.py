@@ -10,10 +10,10 @@ from wombatAutoRig.src.core import TwistExtractor
 from wombatAutoRig.src.core import NewCTRL
 
 
-#replacer clavicle
+#Reprendre les twist parce que j'ai fait betise
 #fix bras droit (ribbon)
 #rendre twist fonctionnel (link Bind Hand au DrvJnt_Wrist)
-#Corriger cette histoire de matchPivot qui marche pas
+#Corriger cette histoire de matchPivot qui marche pas (vu mais doit l'implementer pour tt les CTRLs)
 #Faire les doigts
 
 
