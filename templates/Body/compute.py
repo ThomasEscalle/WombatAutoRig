@@ -12,9 +12,7 @@ from wombatAutoRig.src.core import NewCTRL
 
 #(Reprendre les twist parce que j'ai fait betise jsp a voir/ probleme surtout au niveau des pieds a cause de l'angle qui est different)
 #Faire les doigts
-#CTRL global
 #SpaceFollow
-#pole vector CTRL
 
 
 
@@ -207,7 +205,7 @@ def createLeg(settings, side = "L"):
     cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Leg_{}|CTRL_Global_Ribbon_Leg_{}|IS_CONSTRAIN_BY___DrvJnt_Leg_{}__".format(settings["name"], side ,side ,side))
     cmds.rotate(90, 0, 0, f"CTRL_Global_Ribbon_Leg_{side}", r=True, os=True)
     MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"CTRL_Global_Ribbon_Leg_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Leg_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(Global, f"Grp_Ribbon_Leg_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
     CTRL_Shape_Leg = cmds.listRelatives(f"CTRL_Global_Ribbon_Knee_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Leg[0] + ".lodVisibility", 0)
     
@@ -221,7 +219,7 @@ def createLeg(settings, side = "L"):
     cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Knee_{}|CTRL_Global_Ribbon_Knee_{}|IS_CONSTRAIN_BY___DrvJnt_Knee_{}__".format(settings["name"], side , side ,side))
     cmds.rotate(90, 0, 0, f"CTRL_Global_Ribbon_Knee_{side}", r=True, os=True)
     MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, f"CTRL_Global_Ribbon_Knee_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Knee_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(Global, f"Grp_Ribbon_Knee_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
     CTRL_Shape_Knee = cmds.listRelatives(f"CTRL_Global_Ribbon_Leg_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Knee[0] + ".lodVisibility", 0)
     
@@ -563,7 +561,7 @@ def createArm(settings, side = "L"):
     DrvJnt_Arm_L = [f"DrvJnt_Arm_{side}"]
     MatrixConstrain.MatrixConstrain((f"DrvJnt_Arm_{side}", f"DrvJnt_Elbow_{side}"), f"CTRL_Global_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms|Grp_Ribbon_Arm_{}|CTRL_Global_Ribbon_Arm_{}".format(settings["name"], side,side), Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    MatrixConstrain.MatrixConstrain(Global, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms|Grp_Ribbon_Arm_{}|CTRL_Global_Ribbon_Arm_{}".format(settings["name"], side,side), Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(Global, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms|Grp_Ribbon_Arm_{}".format(settings["name"], side), Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
     CTRL_Shape_Arm = cmds.listRelatives(f"CTRL_Global_Ribbon_Elbow_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Arm[0] + ".lodVisibility", 0)
     
@@ -574,7 +572,7 @@ def createArm(settings, side = "L"):
     DrvJnt_Elbow_L = [f"DrvJnt_Elbow_{side}"]
     MatrixConstrain.MatrixConstrain((f"DrvJnt_Elbow_{side}", f"DrvJnt_Wrist_{side}"), f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(DrvJnt_Elbow_L, f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(Global, f"Grp_Ribbon_Elbow_{side}", Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
 
     CTRL_Shape_Elbow = cmds.listRelatives(f"CTRL_Global_Ribbon_Arm_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Elbow[0] + ".lodVisibility", 0)
