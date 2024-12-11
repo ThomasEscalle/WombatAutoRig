@@ -104,6 +104,8 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         Script = cmds.scriptNode(stp ='python', st = 1, afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
         cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
         cmds.parent(locator, Slave)
+
+        return DecMatX
     else : 
         MultMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_'+Slave)
         DecMatXFin = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_'+Slave)
@@ -211,6 +213,10 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         Script = cmds.scriptNode(stp ='python', st = 1, afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
         cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
         cmds.parent(locator, Slave)
+
+        return DecMatXFin
+
+
 
 
 if __name__ == '__main__':

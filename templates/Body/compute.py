@@ -12,11 +12,9 @@ from wombatAutoRig.src.core import NewCTRL
 
 #(Reprendre les twist parce que j'ai fait betise jsp a voir/ probleme surtout au niveau des pieds a cause de l'angle qui est different)
 #fix bras droit (ribbon)
-#rendre twist fonctionnel (link Bind Hand au DrvJnt_Wrist)
 #Faire les doigts
 #CTRL global
 #IK CTRL Vis
-#contraint DrvJnt wrist par soit FK soit IK en fonction du mode actuel
 #SpaceFollow
 #pole vector CTRL
 
@@ -586,7 +584,6 @@ def createArm(settings, side = "L"):
     
     cmds.connectAttr(f"FK_Arm_{side}.rotate", f"DrvJnt_Arm_{side}.rotate")
     cmds.connectAttr(f"FK_Elbow_{side}.rotate", f"DrvJnt_Elbow_{side}.rotate")
-    cmds.connectAttr(f"FK_Wrist_{side}.rotate", f"DrvJnt_Wrist_{side}.rotate")
     
     cmds.createNode("reverse", n="Reverse_Arm_{}".format(side))
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Reverse_Arm_{side}.inputX")
@@ -684,16 +681,16 @@ def createArm(settings, side = "L"):
     #Node Conditon
     cmds.createNode("condition", n=f"Cond_Constraint_DrvJnt_{side}")
     CTRL_IK_Wrist = [f"CTRL_Wrist_{side}"]
-    MatrixConstrain.MatrixConstrain(FK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    cmds.disconnectAttr(f"DecMatX_{FK_Wrist[0]}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
-    cmds.disconnectAttr(f"DecMatX_{FK_Wrist[0]}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
-    cmds.disconnectAttr(f"DecMatX_{FK_Wrist[0]}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ")
-    cmds.connectAttr(f"DecMatX_{FK_Wrist[0]}.outputRotate", f"Cond_Constraint_DrvJnt_{side}.colorIfTrue")
-    MatrixConstrain.MatrixConstrain(CTRL_IK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    cmds.disconnectAttr(f"DecMatX_{CTRL_IK_Wrist[0]}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
-    cmds.disconnectAttr(f"DecMatX_{CTRL_IK_Wrist[0]}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
-    cmds.disconnectAttr(f"DecMatX_{CTRL_IK_Wrist[0]}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ")
-    cmds.connectAttr(f"DecMatX_{CTRL_IK_Wrist[0]}.outputRotate", f"Cond_Constraint_DrvJnt_{side}.colorIfTrue")
+    FK_Constraint = MatrixConstrain.MatrixConstrain(FK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    cmds.disconnectAttr(f"{FK_Constraint}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
+    cmds.disconnectAttr(f"{FK_Constraint}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
+    cmds.disconnectAttr(f"{FK_Constraint}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ")
+    cmds.connectAttr(f"{FK_Constraint}.outputRotate", f"Cond_Constraint_DrvJnt_{side}.colorIfTrue")
+    IK_Constraint = MatrixConstrain.MatrixConstrain(CTRL_IK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    cmds.disconnectAttr(f"{IK_Constraint}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
+    cmds.disconnectAttr(f"{IK_Constraint}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
+    cmds.disconnectAttr(f"{IK_Constraint}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ") 
+    cmds.connectAttr(f"{IK_Constraint}.outputRotate", f"Cond_Constraint_DrvJnt_{side}.colorIfFalse")
 
     cmds.connectAttr(f"Cond_Constraint_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.r")
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_Constraint_DrvJnt_{side}.secondTerm")
