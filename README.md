@@ -19,17 +19,23 @@ wombatAutoRig.run()
 
 
 ## Documentation
-
 - [Color](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Colors.md)
 - [Offset](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Offset.md)
 - [Preferences](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Preferences.md)
 - [Ribbon](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Ribbon.md)
+- [Bookmark](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Bookmark.md)
+- [Controllers](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Controllers.md)
+- [Matrix Constraints](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/MatrixConstraints.md)
+- [Non roll Matrix](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/NonRollMatrix.md)
+- [Pole Vector](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/PoleVector.md)
+- [Ribbon on curve](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/RibbonOnCurve.md)
+- [Twist Extractor](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/TwistExtractor.md)
 
 
-
-
-AutoRig_Data
-    JointsPlacement
-    ControllersPlacement
-        IK_Controllers
-        FK_Controllers
+## Dialogs documentation
+- [Dialog Wombat Autorig](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Colors.md)
+- [Dialog Color](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/DlgColor.md)
+- [Dialog Controllers](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/DlgControllers.md)
+- [Dialog Matrix Constraint](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/DlgMatrixConstraint.md)
+- [Dialog Ribbon](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/DlgRibbon.md)
+- [Dialog Ribbon on Curve](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/DlgRibbonOnCurves.md)
