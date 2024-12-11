@@ -1,12 +1,12 @@
 import maya.cmds as cmds
 from wombatAutoRig.src.core import Offset
 
-def NewCTRL(CTRL, Joint, name)->str:
+def NewCTRL(CTRL, Joint, name, nbr=1)->str:
 
     #Create a group to be the new CTRL
     cmds.group(n=f"{name}", empty=True)
     cmds.matchTransform(name, Joint, pos=True, rot=True)
-    Offset.offset(f"{name}", nbr=1)
+    Offset.offset(f"{name}", nbr=nbr)
 
     #mettre le CTRL dans le bon worldSpace
     cmds.parent(CTRL, f"{name}_Offset")

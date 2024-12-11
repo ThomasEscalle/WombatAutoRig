@@ -10,11 +10,16 @@ from wombatAutoRig.src.core import TwistExtractor
 from wombatAutoRig.src.core import NewCTRL
 
 
-#Reprendre les twist parce que j'ai fait betise
+#(Reprendre les twist parce que j'ai fait betise jsp a voir/ probleme surtout au niveau des pieds a cause de l'angle qui est different)
 #fix bras droit (ribbon)
 #rendre twist fonctionnel (link Bind Hand au DrvJnt_Wrist)
-#Corriger cette histoire de matchPivot qui marche pas (vu mais doit l'implementer pour tt les CTRLs)
 #Faire les doigts
+#CTRL global
+#IK CTRL Vis
+#contraint DrvJnt wrist par soit FK soit IK en fonction du mode actuel
+#SpaceFollow
+#pole vector CTRL
+
 
 
 def compute(settings):
@@ -254,15 +259,12 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"Settings_Leg_{side}.Vis_Pin", f"CTRL_Pin_Knee_{side}.visibility")
 
     #region CTRL FK Joints
-    cmds.duplicate(f"PlacementCtrl_Fk_Leg_{side}", n=f"CTRL_FK_Leg_{side}")
-    cmds.duplicate(f"PlacementCtrl_Fk_Knee_{side}", n=f"CTRL_FK_Knee_{side}")
-    cmds.duplicate(f"PlacementCtrl_Fk_Ankle_{side}", n=f"CTRL_FK_Ankle_{side}")
-    cmds.duplicate(f"PlacementCtrl_Fk_Ball_{side}", n=f"CTRL_FK_Ball_{side}")
-    #Hierachy
-    Offset.offset(f"CTRL_FK_Leg_{side}", nbr=1)
-    Offset.offset(f"CTRL_FK_Knee_{side}", nbr=1)
-    Offset.offset(f"CTRL_FK_Ankle_{side}", nbr=1)
-    Offset.offset(f"CTRL_FK_Ball_{side}", nbr=1)
+
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Leg_{side}", f"FK_Leg_{side}", name=f"CTRL_FK_Leg_{side}", nbr=3)
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Knee_{side}", f"FK_Knee_{side}", name=f"CTRL_FK_Knee_{side}")
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Ankle_{side}", f"FK_Ankle_{side}", name=f"CTRL_FK_Ankle_{side}")
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Ball_{side}", f"FK_Ball_{side}", name=f"CTRL_FK_Ball_{side}")
+
     cmds.parent(f"CTRL_FK_Leg_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     cmds.parent(f"CTRL_FK_Knee_{side}_Offset", f"CTRL_FK_Leg_{side}")
     cmds.parent(f"CTRL_FK_Ankle_{side}_Offset", f"CTRL_FK_Knee_{side}")
@@ -277,6 +279,10 @@ def createLeg(settings, side = "L"):
     MatrixConstrain.MatrixConstrain(FK_Knee, f"FK_Knee_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
     MatrixConstrain.MatrixConstrain(FK_Ankle, f"FK_Ankle_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
     MatrixConstrain.MatrixConstrain(FK_Ball, f"FK_Ball_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+
+    Bind_Hip = [f"Bind_Hip_{side}"]
+    MatrixConstrain.MatrixConstrain(Bind_Hip, f"CTRL_FK_Leg_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False,)
+
 
     
     #region Stretch Leg 
@@ -520,8 +526,6 @@ def createArm(settings, side = "L"):
     cmds.setAttr(f"Settings_Arm_{side}.sy", keyable=False, channelBox=False)
     cmds.setAttr(f"Settings_Arm_{side}.sz", keyable=False, channelBox=False)
     Offset.offset(f"Settings_Arm_{side}", nbr=2)
-    MatrixConstrain.MatrixConstrain(Bind_Clavicle_end, f"Settings_Arm_{side}_Move", Offset=True, sX=False, sY=False, sZ=False)
-    cmds.setAttr(f"Settings_Arm_{side}.IK_FK", 1)
     
     #region Ribbon
     Ribbon.Ribbon(Name=f"Ribbon_Arm_{side}", Span=5)
@@ -594,17 +598,11 @@ def createArm(settings, side = "L"):
     cmds.connectAttr(f"Settings_Arm_{side}.Vis_Pin", f"CTRL_Pin_Elbow_{side}.visibility")
 
     #region CTRL FK
-    cmds.duplicate(f"PlacementCtrl_Fk_Shoulder_{side}", n=f"CTRL_FK_Arm_{side}")
-    cmds.duplicate(f"PlacementCtrl_Fk_Elbow_{side}", n=f"CTRL_FK_Elbow_{side}")
-    cmds.duplicate(f"PlacementCtrl_Fk_Wrist_{side}", n=f"CTRL_FK_Wrist_{side}")
-    #MatchPivot
-    cmds.matchTransform(f"CTRL_FK_Arm_{side}", f"FK_Arm_{side}", piv=True)
-    cmds.matchTransform(f"CTRL_FK_Elbow_{side}", f"FK_Elbow_{side}", piv=True)
-    cmds.matchTransform(f"CTRL_FK_Wrist_{side}", f"FK_Wrist_{side}", piv=True)
-    #Hierachy
-    Offset.offset(f"CTRL_FK_Arm_{side}", nbr=1)
-    Offset.offset(f"CTRL_FK_Elbow_{side}", nbr=1)
-    Offset.offset(f"CTRL_FK_Wrist_{side}", nbr=1)
+
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Shoulder_{side}", f"FK_Arm_{side}", name=f"CTRL_FK_Arm_{side}", nbr=3)
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Elbow_{side}", f"FK_Elbow_{side}", name=f"CTRL_FK_Elbow_{side}")
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Wrist_{side}", f"FK_Wrist_{side}", name=f"CTRL_FK_Wrist_{side}")
+
     cmds.parent(f"CTRL_FK_Arm_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     cmds.parent(f"CTRL_FK_Elbow_{side}_Offset", f"CTRL_FK_Arm_{side}")
     cmds.parent(f"CTRL_FK_Wrist_{side}_Offset", f"CTRL_FK_Elbow_{side}")
@@ -616,6 +614,9 @@ def createArm(settings, side = "L"):
     MatrixConstrain.MatrixConstrain(FK_Arm, f"FK_Arm_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
     MatrixConstrain.MatrixConstrain(FK_Elbow, f"FK_Elbow_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
     MatrixConstrain.MatrixConstrain(FK_Wrist, f"FK_Wrist_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+
+    Bind_Clavicle = [f"Bind_Clavicle_{side}"]
+    MatrixConstrain.MatrixConstrain(Bind_Clavicle, f"CTRL_FK_Arm_{side}_Hook", Offset=True, rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False,)
 
     
     #region Stretch Arm 
@@ -674,6 +675,28 @@ def createArm(settings, side = "L"):
     
     cmds.connectAttr(f"Cond_FK_Arm_{side}.outColor", f"DrvJnt_Elbow_{side}.s")
     cmds.connectAttr(f"Cond_FK_Arm_{side}.outColor", f"DrvJnt_Arm_{side}.s")
+
+
+    #DrvJnt wrsit constraint bind hand and is constraint by FK and IK
+    DrvJntWrist = [f"DrvJnt_Wrist_{side}"]
+    MatrixConstrain.MatrixConstrain(DrvJntWrist, f"Bind_Hand_{side}_Hook", sX=False, sY=False, sZ=False)
+
+    #Node Conditon
+    cmds.createNode("condition", n=f"Cond_Constraint_DrvJnt_{side}")
+    CTRL_IK_Wrist = [f"CTRL_Wrist_{side}"]
+    MatrixConstrain.MatrixConstrain(FK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    cmds.disconnectAttr(f"DecMatX_{FK_Wrist[0]}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
+    cmds.disconnectAttr(f"DecMatX_{FK_Wrist[0]}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
+    cmds.disconnectAttr(f"DecMatX_{FK_Wrist[0]}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ")
+    cmds.connectAttr(f"DecMatX_{FK_Wrist[0]}.outputRotate", f"Cond_Constraint_DrvJnt_{side}.colorIfTrue")
+    MatrixConstrain.MatrixConstrain(CTRL_IK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    cmds.disconnectAttr(f"DecMatX_{CTRL_IK_Wrist[0]}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
+    cmds.disconnectAttr(f"DecMatX_{CTRL_IK_Wrist[0]}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
+    cmds.disconnectAttr(f"DecMatX_{CTRL_IK_Wrist[0]}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ")
+    cmds.connectAttr(f"DecMatX_{CTRL_IK_Wrist[0]}.outputRotate", f"Cond_Constraint_DrvJnt_{side}.colorIfTrue")
+
+    cmds.connectAttr(f"Cond_Constraint_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.r")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_Constraint_DrvJnt_{side}.secondTerm")
 
 
     #region Twist Ex 

@@ -23,7 +23,7 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         # Creation des differents Nodes Matrix
 
         MultMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_'+Slave)
-        DecMatX = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_'+Slave)
+        DecMatX = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_'+Master[0])
         ComPivMatX = cmds.shadingNode('composeMatrix', asUtility=True, n='ComPivMatX_'+Master[0])
         MultPivMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultPivMatX_'+Slave)
 
