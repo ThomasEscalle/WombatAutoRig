@@ -25,6 +25,14 @@ wombatAutoRig.run()
 - [Preferences](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Preferences.md)
 - [Ribbon](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Ribbon.md)
 
+- [Bookmark](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Bookmark.md)
+- [Controllers](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Controllers.md)
+- [Matrix Constraints](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/MatrixConstraints.md)
+- [Non roll Matrix](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/NonRollMatrix.md)
+- [Pole Vector](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/PoleVector.md)
+- [Ribbon on curve](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/RibbonOnCurve.md)
+- [Twist Extractor](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/TwistExtractor.md)
+
 
 
 
