@@ -41,6 +41,18 @@ def compute(settings):
     createHand(settings, "L")
     createHand(settings, "R")
 
+    createFinger(settings, side ="L", finger= "Thumb")
+    createFinger(settings, side ="L", finger= "Index")
+    createFinger(settings, side ="L", finger= "Middle")
+    createFinger(settings, side ="L", finger= "Ring")
+    createFinger(settings, side ="L", finger= "Pimky")
+
+    createFinger(settings, side ="R", finger= "Thumb")
+    createFinger(settings, side ="R", finger= "Index")
+    createFinger(settings, side ="R", finger= "Middle")
+    createFinger(settings, side ="R", finger= "Ring")
+    createFinger(settings, side ="R", finger= "Pimky")
+
     createArm(settings, "L")
     createArm(settings, "R")
 
@@ -205,7 +217,7 @@ def createLeg(settings, side = "L"):
     cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Leg_{}|CTRL_Global_Ribbon_Leg_{}|IS_CONSTRAIN_BY___DrvJnt_Leg_{}__".format(settings["name"], side ,side ,side))
     cmds.rotate(90, 0, 0, f"CTRL_Global_Ribbon_Leg_{side}", r=True, os=True)
     MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"CTRL_Global_Ribbon_Leg_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    MatrixConstrain.MatrixConstrain(Global, f"Grp_Ribbon_Leg_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Leg_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
     CTRL_Shape_Leg = cmds.listRelatives(f"CTRL_Global_Ribbon_Knee_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Leg[0] + ".lodVisibility", 0)
     
@@ -219,7 +231,7 @@ def createLeg(settings, side = "L"):
     cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Knee_{}|CTRL_Global_Ribbon_Knee_{}|IS_CONSTRAIN_BY___DrvJnt_Knee_{}__".format(settings["name"], side , side ,side))
     cmds.rotate(90, 0, 0, f"CTRL_Global_Ribbon_Knee_{side}", r=True, os=True)
     MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, f"CTRL_Global_Ribbon_Knee_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    MatrixConstrain.MatrixConstrain(Global, f"Grp_Ribbon_Knee_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Knee_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
     CTRL_Shape_Knee = cmds.listRelatives(f"CTRL_Global_Ribbon_Leg_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Knee[0] + ".lodVisibility", 0)
     
@@ -394,13 +406,42 @@ def createHand(settings, side = "L"):
     #offset
     Offset.offset(f"Bind_Hand_{side}", nbr=3)
 
-    # Check if "Joints_Arms" exists, if not create it
+    # Check if "Joints_Hand" exists, if not create it
     if not cmds.objExists("Joints_Hands"):
         cmds.group(n="Joints_Hands", em=True)
         cmds.parent("Joints_Hands", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
 
     #rangement
     cmds.parent(f"Bind_Hand_{side}_Offset", "{}|GlobalMove_01|Joints_01|Joints_Hands".format(settings["name"]))
+
+def createFinger(settings, side ="L", finger= "Thumb"):
+    #Duplicate Joint
+    cmds.duplicate(f"PlacementJnt_{finger}_Metacarpus_{side}", n=f"Bind_{finger}_Metacarpus_{side}", po=True)
+    Color.setColor(f"Bind_{finger}_Metacarpus_{side}", "white")
+    cmds.makeIdentity(f"Bind_{finger}_Metacarpus_{side}", a=True, t=True, r=True, s=True)
+
+    if finger == "Thumb":
+        n=2
+    else :
+        n=3
+    for i in range(n):
+        cmds.duplicate(f"PlacementJnt_{finger}_0{i+1}_{side}", n=f"Bind_{finger}_0{i+1}_{side}", po=True)
+        Color.setColor(f"Bind_{finger}_0{i+1}_{side}", "white")
+        cmds.makeIdentity(f"Bind_{finger}_0{i+1}_{side}", a=True, t=True, r=True, s=True)
+
+    cmds.duplicate(f"PlacementJnt_{finger}_end_{side}", n=f"Bind_{finger}_end_{side}", po=True)
+    Color.setColor(f"Bind_{finger}_end_{side}", "white")
+    cmds.makeIdentity(f"Bind_{finger}_end_{side}", a=True, t=True, r=True, s=True)
+
+    #Rangement
+    cmds.parent(f"Bind_{finger}_Metacarpus_{side}", f"Bind_Hand_{side}")
+    cmds.parent(f"Bind_{finger}_01_{side}", f"Bind_{finger}_Metacarpus_{side}")
+    cmds.parent(f"Bind_{finger}_02_{side}", f"Bind_{finger}_01_{side}")
+    if finger == "Thumb":
+        cmds.parent(f"Bind_{finger}_end_{side}", f"Bind_{finger}_02_{side}")
+    else:
+        cmds.parent(f"Bind_{finger}_03_{side}", f"Bind_{finger}_02_{side}")
+        cmds.parent(f"Bind_{finger}_end_{side}", f"Bind_{finger}_03_{side}")
 
 def createArm(settings, side = "L"):
     #region Creating the joints 
@@ -561,8 +602,8 @@ def createArm(settings, side = "L"):
     DrvJnt_Arm_L = [f"DrvJnt_Arm_{side}"]
     MatrixConstrain.MatrixConstrain((f"DrvJnt_Arm_{side}", f"DrvJnt_Elbow_{side}"), f"CTRL_Global_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms|Grp_Ribbon_Arm_{}|CTRL_Global_Ribbon_Arm_{}".format(settings["name"], side,side), Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    MatrixConstrain.MatrixConstrain(Global, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms|Grp_Ribbon_Arm_{}".format(settings["name"], side), Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
-    CTRL_Shape_Arm = cmds.listRelatives(f"CTRL_Global_Ribbon_Elbow_{side}", shapes=True)
+    MatrixConstrain.MatrixConstrain(Global, "CTRL_Global_Ribbon_Arm_{}".format(side), Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+    CTRL_Shape_Arm = cmds.listRelatives(f"CTRL_Global_Ribbon_Arm_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Arm[0] + ".lodVisibility", 0)
     
     cmds.parent(f"Grp_Ribbon_Elbow_{side}|Grp_Extra_Nodes_Ribbon_Elbow_{side}|Grp_Extra_Nodes_To_Hide_Ribbon_Elbow_{side}", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01|Ribbons_Arms_Hide".format(settings["name"]))
@@ -572,9 +613,9 @@ def createArm(settings, side = "L"):
     DrvJnt_Elbow_L = [f"DrvJnt_Elbow_{side}"]
     MatrixConstrain.MatrixConstrain((f"DrvJnt_Elbow_{side}", f"DrvJnt_Wrist_{side}"), f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(DrvJnt_Elbow_L, f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    MatrixConstrain.MatrixConstrain(Global, f"Grp_Ribbon_Elbow_{side}", Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
 
-    CTRL_Shape_Elbow = cmds.listRelatives(f"CTRL_Global_Ribbon_Arm_{side}", shapes=True)
+    CTRL_Shape_Elbow = cmds.listRelatives(f"CTRL_Global_Ribbon_Elbow_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Elbow[0] + ".lodVisibility", 0)
     
     DrvJnt_Wrist_L = [f"DrvJnt_Wrist_{side}"]

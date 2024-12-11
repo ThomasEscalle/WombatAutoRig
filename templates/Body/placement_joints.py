@@ -114,7 +114,7 @@ def placeJointsArm(side="L", settings={}):
     
     end_index = createJoint(f"PlacementJnt_Index_end_{side}", (sign * 57.097, 88.828, 0.424), (-82.190- offset,sign * -8.195,sign * -78.284), settings)
     end_middle = createJoint(f"PlacementJnt_Middle_end_{side}", (sign * 57.401, 87.045, -1.832), (-91.079- offset,sign * -7.767,sign * -82.798), settings)
-    end_ring = createJoint(f"PlacementJnt_Ring_end_{side}", (sign * 56.271, 89.990, -3.863), (-114.047- offset,sign * -15.307,sign * -85.696), settings)
+    end_ring = createJoint(f"PlacementJnt_Ring_end_{side}", (sign * 56.249, 88.375, -3.945), (-114.047- offset,sign * -15.307,sign * -85.696), settings)
     end_pimky = createJoint(f"PlacementJnt_Pimky_end_{side}", (sign * 53.845, 89.431, -6.045), (-117.764- offset,sign * -10.735,sign * -85.330), settings)
 
     clavicle = createJoint(f"PlacementJnt_Clavicle_{side}", (sign * 2.214, 133.598, 0.001), (1.337- offset,sign * 15.585,sign *4.963), settings)
