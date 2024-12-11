@@ -19,7 +19,6 @@ wombatAutoRig.run()
 
 
 ## Documentation
-
 - [Color](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Colors.md)
 - [Offset](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Offset.md)
 - [Preferences](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Preferences.md)
@@ -31,3 +30,12 @@ wombatAutoRig.run()
 - [Pole Vector](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/PoleVector.md)
 - [Ribbon on curve](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/RibbonOnCurve.md)
 - [Twist Extractor](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/TwistExtractor.md)
+
+
+## Dialogs
+- [Dialog Wombat Autorig](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Colors.md)
+- [Dialog Color](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/DlgColor.md)
+- [Dialog Controllers](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/DlgControllers.md)
+- [Dialog Matrix Constraint](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/DlgMatrixConstraint.md)
+- [Dialog Ribbon](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/DlgRibbon.md)
+- [Dialog Ribbon on Curve](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/DlgRibbonOnCurves.md)
