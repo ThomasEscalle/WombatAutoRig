@@ -14,13 +14,9 @@ def NewCTRL(CTRL, Joint, name)->str:
     #parenter la shape du CTRL dans le new CTRL
     cmds.makeIdentity(CTRL, a=True, t=True, r=True, s=True)
     Shape = cmds.listRelatives(CTRL, s=True)
-    cmds.parent(Shape, f"{name}_Offset", s=True)
+    cmds.parent(Shape, name, s=True, r=True)
 
     #Supprimer l'ancien CTRL
     cmds.delete(CTRL)
-    cmds.delete(name)
-
-    cmds.rename("transform1", name)
-
 
     return f"{name}_Offset"
