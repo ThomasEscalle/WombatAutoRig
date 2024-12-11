@@ -81,6 +81,10 @@ importlib.reload(FileHelper)
 from wombatAutoRig.src.core import TemplateBase
 importlib.reload(TemplateBase)
 
+# Recharge le module wombatAutoRig.src.core.NewCTRL
+from wombatAutoRig.src.core import NewCTRL
+importlib.reload(NewCTRL)
+
 # Recharge le module wombatAutoRig.src.ui.DlgNewTemplate
 from wombatAutoRig.src.ui import DlgNewTemplate
 importlib.reload(DlgNewTemplate)

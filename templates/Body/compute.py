@@ -7,6 +7,7 @@ from wombatAutoRig.src.core import MatrixConstrain
 from wombatAutoRig.src.core import Ribbon
 from wombatAutoRig.src.core import NonRollMatrix
 from wombatAutoRig.src.core import TwistExtractor
+from wombatAutoRig.src.core import NewCTRL
 
 
 #replacer clavicle
@@ -125,6 +126,7 @@ def createLeg(settings, side = "L"):
     cmds.duplicate(f"PlacementCtrl_Pin_Knee_{side}", n=f"CTRL_Pin_Knee_{side}")
     cmds.parent(f"CTRL_Pin_Knee_{side}", "{}|GlobalMove_01|Joints_01|Joints_Legs|Joints_Leg_{}|Preserve_Knee_{}_Offset|Preserve_Knee_{}_Hook|Preserve_Knee_{}_Move".format(settings["name"], side, side, side, side))
     cmds.parent(f"Preserve_Knee_{side}", f"CTRL_Pin_Knee_{side}")
+    cmds.makeIdentity(f"CTRL_Pin_Knee_{side}", a=True, t=True, r=True, s=True)
     cmds.createNode('multiplyDivide', n=f"MD_Preserve_Knee_{side}")
     cmds.connectAttr(f"DrvJnt_Knee_{side}.ry", f"MD_Preserve_Knee_{side}.input1X")
     cmds.connectAttr(f"MD_Preserve_Knee_{side}.outputX", f"Preserve_Knee_{side}_Move.ry")
@@ -212,6 +214,12 @@ def createLeg(settings, side = "L"):
     MatrixConstrain.MatrixConstrain(Preserve_Knee_L, f"CTRL_End_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(Preserve_Knee_L, f"CTRL_Start_Ribbon_Leg_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     
+    #Bend
+    BendLeg = NewCTRL.Bend(f"PlacementCtrl_Ribbon_Leg_{side}", f"CTRL_Mid_Ribbon_Leg_{side}", name=f"CTRL_Mid_Ribbon_Leg_{side}")
+    BendKnee = NewCTRL.Bend(f"PlacementCtrl_Ribbon_Knee_{side}", f"CTRL_Mid_Ribbon_Knee_{side}", name=f"CTRL_Mid_Ribbon_Knee_{side}")
+
+    cmds.connectAttr(f"Settings_Leg_{side}.Vis_Bend", BendLeg + ".visibility")
+    cmds.connectAttr(f"Settings_Leg_{side}.Vis_Bend", BendKnee + ".visibility")
 
     #endregion Leg 
     
@@ -465,17 +473,16 @@ def createArm(settings, side = "L"):
     cmds.duplicate(f"PlacementCtrl_Pin_Elbow_{side}", n=f"CTRL_Pin_Elbow_{side}")
     cmds.parent(f"CTRL_Pin_Elbow_{side}", "{}|GlobalMove_01|Joints_01|Joints_Arms|Joints_Arm_{}|Preserve_Elbow_{}_Offset|Preserve_Elbow_{}_Hook|Preserve_Elbow_{}_Move".format(settings["name"], side, side, side, side))
     cmds.parent(f"Preserve_Elbow_{side}", f"CTRL_Pin_Elbow_{side}")
+    cmds.makeIdentity(f"CTRL_Pin_Elbow_{side}", a=True, t=True, r=True, s=True)
     cmds.createNode('multiplyDivide', n=f"MD_Preserve_Elbow_{side}")
     cmds.connectAttr(f"DrvJnt_Elbow_{side}.ry", f"MD_Preserve_Elbow_{side}.input1X")
     cmds.connectAttr(f"MD_Preserve_Elbow_{side}.outputX", f"Preserve_Elbow_{side}_Move.ry")
     cmds.setAttr(f"MD_Preserve_Elbow_{side}.input2X", 0.5)
     
     #region Creating The Wrist CTRL
-    cmds.duplicate(f"PlacementCtrl_Ik_Arm_{side}", n=f"CTRL_Wrist_{side}")
-    cmds.parent(f"CTRL_Wrist_{side}", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+    NewCTRL.NewCTRL(f"PlacementCtrl_Ik_Arm_{side}", f"DrvJnt_Wrist_{side}", name=f"CTRL_Wrist_{side}")
+    cmds.parent(f"CTRL_Wrist_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     cmds.addAttr(f"CTRL_Wrist_{side}", ln=f"Stretch_Arm", at="bool", dv=False, k=True)
-    cmds.matchTransform(f"CTRL_Wrist_{side}", f"DrvJnt_Wrist_{side}", piv=True)
-    Offset.offset(f"CTRL_Wrist_{side}", nbr=1)
 
 
     #region Creating the IK handle
@@ -559,6 +566,12 @@ def createArm(settings, side = "L"):
     MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_End_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_Start_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     
+    #Bend
+    BendArm = NewCTRL.Bend(f"PlacementCtrl_Ribbon_Arm_{side}", f"CTRL_Mid_Ribbon_Arm_{side}", name=f"CTRL_Mid_Ribbon_Arm_{side}")
+    BendElbow = NewCTRL.Bend(f"PlacementCtrl_Ribbon_Elbow_{side}", f"CTRL_Mid_Ribbon_Elbow_{side}", name=f"CTRL_Mid_Ribbon_Elbow_{side}")
+
+    cmds.connectAttr(f"Settings_Arm_{side}.Vis_Bend", BendArm + ".visibility")
+    cmds.connectAttr(f"Settings_Arm_{side}.Vis_Bend", BendElbow + ".visibility")
 
     #endregion Arm 
     
