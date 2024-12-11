@@ -93,8 +93,6 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         afterScript = 'import maya.cmds as cmds\n'
 
         afterScript += 'cmds.delete("{}")\n'.format(MultMatX, DecMatX)
-        afterScript += 'cmds.delete("{}")\n'.format(ComPivMatX)
-        afterScript += 'cmds.delete("{}")\n'.format(MultPivMatX)
         
         if Offset == True:
             afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
@@ -201,10 +199,10 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         afterScript += 'cmds.delete("{}")\n'.format(PmaScale)
         afterScript += 'cmds.delete("{}")\n'.format(PmaRotate)
         afterScript += 'cmds.delete("{}")\n'.format(PmaTranslate)
-        for i in range (len(Master)):
-            afterScript += 'cmds.delete("{}")\n'.format('DecMatX_{}'.format(i)+Slave)
-            afterScript += 'cmds.delete("{}")\n'.format('ComPivMatX_{}'.format(i)+Slave)
-            afterScript += 'cmds.delete("{}")\n'.format('MultPivMatX_{}'.format(i)+Slave)
+        afterScript += 'cmds.delete("{}")\n'.format('DecMatX_0'+Slave)
+        afterScript += 'cmds.delete("{}")\n'.format('ComPivMatX_0'+Slave)
+        afterScript += 'cmds.delete("{}")\n'.format('MultPivMatX_0'+Slave)
+
         if Offset == True:
             afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
         if cmds.objectType(Slave) == 'joint' :

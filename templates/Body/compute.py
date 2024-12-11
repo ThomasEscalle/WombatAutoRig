@@ -11,16 +11,22 @@ from wombatAutoRig.src.core import NewCTRL
 
 
 #(Reprendre les twist parce que j'ai fait betise jsp a voir/ probleme surtout au niveau des pieds a cause de l'angle qui est different)
-#fix bras droit (ribbon)
 #Faire les doigts
 #CTRL global
-#IK CTRL Vis
 #SpaceFollow
 #pole vector CTRL
 
 
 
 def compute(settings):
+    #CTRL global
+    cmds.duplicate("PlacementCtrl_Global", n="CTRL_{}_Global".format(settings["name"]))
+    cmds.parent("CTRL_{}_Global".format(settings["name"]), "{}".format(settings["name"]))
+    cmds.makeIdentity("CTRL_{}_Global".format(settings["name"]), a=True, t=True, r=True, s=True)
+    Global = ["CTRL_{}_Global".format(settings["name"])]
+    MatrixConstrain.MatrixConstrain(Global, "{}|GlobalMove_01".format(settings["name"]))
+
+    #Joint Root
     cmds.duplicate("PlacementJnt_Root", n="Bind_Root", po = True)
     cmds.parent(f"Bind_Root", world=True)
     Offset.offset("Bind_Root", nbr=3)
@@ -39,6 +45,9 @@ def compute(settings):
 
     createArm(settings, "L")
     createArm(settings, "R")
+
+
+
 
 def createLeg(settings, side = "L"):
 
@@ -138,12 +147,14 @@ def createLeg(settings, side = "L"):
     #region Creating the IK handle
     cmds.ikHandle(n=f"IK_Leg_{side}", sj=f"DrvJnt_Leg_{side}", ee=f"DrvJnt_Ankle_{side}", sol="ikRPsolver")
     cmds.parent(f"IK_Leg_{side}", "{}|GlobalMove_01|IKs_01".format(settings["name"]))
-    Locator = cmds.spaceLocator(n=f"PoleVector_{side}")
-    Color.setColor(f"PoleVector_{side}", "green")
-    PoleVector.PoleVector(joint_1=f"DrvJnt_Leg_{side}", joint_2=f"DrvJnt_Knee_{side}", joint_3=f"DrvJnt_Ankle_{side}", CTRL=f"PoleVector_{side}")
-    Offset.offset(f"PoleVector_{side}", nbr=1)
-    cmds.poleVectorConstraint(Locator, f"IK_Leg_{side}")
-    cmds.parent(f"PoleVector_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+    #pole vector
+    #Locator = cmds.spaceLocator(n=f"PoleVector_{side}")
+    #Color.setColor(f"PoleVector_{side}", "green")
+    PoleVector.PoleVector(joint_1=f"DrvJnt_Leg_{side}", joint_2=f"DrvJnt_Knee_{side}", joint_3=f"DrvJnt_Ankle_{side}", CTRL=f"PlacementCtrl_Pv_Leg_{side}")
+    cmds.rename(f"PlacementCtrl_Pv_Leg_{side}", f"PV_Leg_{side}")
+    Offset.offset(f"PV_Leg_{side}", nbr=1)
+    cmds.poleVectorConstraint(f"PV_Leg_{side}", f"IK_Leg_{side}")
+    cmds.parent(f"PV_Leg_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     
     #region Attach Joints 
     Bind_Hip_L = [f"Bind_Hip_{side}"]
@@ -175,6 +186,8 @@ def createLeg(settings, side = "L"):
     #region Ribbon
     Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5)
     Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5)
+
+    Global = ["CTRL_{}_Global".format(settings["name"])]
     
     if not cmds.objExists("Ribbons_Legs_Hide"):
         cmds.group(n="Ribbons_Legs_Hide", em=True)
@@ -194,6 +207,7 @@ def createLeg(settings, side = "L"):
     cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Leg_{}|CTRL_Global_Ribbon_Leg_{}|IS_CONSTRAIN_BY___DrvJnt_Leg_{}__".format(settings["name"], side ,side ,side))
     cmds.rotate(90, 0, 0, f"CTRL_Global_Ribbon_Leg_{side}", r=True, os=True)
     MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"CTRL_Global_Ribbon_Leg_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Leg_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
     CTRL_Shape_Leg = cmds.listRelatives(f"CTRL_Global_Ribbon_Knee_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Leg[0] + ".lodVisibility", 0)
     
@@ -207,6 +221,7 @@ def createLeg(settings, side = "L"):
     cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Knee_{}|CTRL_Global_Ribbon_Knee_{}|IS_CONSTRAIN_BY___DrvJnt_Knee_{}__".format(settings["name"], side , side ,side))
     cmds.rotate(90, 0, 0, f"CTRL_Global_Ribbon_Knee_{side}", r=True, os=True)
     MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, f"CTRL_Global_Ribbon_Knee_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Knee_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
     CTRL_Shape_Knee = cmds.listRelatives(f"CTRL_Global_Ribbon_Leg_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Knee[0] + ".lodVisibility", 0)
     
@@ -252,7 +267,7 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"IK_Toe_{side}.visibility")
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"Bind_Foot_{side}.visibility")
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"DrvJnt_Leg_{side}.visibility")
-    cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"PoleVector_{side}.visibility")
+    cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"PV_Leg_{side}.visibility")
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"CTRL_Foot_{side}.visibility")
     cmds.connectAttr(f"Settings_Leg_{side}.Vis_Pin", f"CTRL_Pin_Knee_{side}.visibility")
 
@@ -492,14 +507,16 @@ def createArm(settings, side = "L"):
     #region Creating the IK handle
     cmds.ikHandle(n=f"IK_Arm_{side}", sj=f"DrvJnt_Arm_{side}", ee=f"DrvJnt_Wrist_{side}", sol="ikRPsolver")
     cmds.parent(f"IK_Arm_{side}", "{}|GlobalMove_01|IKs_01".format(settings["name"]))
-    Locator = cmds.spaceLocator(n=f"PoleVector_Arm_{side}")
-    Color.setColor(f"PoleVector_Arm_{side}", "green")
-    PoleVector.PoleVector(joint_1=f"DrvJnt_Arm_{side}", joint_2=f"DrvJnt_Elbow_{side}", joint_3=f"DrvJnt_Wrist_{side}", CTRL=f"PoleVector_Arm_{side}")
-    Offset.offset(f"PoleVector_Arm_{side}", nbr=1)
-    cmds.poleVectorConstraint(Locator, f"IK_Arm_{side}")
-    cmds.parent(f"PoleVector_Arm_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     CTRL_Wrist_L = [f"CTRL_Wrist_{side}"]  
     MatrixConstrain.MatrixConstrain(CTRL_Wrist_L, f"IK_Arm_{side}")
+    #pole vector
+    #Locator = cmds.spaceLocator(n=f"PoleVector_Arm_{side}")
+    #Color.setColor(f"PoleVector_Arm_{side}", "green")
+    PoleVector.PoleVector(joint_1=f"DrvJnt_Arm_{side}", joint_2=f"DrvJnt_Elbow_{side}", joint_3=f"DrvJnt_Wrist_{side}", CTRL=f"PlacementCtrl_Pv_Arm_{side}")
+    cmds.rename(f"PlacementCtrl_Pv_Arm_{side}", f"PV_Arm_{side}")
+    Offset.offset(f"PV_Arm_{side}", nbr=1)
+    cmds.poleVectorConstraint(f"PV_Arm_{side}", f"IK_Arm_{side}")
+    cmds.parent(f"PV_Arm_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     
     #region Attach Joints 
     DrvJnt_Arm_L = [f"DrvJnt_Arm_{side}"]
@@ -528,6 +545,8 @@ def createArm(settings, side = "L"):
     #region Ribbon
     Ribbon.Ribbon(Name=f"Ribbon_Arm_{side}", Span=5)
     Ribbon.Ribbon(Name=f"Ribbon_Elbow_{side}", Span=5)
+
+    Global = ["CTRL_{}_Global".format(settings["name"])]
     
     if not cmds.objExists("Ribbons_Arms_Hide"):
         cmds.group(n="Ribbons_Arms_Hide", em=True)
@@ -544,8 +563,7 @@ def createArm(settings, side = "L"):
     DrvJnt_Arm_L = [f"DrvJnt_Arm_{side}"]
     MatrixConstrain.MatrixConstrain((f"DrvJnt_Arm_{side}", f"DrvJnt_Elbow_{side}"), f"CTRL_Global_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms|Grp_Ribbon_Arm_{}|CTRL_Global_Ribbon_Arm_{}".format(settings["name"], side,side), Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms|Grp_Ribbon_Arm_{}|CTRL_Global_Ribbon_Arm_{}|IS_CONSTRAIN_BY___DrvJnt_Arm_{}__".format(settings["name"], side ,side ,side))
-    MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, f"CTRL_Global_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(Global, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms|Grp_Ribbon_Arm_{}|CTRL_Global_Ribbon_Arm_{}".format(settings["name"], side,side), Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
     CTRL_Shape_Arm = cmds.listRelatives(f"CTRL_Global_Ribbon_Elbow_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Arm[0] + ".lodVisibility", 0)
     
@@ -556,17 +574,23 @@ def createArm(settings, side = "L"):
     DrvJnt_Elbow_L = [f"DrvJnt_Elbow_{side}"]
     MatrixConstrain.MatrixConstrain((f"DrvJnt_Elbow_{side}", f"DrvJnt_Wrist_{side}"), f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(DrvJnt_Elbow_L, f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms|Grp_Ribbon_Elbow_{}|CTRL_Global_Ribbon_Elbow_{}|IS_CONSTRAIN_BY___DrvJnt_Elbow_{}__".format(settings["name"], side , side ,side))
-    MatrixConstrain.MatrixConstrain(DrvJnt_Elbow_L, f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+
     CTRL_Shape_Elbow = cmds.listRelatives(f"CTRL_Global_Ribbon_Arm_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Elbow[0] + ".lodVisibility", 0)
     
     DrvJnt_Wrist_L = [f"DrvJnt_Wrist_{side}"]
     Preserve_Elbow_L = [f"Preserve_Elbow_{side}"]
-    MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, f"CTRL_End_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Wrist_L, f"CTRL_Start_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_End_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_Start_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    if side =="L":
+        MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, f"CTRL_End_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+        MatrixConstrain.MatrixConstrain(DrvJnt_Wrist_L, f"CTRL_Start_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+        MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_End_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+        MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_Start_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    elif side =="R":
+        MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, f"CTRL_Start_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+        MatrixConstrain.MatrixConstrain(DrvJnt_Wrist_L, f"CTRL_End_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+        MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_Start_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+        MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_End_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     
     #Bend
     BendArm = NewCTRL.Bend(f"PlacementCtrl_Ribbon_Arm_{side}", f"CTRL_Mid_Ribbon_Arm_{side}", name=f"CTRL_Mid_Ribbon_Arm_{side}")
@@ -591,7 +615,8 @@ def createArm(settings, side = "L"):
     cmds.connectAttr(f"Reverse_Arm_{side}.outputX", f"FK_Arm_{side}.visibility")
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"IK_Arm_{side}.visibility")
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"DrvJnt_Arm_{side}.visibility")
-    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"PoleVector_Arm_{side}.visibility")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"PV_Arm_{side}.visibility")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"CTRL_Wrist_{side}.visibility")
     cmds.connectAttr(f"Settings_Arm_{side}.Vis_Pin", f"CTRL_Pin_Elbow_{side}.visibility")
 
     #region CTRL FK
@@ -698,26 +723,28 @@ def createArm(settings, side = "L"):
 
     #region Twist Ex 
     TwistExtractor.create_twist_extractor(f"Arm_{side}")
-    TwistExtractor.create_twist_extractor(f"Elbow_{side}")
+    TwistExtractor.create_twist_extractor(f"Wrist_{side}")
 
     cmds.duplicate(f"DrvJnt_Wrist_{side}", n=f"DrvJnt_Wrist_{side}_NonRoll", po=True)
     Color.setColor(f"DrvJnt_Wrist_{side}", "orange")
+
     cmds.createNode("multiplyDivide", n=f"OpposedArm_{side}")
     cmds.setAttr(f"OpposedArm_{side}.input2X", -1)
-    cmds.setAttr(f"OpposedArm_{side}.input2Y", -1)
 
     NonRoll_Arm = NonRollMatrix.NonRollMatrix(f"Bind_Clavicle_{side}", f"DrvJnt_Arm_{side}")
-    NonRoll_Hand = NonRollMatrix.NonRollMatrix(f"DrvJnt_Wrist_{side}_NonRoll", f"Bind_Hand_{side}")
 
+    cmds.connectAttr(NonRoll_Arm + ".outputRotateX", f"OpposedArm_{side}.input1X")
+    cmds.connectAttr(f"OpposedArm_{side}.outputX",f"Twist_Arm_{side}_00.rotateX")
 
-    cmds.connectAttr(NonRoll_Hand + ".outputRotateX", f"OpposedArm_{side}.input1X")
-    cmds.connectAttr(f"OpposedArm_{side}.outputX", f"Twist_Elbow_{side}_00.rotateX")
-    cmds.connectAttr(NonRoll_Arm + ".outputRotateX", f"OpposedArm_{side}.input1Y")
-    cmds.connectAttr(f"OpposedArm_{side}.outputY",f"Twist_Arm_{side}_00.rotateX")
-
+    cmds.connectAttr(DrvJnt_Wrist_L[0] + ".r", f"Twist_Wrist_{side}_00.r")
 
     cmds.parent(f"Twist_Arm_{side}_grp", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
-    cmds.parent(f"Twist_Elbow_{side}_grp", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
+    cmds.parent(f"Twist_Wrist_{side}_grp", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
     
-    cmds.connectAttr(f"Twist_Arm_{side}_00.TwistEx", f"CTRL_End_Ribbon_Arm_{side}.rotateX")
-    cmds.connectAttr(f"Twist_Elbow_{side}_00.TwistEx", f"CTRL_Start_Ribbon_Elbow_{side}.rotateX")
+    if side == "L":
+        cmds.connectAttr(f"Twist_Arm_{side}_00.TwistEx", f"CTRL_End_Ribbon_Arm_{side}.rotateX")
+        cmds.connectAttr(f"Twist_Wrist_{side}_00.TwistEx", f"CTRL_Start_Ribbon_Elbow_{side}.rotateX")
+
+    elif side == "R":
+        cmds.connectAttr(f"Twist_Arm_{side}_00.TwistEx", f"CTRL_Start_Ribbon_Arm_{side}.rotateX")
+        cmds.connectAttr(f"Twist_Wrist_{side}_00.TwistEx", f"CTRL_End_Ribbon_Elbow_{side}.rotateX")
