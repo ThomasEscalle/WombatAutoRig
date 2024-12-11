@@ -32,7 +32,7 @@ wombatAutoRig.run()
 - [Twist Extractor](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/TwistExtractor.md)
 
 
-## Dialogs
+## Dialogs documentation
 - [Dialog Wombat Autorig](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/Colors.md)
 - [Dialog Color](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/DlgColor.md)
 - [Dialog Controllers](https://github.com/ThomasEscalle/WombatAutoRig/blob/main/docs/DlgControllers.md)
