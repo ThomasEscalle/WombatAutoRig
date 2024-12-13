@@ -11,7 +11,7 @@ from wombatAutoRig.src.core import NewCTRL
 
 
 #(Reprendre les twist parce que j'ai fait betise jsp a voir/ probleme surtout au niveau des pieds a cause de l'angle qui est different)
-#Faire les doigts
+#Faire les doigts (attentes CTRLs)
 #SpaceFollow
 
 
