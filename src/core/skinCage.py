@@ -17,8 +17,8 @@ def create_skin_cage(joints, body_mesh):
         modify_cube_shape(cube, joint, body_mesh)
 
         #Scale up cubes so the skin works better
-        cmds.setAttr(cube + ".scaleY", 1.1*(cube + ".scaleY"))
-        cmds.setAttr(cube + ".scaleZ", 1.1*(cube + ".scaleZ"))
+        cmds.setAttr(cube + ".scaleY", 1.1)
+        cmds.setAttr(cube + ".scaleZ", 1.1)
 
         # Skin the cube to the joint
         cmds.skinCluster(joint, cube, toSelectedBones=True, maximumInfluences=1)
