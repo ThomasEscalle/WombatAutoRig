@@ -79,7 +79,19 @@ def placeControllers(settings):
     placeSpineControllers(settings)
     placeLegsControllers(settings)
     placeArmsControllers(settings)
-    
+    placeFingersControllers(settings)
+
+
+
+
+def placeFingersControllers(settings):
+    print("Fingers controllers")
+    ctrl_01 = Controllers.createController("2D_Shapes/Finger", "PlacementCtrl_Finger_01")
+    # Match the transformations to 'PlacementJnt_Thumb_Metacarpus_R'
+    cmds.matchTransform("PlacementCtrl_Finger_01", "PlacementJnt_Thumb_Metacarpus_R")
+    # Rotate the controller -90 degrees in X
+    cmds.rotate(0, -90, 0, "PlacementCtrl_Finger_01", r=True)
+
 
 
 
