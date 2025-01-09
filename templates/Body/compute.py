@@ -33,6 +33,7 @@ def compute(settings):
     #CTRL Settings
     cmds.duplicate("PlacementCtrl_Settings", n="CTRL_Settings")
     cmds.parent("CTRL_Settings", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+    cmds.makeIdentity("CTRL_Settings", a=True, t=True, r=True, s=True)
 
 
     createLeg(settings, "L")
@@ -45,13 +46,13 @@ def compute(settings):
     createFinger(settings, side ="L", finger= "Index")
     createFinger(settings, side ="L", finger= "Middle")
     createFinger(settings, side ="L", finger= "Ring")
-    createFinger(settings, side ="L", finger= "Pimky")
+    createFinger(settings, side ="L", finger= "Pinky")
 
     createFinger(settings, side ="R", finger= "Thumb")
     createFinger(settings, side ="R", finger= "Index")
     createFinger(settings, side ="R", finger= "Middle")
     createFinger(settings, side ="R", finger= "Ring")
-    createFinger(settings, side ="R", finger= "Pimky")
+    createFinger(settings, side ="R", finger= "Pinky")
 
     createArm(settings, "L")
     createArm(settings, "R")
@@ -442,6 +443,48 @@ def createFinger(settings, side ="L", finger= "Thumb"):
     else:
         cmds.parent(f"Bind_{finger}_03_{side}", f"Bind_{finger}_02_{side}")
         cmds.parent(f"Bind_{finger}_end_{side}", f"Bind_{finger}_03_{side}")
+
+    
+    #Create CTRLs
+    
+    NewCTRL.NewCTRL(f"PlacementCtrl_Finger_{finger}_Metacarpus_{side}", f"Bind_{finger}_Metacarpus_{side}", name=f"CTRL_Finger_{finger}_Metacarpus_{side}")
+    NewCTRL.NewCTRL(f"PlacementCtrl_Finger_{finger}_01_{side}", f"Bind_{finger}_01_{side}", name=f"CTRL_Finger_{finger}_01_{side}")
+    NewCTRL.NewCTRL(f"PlacementCtrl_Finger_{finger}_02_{side}", f"Bind_{finger}_02_{side}", name=f"CTRL_Finger_{finger}_02_{side}")
+
+    if finger != "Thumb":
+        NewCTRL.NewCTRL(f"PlacementCtrl_Finger_{finger}_03_{side}", f"Bind_{finger}_03_{side}", name=f"CTRL_Finger_{finger}_03_{side}")
+
+    if not cmds.objExists("CTRLs_Hands"):
+        cmds.group(n="CTRLs_Hands", em=True)
+        cmds.parent("CTRLs_Hands", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+
+    if not cmds.objExists(f"CTRLs_Hand_{side}"):
+        cmds.group(empty=True, name=f"CTRLs_Hand_{side}")
+        cmds.parent(f"CTRLs_Hand_{side}", "{}|GlobalMove_01|CTRLs_01|CTRLs_Hands".format(settings["name"]))
+        Bind_Hand = [f"Bind_Hand_{side}"]
+        MatrixConstrain.MatrixConstrain(Bind_Hand, f"CTRLs_Hand_{side}", Offset=True, sX=False, sY=False, sZ=False,)
+
+    cmds.parent(f"CTRL_Finger_{finger}_Metacarpus_{side}_Offset", f"CTRLs_Hand_{side}")
+    cmds.parent(f"CTRL_Finger_{finger}_01_{side}_Offset", f"CTRL_Finger_{finger}_Metacarpus_{side}")
+    cmds.parent(f"CTRL_Finger_{finger}_02_{side}_Offset", f"CTRL_Finger_{finger}_01_{side}")
+
+    if finger != "Thumb":
+        cmds.parent(f"CTRL_Finger_{finger}_03_{side}_Offset", f"CTRL_Finger_{finger}_02_{side}")
+
+    #Constraining 
+    Metacarpus = [f"CTRL_Finger_{finger}_Metacarpus_{side}"]
+    Finger01 = [f"CTRL_Finger_{finger}_01_{side}"]
+    Finger02 = [f"CTRL_Finger_{finger}_02_{side}"]
+    MatrixConstrain.MatrixConstrain(Metacarpus, f"Bind_{finger}_Metacarpus_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+    MatrixConstrain.MatrixConstrain(Finger01, f"Bind_{finger}_01_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+    MatrixConstrain.MatrixConstrain(Finger02, f"Bind_{finger}_02_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+
+    if finger != "Thumb":
+        Finger03 = [f"CTRL_Finger_{finger}_03_{side}"]
+        MatrixConstrain.MatrixConstrain(Finger03, f"Bind_{finger}_03_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+
+    
+
 
 def createArm(settings, side = "L"):
     #region Creating the joints 
