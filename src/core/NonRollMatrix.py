@@ -1,6 +1,11 @@
 import maya.cmds as cmds
 from wombatAutoRig.src.core import Offset
 
+#JntStill : joint correspondant a la reference du non mouvement (ex:Hip, clavicle, wristNonRoll ...)
+# JntMove : joint correspondant a la reference du mouvement (ex:Leg, Arm, wrist...)
+# Creer un reseau de node matriciel qui extrait les rotation d'une articualtion proprement.
+
+
 def NonRollMatrix(JntStill, JntMove):
     #Create Locators
     Loc_Still = cmds.spaceLocator(name='Loc_nonRoll_Still_{}'.format(JntStill))[0]
