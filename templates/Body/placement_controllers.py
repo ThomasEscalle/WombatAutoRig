@@ -1,4 +1,5 @@
 from maya import cmds
+
 from wombatAutoRig.src.core import Color
 from wombatAutoRig.src.core import Controllers
 from wombatAutoRig.src.core import AutorigHelper
@@ -84,13 +85,159 @@ def placeControllers(settings):
 
 
 
+# Create a finger controller
+def createFingerController(name, parentJoint, settings , rotation = [-90, -90 , 0], color = "red"):
+    ctrl = Controllers.createController("2D_Shapes/Finger", name)
+    # Match the transformations to 'PlacementJnt_Thumb_Metacarpus_R'
+    cmds.matchTransform(name, parentJoint)
+    cmds.rotate(rotation[0], 0, 0, name, r=True, os=True, fo=True)
+    cmds.rotate(0, rotation[1], 0, name, r=True, os=True, fo=True)
+    cmds.scale(0.5, 0.5, 0.5, name, r=True, ws=True)
+    Color.setColor(name, color)
+    cmds.parent(name, "AutoRig_Data|ControllersPlacement|Global_Controllers")
+
+    return "AutoRig_Data|ControllersPlacement|Global_Controllers|" + name
+
+
+# PlacementCtrl_Finger_Thumb_Metacarpus_R
+# PlacementCtrl_Finger_Index_Metacarpus_R
+# PlacementCtrl_Finger_Middle_Metacarpus_R
+# PlacementCtrl_Finger_Ring_Metacarpus_R
+# PlacementCtrl_Finger_Pinky_Metacarpus_R
+# PlacementCtrl_Finger_Thumb_01_R
+# PlacementCtrl_Finger_Thumb_02_R
+# PlacementCtrl_Finger_Index_01_R
+# PlacementCtrl_Finger_Index_02_R
+# PlacementCtrl_Finger_Index_03_R
+# PlacementCtrl_Finger_Middle_01_R
+# PlacementCtrl_Finger_Middle_02_R
+# PlacementCtrl_Finger_Middle_03_R
+# PlacementCtrl_Finger_Ring_01_R
+# PlacementCtrl_Finger_Ring_02_R
+# PlacementCtrl_Finger_Ring_03_R
+# PlacementCtrl_Finger_Pinky_01_R
+# PlacementCtrl_Finger_Pinky_02_R
+# PlacementCtrl_Finger_Pinky_03_R
+# PlacementCtrl_Finger_Thumb_Metacarpus_L
+# PlacementCtrl_Finger_Index_Metacarpus_L
+# PlacementCtrl_Finger_Middle_Metacarpus_L
+# PlacementCtrl_Finger_Ring_Metacarpus_L
+# PlacementCtrl_Finger_Pinky_Metacarpus_L
+# PlacementCtrl_Finger_Thumb_01_L
+# PlacementCtrl_Finger_Thumb_02_L
+# PlacementCtrl_Finger_Index_01_L
+# PlacementCtrl_Finger_Index_02_L
+# PlacementCtrl_Finger_Index_03_L
+# PlacementCtrl_Finger_Middle_01_L
+# PlacementCtrl_Finger_Middle_02_L
+# PlacementCtrl_Finger_Middle_03_L
+# PlacementCtrl_Finger_Ring_01_L
+# PlacementCtrl_Finger_Ring_02_L
+# PlacementCtrl_Finger_Ring_03_L
+# PlacementCtrl_Finger_Pinky_01_L
+# PlacementCtrl_Finger_Pinky_02_L
+# PlacementCtrl_Finger_Pinky_03_L
 def placeFingersControllers(settings):
     print("Fingers controllers")
-    ctrl_01 = Controllers.createController("2D_Shapes/Finger", "PlacementCtrl_Finger_01")
-    # Match the transformations to 'PlacementJnt_Thumb_Metacarpus_R'
-    cmds.matchTransform("PlacementCtrl_Finger_01", "PlacementJnt_Thumb_Metacarpus_R")
-    # Rotate the controller -90 degrees in X
-    cmds.rotate(0, -90, 0, "PlacementCtrl_Finger_01", r=True)
+
+    # region RIGHT FINGERS
+    
+    # PlacementJnt_Thumb_Metacarpus_R
+    ctrl_01 = createFingerController("PlacementCtrl_Finger_Thumb_Metacarpus_R", "PlacementJnt_Thumb_Metacarpus_R", settings)
+    # Bind_Index_Metacarpus_R
+    ctrl_02 = createFingerController("PlacementCtrl_Finger_Index_Metacarpus_R", "PlacementJnt_Index_Metacarpus_R", settings)
+    # PlacementJnt_Middle_Metacarpus_R
+    ctrl_03 = createFingerController("PlacementCtrl_Finger_Middle_Metacarpus_R", "PlacementJnt_Middle_Metacarpus_R", settings)
+    # PlacementJnt_Ring_Metacarpus_R
+    ctrl_04 = createFingerController("PlacementCtrl_Finger_Ring_Metacarpus_R", "PlacementJnt_Ring_Metacarpus_R", settings)
+    # PlacementJnt_Pimky_Metacarpus_R
+    ctrl_05 = createFingerController("PlacementCtrl_Finger_Pinky_Metacarpus_R", "PlacementJnt_Pimky_Metacarpus_R", settings)
+
+
+    # PlacementJnt_Thumb_01_R
+    ctrl_01_01 = createFingerController("PlacementCtrl_Finger_Thumb_01_R", "PlacementJnt_Thumb_01_R", settings)
+    # PlacementJnt_Thumb_02_R
+    ctrl_01_02 = createFingerController("PlacementCtrl_Finger_Thumb_02_R", "PlacementJnt_Thumb_02_R", settings)
+
+    # PlacementJnt_Index_01_R
+    ctrl_02_01 = createFingerController("PlacementCtrl_Finger_Index_01_R", "PlacementJnt_Index_01_R", settings)
+    # PlacementJnt_Index_02_R
+    ctrl_02_02 = createFingerController("PlacementCtrl_Finger_Index_02_R", "PlacementJnt_Index_02_R", settings)
+    # PlacementJnt_Index_03_R
+    ctrl_02_03 = createFingerController("PlacementCtrl_Finger_Index_03_R", "PlacementJnt_Index_03_R", settings)
+
+    # PlacementJnt_Middle_01_R
+    ctrl_03_01 = createFingerController("PlacementCtrl_Finger_Middle_01_R", "PlacementJnt_Middle_01_R", settings)
+    # PlacementJnt_Middle_02_R
+    ctrl_03_02 = createFingerController("PlacementCtrl_Finger_Middle_02_R", "PlacementJnt_Middle_02_R", settings)
+    # PlacementJnt_Middle_03_R
+    ctrl_03_03 = createFingerController("PlacementCtrl_Finger_Middle_03_R", "PlacementJnt_Middle_03_R", settings)
+
+    # PlacementJnt_Ring_01_R
+    ctrl_04_01 = createFingerController("PlacementCtrl_Finger_Ring_01_R", "PlacementJnt_Ring_01_R", settings)
+    # PlacementJnt_Ring_02_R
+    ctrl_04_02 = createFingerController("PlacementCtrl_Finger_Ring_02_R", "PlacementJnt_Ring_02_R", settings)
+    # PlacementJnt_Ring_03_R
+    ctrl_04_03 = createFingerController("PlacementCtrl_Finger_Ring_03_R", "PlacementJnt_Ring_03_R", settings)
+    
+
+    # PlacementJnt_Pinky_01_R
+    ctrl_05_01 = createFingerController("PlacementCtrl_Finger_Pinky_01_R", "PlacementJnt_Pimky_01_R", settings)
+    # PlacementJnt_Pinky_02_R
+    ctrl_05_02 = createFingerController("PlacementCtrl_Finger_Pinky_02_R", "PlacementJnt_Pimky_02_R", settings)
+    # PlacementJnt_Pinky_03_R
+    ctrl_05_03 = createFingerController("PlacementCtrl_Finger_Pinky_03_R", "PlacementJnt_Pimky_03_R", settings)
+
+
+    # region LEFT FINGERS
+
+    # PlacementJnt_Thumb_Metacarpus_L
+    ctrl_06 = createFingerController("PlacementCtrl_Finger_Thumb_Metacarpus_L", "PlacementJnt_Thumb_Metacarpus_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Index_Metacarpus_L
+    ctrl_07 = createFingerController("PlacementCtrl_Finger_Index_Metacarpus_L", "PlacementJnt_Index_Metacarpus_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Middle_Metacarpus_L
+    ctrl_08 = createFingerController("PlacementCtrl_Finger_Middle_Metacarpus_L", "PlacementJnt_Middle_Metacarpus_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Ring_Metacarpus_L
+    ctrl_09 = createFingerController("PlacementCtrl_Finger_Ring_Metacarpus_L", "PlacementJnt_Ring_Metacarpus_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Pimky_Metacarpus_L
+    ctrl_10 = createFingerController("PlacementCtrl_Finger_Pinky_Metacarpus_L", "PlacementJnt_Pimky_Metacarpus_L", settings, rotation=[90, 90, 0], color="turquoise")
+
+
+    # PlacementJnt_Thumb_01_L
+    ctrl_06_01 = createFingerController("PlacementCtrl_Finger_Thumb_01_L", "PlacementJnt_Thumb_01_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Thumb_02_L
+    ctrl_06_02 = createFingerController("PlacementCtrl_Finger_Thumb_02_L", "PlacementJnt_Thumb_02_L", settings, rotation=[90, 90, 0], color="turquoise")
+
+    # PlacementJnt_Index_01_L
+    ctrl_07_01 = createFingerController("PlacementCtrl_Finger_Index_01_L", "PlacementJnt_Index_01_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Index_02_L
+    ctrl_07_02 = createFingerController("PlacementCtrl_Finger_Index_02_L", "PlacementJnt_Index_02_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Index_03_L
+    ctrl_07_03 = createFingerController("PlacementCtrl_Finger_Index_03_L", "PlacementJnt_Index_03_L", settings, rotation=[90, 90, 0], color="turquoise")
+
+    # PlacementJnt_Middle_01_L
+    ctrl_08_01 = createFingerController("PlacementCtrl_Finger_Middle_01_L", "PlacementJnt_Middle_01_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Middle_02_L
+    ctrl_08_02 = createFingerController("PlacementCtrl_Finger_Middle_02_L", "PlacementJnt_Middle_02_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Middle_03_L
+    ctrl_08_03 = createFingerController("PlacementCtrl_Finger_Middle_03_L", "PlacementJnt_Middle_03_L", settings, rotation=[90, 90, 0], color="turquoise")
+
+    # PlacementJnt_Ring_01_L
+    ctrl_09_01 = createFingerController("PlacementCtrl_Finger_Ring_01_L", "PlacementJnt_Ring_01_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Ring_02_L
+    ctrl_09_02 = createFingerController("PlacementCtrl_Finger_Ring_02_L", "PlacementJnt_Ring_02_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Ring_03_L
+    ctrl_09_03 = createFingerController("PlacementCtrl_Finger_Ring_03_L", "PlacementJnt_Ring_03_L", settings, rotation=[90, 90, 0], color="turquoise")
+
+    # PlacementJnt_Pinky_01_L
+    ctrl_10_01 = createFingerController("PlacementCtrl_Finger_Pinky_01_L", "PlacementJnt_Pimky_01_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Pinky_02_L
+    ctrl_10_02 = createFingerController("PlacementCtrl_Finger_Pinky_02_L", "PlacementJnt_Pimky_02_L", settings, rotation=[90, 90, 0], color="turquoise")
+    # PlacementJnt_Pinky_03_L
+    ctrl_10_03 = createFingerController("PlacementCtrl_Finger_Pinky_03_L", "PlacementJnt_Pimky_03_L", settings, rotation=[90, 90, 0], color="turquoise")
+
+
+
 
 
 
@@ -119,6 +266,8 @@ def placeGlobalControllers(settings) :
     setShapeSize("PlacementCtrl_Root", 2)
     Color.setColor("PlacementCtrl_Root", "yellow")
     cmds.parent("PlacementCtrl_Root", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+
+
 
     # PlacementCtrl_Settings
     PlacementCtrl_Settings = cmds.circle(name="PlacementCtrl_Settings", normal=[0, 1, 0], radius=1)
