@@ -37,6 +37,7 @@ class Template(TemplateBase.TemplateBase):
             PageGeometrySelection.PageGeometrySelection(),
             PageJointPlacement.PageJointPlacement(),
             PageControllerPlacement.PageControllerPlacement(),
+            PageGlobalSettings.PageGlobalSettings()
         ]
 
         self.pages[0].entered.connect(self.onGlobalSettingsEntered)
@@ -51,10 +52,15 @@ class Template(TemplateBase.TemplateBase):
         self.pages[3].entered.connect(self.onControllerPlacementEntered)
         self.pages[3].accepted.connect(self.onControllerPlacementAccepted)
 
+        self.pages[4].entered.connect(self.onBindEntered)
+        self.pages[4].accepted.connect(self.onBindAccepted)
 
         self.pages[0].setPageTitle("Global Settings")
         self.pages[0].addTextInput("Name", "name")
         self.pages[0].addTextInput("Identifier", "identifier")
+
+        self.pages[4].setPageTitle("Bind Skin")
+        self.pages[4].addCheckbox("Bind Skin", "bindSkin")
 
         
 
@@ -190,6 +196,13 @@ class Template(TemplateBase.TemplateBase):
         AutorigHelper.hideControllersPlacement(1)
         print("onControllerPlacementAccepted")
 
+
+
+    def onBindEntered(self):
+        print("onBindEntered")
+
+    def onBindAccepted(self):
+        print("onBindAccepted")
 
 
     ################################################################################################
