@@ -1,12 +1,13 @@
 import maya.cmds as cmds
 from wombatAutoRig.src.core import Offset
+from wombatAutoRig.src.core import Bookmark
 
 #JntStill : joint correspondant a la reference du non mouvement (ex:Hip, clavicle, wristNonRoll ...)
 # JntMove : joint correspondant a la reference du mouvement (ex:Leg, Arm, wrist...)
 # Creer un reseau de node matriciel qui extrait les rotation d'une articualtion proprement.
 
 
-def NonRollMatrix(JntStill, JntMove):
+def NonRollMatrix(JntStill, JntMove, OffsetBookmark=0):
     #Create Locators
     Loc_Still = cmds.spaceLocator(name='Loc_nonRoll_Still_{}'.format(JntStill))[0]
     Loc_Move = cmds.spaceLocator(name='Loc_nonRoll_Move_{}'.format(JntMove))[0]
@@ -40,6 +41,16 @@ def NonRollMatrix(JntStill, JntMove):
     cmds.connectAttr(MultMatX + ".matrixSum", DecMatX + ".inputMatrix")
 
     cmds.connectAttr(DecMatX + ".outputQuat", QuatToE + ".inputQuat")
+
+    row = OffsetBookmark
+
+    Bookmark.createBookmark("NonRoll")
+
+    Bookmark.addNodeToBookmark("NonRoll", Loc_Still, 0.1 + OffsetBookmark, 0, state=0)
+    Bookmark.addNodeToBookmark("NonRoll", Loc_Move, -0.1 + OffsetBookmark, 0, state=0)
+    Bookmark.addNodeToBookmark("NonRoll", MultMatX, 0 + OffsetBookmark, 1, state=0)
+    Bookmark.addNodeToBookmark("NonRoll", DecMatX, 0 + OffsetBookmark, 2, state=0)
+    Bookmark.addNodeToBookmark("NonRoll", QuatToE, 0 + OffsetBookmark, 3, state=0)
 
     return QuatToE
 
