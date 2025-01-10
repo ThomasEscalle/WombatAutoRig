@@ -621,7 +621,7 @@ def placeArmsControllers(settings):
 
     # PlacementCtrl_Pv_Arm_L
     PlacementCtrl_Pv_Arm_L = Controllers.createController("3D_Shapes/corner", "PlacementCtrl_Pv_Arm_L")
-    transformRelative("PlacementCtrl_Pv_Arm_L", [29, 116, -34], [-90, 0, 0], [1, 1, 1] , settings)
+    transformRelative("PlacementCtrl_Pv_Arm_L", [29, 116, -34], [-90, 180, 0], [1, 1, 1] , settings)
     Color.setColor("PlacementCtrl_Pv_Arm_L", "turquoise")
     cmds.parent("PlacementCtrl_Pv_Arm_L", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 

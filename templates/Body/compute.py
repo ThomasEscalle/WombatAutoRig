@@ -17,6 +17,10 @@ from wombatAutoRig.src.core import NewCTRL
 
 
 def compute(settings):
+
+    # Bind skin set
+    cmds.sets(n="Bind_JNTs", em=True)
+    
     #CTRL global
     cmds.duplicate("PlacementCtrl_Global", n="CTRL_{}_Global".format(settings["name"]))
     cmds.parent("CTRL_{}_Global".format(settings["name"]), "{}".format(settings["name"]))
@@ -26,7 +30,9 @@ def compute(settings):
 
     #Joint Root
     cmds.duplicate("PlacementJnt_Root", n="Bind_Root", po = True)
+
     cmds.parent(f"Bind_Root", world=True)
+    cmds.sets(f"Bind_Root", add="Bind_JNTs")
     Offset.offset("Bind_Root", nbr=3)
     cmds.parent("Bind_Root_Offset", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
 
@@ -34,6 +40,10 @@ def compute(settings):
     cmds.duplicate("PlacementCtrl_Settings", n="CTRL_Settings")
     cmds.parent("CTRL_Settings", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     cmds.makeIdentity("CTRL_Settings", a=True, t=True, r=True, s=True)
+
+
+
+
 
 
     createLeg(settings, "L")
@@ -68,6 +78,8 @@ def createLeg(settings, side = "L"):
     #region Creating the joints 
     
     cmds.duplicate(f"PlacementJnt_Hip_{side}", n=f"Bind_Hip_{side}", po = True)
+    cmds.sets(f"Bind_Hip_{side}", add="Bind_JNTs")
+
     
     cmds.duplicate(f"PlacementJnt_Hip_{side}", n=f"DrvJnt_Leg_{side}", po=True)
     Color.setColor(f"DrvJnt_Leg_{side}", "yellow")
@@ -195,8 +207,8 @@ def createLeg(settings, side = "L"):
     #A contraindre par le CTRL Global
     
     #region Ribbon
-    Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5)
-    Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5)
+    Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5, BindSet= "Bind_JNTs")
+    Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5, BindSet= "Bind_JNTs")
 
     Global = ["CTRL_{}_Global".format(settings["name"])]
     
@@ -238,6 +250,7 @@ def createLeg(settings, side = "L"):
     
     DrvJnt_Ankle_L = [f"DrvJnt_Ankle_{side}"]
     Preserve_Knee_L = [f"Preserve_Knee_{side}"]
+    cmds.sets(f"Preserve_Knee_{side}", add="Bind_JNTs")
     MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"CTRL_End_Ribbon_Leg_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(DrvJnt_Ankle_L, f"CTRL_Start_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
     MatrixConstrain.MatrixConstrain(Preserve_Knee_L, f"CTRL_End_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
@@ -254,9 +267,21 @@ def createLeg(settings, side = "L"):
     
 
 
+    ############################################################################################################
+    ############################################################################################################
+    ################### C O M P U T E    L E G  T H O M A S  ##################################################
+    ############################################################################################################
+    ############################################################################################################
 
     computeThomas.createFoot(settings, side)
     
+    ############################################################################################################
+    ############################################################################################################
+    ############################################################################################################
+    ############################################################################################################
+    ############################################################################################################
+
+
     
     #region Connction IK/FK
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"IK_Leg_{side}.ikBlend")
@@ -268,6 +293,11 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"FK_Ankle_{side}.rotate", f"Bind_Foot_{side}.rotate")
     cmds.connectAttr(f"FK_Ball_{side}.rotate", f"Bind_Ball_{side}.rotate")
     cmds.connectAttr(f"FK_Toe_{side}.rotate", f"Bind_Toe_{side}.rotate")
+
+
+
+
+
     
     cmds.createNode("reverse", n="Reverse_Leg_{}".format(side))
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"Reverse_Leg_{side}.inputX")
@@ -400,9 +430,11 @@ def createHand(settings, side = "L"):
     #region Creating the joints
     cmds.duplicate(f"PlacementJnt_Wrist_{side}", n=f"Bind_Hand_{side}", po=True)
     Color.setColor(f"Bind_Hand_{side}", "white")
+    cmds.sets(f"Bind_Hand_{side}", add="Bind_JNTs")
 
     #freeze transform
     cmds.makeIdentity(f"Bind_Hand_{side}", a=True, t=True, r=True, s=True)
+
 
     #offset
     Offset.offset(f"Bind_Hand_{side}", nbr=3)
@@ -420,6 +452,8 @@ def createFinger(settings, side ="L", finger= "Thumb"):
     cmds.duplicate(f"PlacementJnt_{finger}_Metacarpus_{side}", n=f"Bind_{finger}_Metacarpus_{side}", po=True)
     Color.setColor(f"Bind_{finger}_Metacarpus_{side}", "white")
     cmds.makeIdentity(f"Bind_{finger}_Metacarpus_{side}", a=True, t=True, r=True, s=True)
+
+    
 
     if finger == "Thumb":
         n=2
@@ -443,6 +477,15 @@ def createFinger(settings, side ="L", finger= "Thumb"):
     else:
         cmds.parent(f"Bind_{finger}_03_{side}", f"Bind_{finger}_02_{side}")
         cmds.parent(f"Bind_{finger}_end_{side}", f"Bind_{finger}_03_{side}")
+
+    cmds.sets(f"Bind_{finger}_Metacarpus_{side}", add="Bind_JNTs")
+    cmds.sets(f"Bind_{finger}_01_{side}", add="Bind_JNTs")
+    cmds.sets(f"Bind_{finger}_02_{side}", add="Bind_JNTs")
+    if finger == "Thumb":
+        cmds.sets(f"Bind_{finger}_end_{side}", add="Bind_JNTs")
+    else:
+        cmds.sets(f"Bind_{finger}_03_{side}", add="Bind_JNTs")
+        cmds.sets(f"Bind_{finger}_end_{side}", add="Bind_JNTs")
 
     
     #Create CTRLs
@@ -509,6 +552,8 @@ def createArm(settings, side = "L"):
     Color.setColor(f"FK_Wrist_{side}", "blue")
     
     cmds.duplicate(f"PlacementJnt_Elbow_{side}", n=f"Preserve_Elbow_{side}", po=True)
+    cmds.sets(f"Preserve_Elbow_{side}", add="Bind_JNTs")
+
 
     #Freeze the transform
 
@@ -521,6 +566,9 @@ def createArm(settings, side = "L"):
     cmds.makeIdentity(f"FK_Elbow_{side}", a=True, t=True, r=True, s=True)
     cmds.makeIdentity(f"FK_Wrist_{side}", a=True, t=True, r=True, s=True)
     cmds.makeIdentity(f"Preserve_Elbow_{side}", a=True, t=True, r=True, s=True)
+
+    cmds.sets(f"Bind_Clavicle_{side}", add="Bind_JNTs")
+    cmds.sets(f"Bind_Clavicle_end_{side}", add="Bind_JNTs")
 
     #Unparenting the joints
 
@@ -625,8 +673,8 @@ def createArm(settings, side = "L"):
     Offset.offset(f"Settings_Arm_{side}", nbr=2)
     
     #region Ribbon
-    Ribbon.Ribbon(Name=f"Ribbon_Arm_{side}", Span=5)
-    Ribbon.Ribbon(Name=f"Ribbon_Elbow_{side}", Span=5)
+    Ribbon.Ribbon(Name=f"Ribbon_Arm_{side}", Span=5, BindSet = "Bind_JNTs")
+    Ribbon.Ribbon(Name=f"Ribbon_Elbow_{side}", Span=5, BindSet = "Bind_JNTs")
 
     Global = ["CTRL_{}_Global".format(settings["name"])]
     

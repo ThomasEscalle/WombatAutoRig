@@ -21,6 +21,13 @@ def createFoot(settings, side = "L"):
     # Rename the joint "PlacementJnt_ToeEnd_{side}" to "Bind_ToeEnd_{side}"
     cmds.rename(f"Bind_Foot_{side}|Bind_Ball_{side}|PlacementJnt_Toe_{side}", f"Bind_Toe_{side}")
 
+
+    # Add the bind joints to the skin set
+    cmds.sets(f"Bind_Foot_{side}", add="Bind_JNTs")
+    cmds.sets(f"Bind_Ball_{side}", add="Bind_JNTs")
+    cmds.sets(f"Bind_Toe_{side}", add="Bind_JNTs")
+
+
     # Add the color to the foot
     Color.setColor(f"Bind_Foot_{side}", "white")
     Color.setColor(f"Bind_Ball_{side}", "white")

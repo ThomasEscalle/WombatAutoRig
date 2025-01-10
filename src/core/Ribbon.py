@@ -72,7 +72,7 @@ def build_Rivet(name, Nurbs):
         cmds.setAttr('%sShape.localPosition%s' %(Rivet, axis), k=False, cb=False)
 
 
-def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5):
+def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5 , BindSet= None):
 
     #Hierarchie groupes
     group_Global= cmds.group(name="Grp_"+Name, empty=True)
@@ -196,6 +196,13 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5):
     #Contrainte sur Mid
     MatrixConstrain.MatrixConstrain((CTRL_Start, CTRL_End), "CTRL_Mid_{}_Offset".format(Name), rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False)
     MatrixConstrain.MatrixConstrain(("DrvJnt_Ribbon_BlShp_{}_Start".format(Name), "DrvJnt_Ribbon_BlShp_{}_End".format(Name)), "DrvJnt_Ribbon_BlShp_{}_Mid_Move".format(Name), rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False)
+
+
+    # Create the sets for the bind joints
+    if BindSet != None:
+        # Apply the set to all the 'Bind' joints
+        for i in range(Span):
+            cmds.sets("Bind_{}_0{}".format(Name,i), add=BindSet)
 
 
 
