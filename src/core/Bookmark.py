@@ -45,7 +45,7 @@ def createBookmark(bookmark_name="Untitled_1"):
     return bookmark_node
 
 
-def addNodeToBookmark(bookmark_node, node_name , column = 0 , row = None , xPos = None , yPos = None):
+def addNodeToBookmark(bookmark_node, node_name , column = 0 , row = None , xPos = None , yPos = None, state=2):
     """
     Adds a node to the specified bookmark in the Maya Node Editor.
 
@@ -82,7 +82,7 @@ def addNodeToBookmark(bookmark_node, node_name , column = 0 , row = None , xPos 
     cmds.setAttr(bookmark_node + ".ni[{}].y".format(num_elements), y)
 
     # Set the visual state of the node (0: Small, 1: Medium, 2: Full)
-    cmds.setAttr(bookmark_node + ".ni[{}].nvs".format(num_elements), 2)
+    cmds.setAttr(bookmark_node + ".ni[{}].nvs".format(num_elements), state)
 
 
 
