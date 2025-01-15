@@ -9,48 +9,48 @@ from wombatAutoRig.src.core import Offset
 
 
 # Up EyeLid vertices
-# select -r Visage.vtx[165] ;
-# select -tgl Visage.vtx[169] ;
-# select -tgl Visage.vtx[178] ;
-# select -tgl Visage.vtx[183] ;
-# select -tgl Visage.vtx[193] ;
-# select -tgl Visage.vtx[198] ;
-# select -tgl Visage.vtx[207] ;
-# select -tgl Visage.vtx[211] ;
-# select -tgl Visage.vtx[216] ;
-# select -tgl Visage.vtx[223] ;
-# select -tgl Visage.vtx[228] ;
+# select -r Face.vtx[165] ;
+# select -tgl Face.vtx[169] ;
+# select -tgl Face.vtx[178] ;
+# select -tgl Face.vtx[183] ;
+# select -tgl Face.vtx[193] ;
+# select -tgl Face.vtx[198] ;
+# select -tgl Face.vtx[207] ;
+# select -tgl Face.vtx[211] ;
+# select -tgl Face.vtx[216] ;
+# select -tgl Face.vtx[223] ;
+# select -tgl Face.vtx[228] ;
 
 # Down EyeLid vertices
-# select -r Visage.vtx[266] ;
-# select -r Visage.vtx[265] ;
-# select -tgl Visage.vtx[262] ;
-# select -tgl Visage.vtx[259] ;
-# select -tgl Visage.vtx[257] ;
-# select -tgl Visage.vtx[254] ;
-# select -tgl Visage.vtx[251] ;
-# select -tgl Visage.vtx[247] ;
-# select -tgl Visage.vtx[243] ;
-# select -tgl Visage.vtx[237] ;
-# select -tgl Visage.vtx[229] ;
+# select -r Face.vtx[266] ;
+# select -r Face.vtx[265] ;
+# select -tgl Face.vtx[262] ;
+# select -tgl Face.vtx[259] ;
+# select -tgl Face.vtx[257] ;
+# select -tgl Face.vtx[254] ;
+# select -tgl Face.vtx[251] ;
+# select -tgl Face.vtx[247] ;
+# select -tgl Face.vtx[243] ;
+# select -tgl Face.vtx[237] ;
+# select -tgl Face.vtx[229] ;
 
 # Eye Geo
 # select -r Eye_0 ;
 
-# Visage Geo
+# Face Geo
 # select -r Face ;
 
 
 def test():
     # Select the eye geometry
-    eyeGeo = "eyeGlassDeformed_L_msh"
-    faceGeo = "Visage"
+    eyeGeo = "Eye_0"
+    faceGeo = "Face"
 
     # Select the up lid vertices
-    upLidVertices = ["Visage.vtx[165]", "Visage.vtx[169]", "Visage.vtx[178]", "Visage.vtx[183]", "Visage.vtx[193]", "Visage.vtx[198]", "Visage.vtx[207]", "Visage.vtx[211]", "Visage.vtx[216]", "Visage.vtx[223]", "Visage.vtx[228]"]
+    upLidVertices = ["Face.vtx[165]", "Face.vtx[169]", "Face.vtx[178]", "Face.vtx[183]", "Face.vtx[193]", "Face.vtx[198]", "Face.vtx[207]", "Face.vtx[211]", "Face.vtx[216]", "Face.vtx[223]", "Face.vtx[228]"]
 
     # Select the down lid vertices
-    downLidVertices = ["Visage.vtx[266]", "Visage.vtx[265]", "Visage.vtx[262]", "Visage.vtx[259]", "Visage.vtx[257]", "Visage.vtx[254]", "Visage.vtx[251]", "Visage.vtx[247]", "Visage.vtx[243]", "Visage.vtx[237]", "Visage.vtx[229]"]
+    downLidVertices = ["Face.vtx[266]", "Face.vtx[265]", "Face.vtx[262]", "Face.vtx[259]", "Face.vtx[257]", "Face.vtx[254]", "Face.vtx[251]", "Face.vtx[247]", "Face.vtx[243]", "Face.vtx[237]", "Face.vtx[229]"]
 
     cartoonEye(eyeGeo, faceGeo , upLidVertices, downLidVertices , "L")
     
