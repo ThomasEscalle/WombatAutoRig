@@ -170,7 +170,14 @@ importlib.reload(WidgetSelectComponent)
 from wombatAutoRig.src.ui.forms import ui_WidgetSelectComponent
 importlib.reload(ui_WidgetSelectComponent)
 
-wombatAutoRig.run()  # Appeler la fonction run() après rechargement
+from wombatAutoRig.src.core import CartoonEye
+importlib.reload(CartoonEye)
+
+
+
+# wombatAutoRig.run()  # Appeler la fonction run() après rechargement
+
+CartoonEye.test()
 
 #dialog = DlgControllers.DlgControllers()
 #dialog.run()  # Appeler la fonction run() après rechargement
