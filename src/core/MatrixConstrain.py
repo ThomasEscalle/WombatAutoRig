@@ -93,6 +93,9 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         afterScript = 'import maya.cmds as cmds\n'
 
         afterScript += 'cmds.delete("{}")\n'.format(MultMatX, DecMatX)
+        afterScript += 'cmds.delete("{}")\n'.format(MultPivMatX)
+        afterScript += 'cmds.delete("{}")\n'.format(ComPivMatX)
+        afterScript += 'cmds.delete("{}")\n'.format(InversePivMatX)
         
         if Offset == True:
             afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)

@@ -1,6 +1,6 @@
 ### Maya script to create a twist extractor system for rig setup
 import maya.cmds as cmds
-from wombatAutoRig.src.core import MatrixConstrain
+from wombatAutoRig.src.core import Bookmark
 
 def create_twist_extractor(name):
     ### Create a Joint in the midle of the world
@@ -55,5 +55,7 @@ def create_twist_extractor(name):
     cmds.group('Twist_' + name + '_00', 'TwistEx_' + name + '_00', name='Twist_' + name + '_grp')
     ### Hide the Twist_<name>_grp
     cmds.setAttr('Twist_' + name + '_grp.visibility', 0)
+
+    return 'Twist_' + name + '_00'
 
 

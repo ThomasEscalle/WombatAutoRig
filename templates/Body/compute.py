@@ -8,6 +8,7 @@ from wombatAutoRig.src.core import Ribbon
 from wombatAutoRig.src.core import NonRollMatrix
 from wombatAutoRig.src.core import TwistExtractor
 from wombatAutoRig.src.core import NewCTRL
+from wombatAutoRig.src.core import Bookmark
 
 
 #(Reprendre les twist parce que j'ai fait betise jsp a voir/ probleme surtout au niveau des pieds a cause de l'angle qui est different)
@@ -401,8 +402,8 @@ def createLeg(settings, side = "L"):
 
 
     #region Twist Ex 
-    TwistExtractor.create_twist_extractor(f"Leg_{side}")
-    TwistExtractor.create_twist_extractor(f"Knee_{side}")
+    Twist_Leg = TwistExtractor.create_twist_extractor(f"Leg_{side}")
+    Twist_Ankle = TwistExtractor.create_twist_extractor(f"Knee_{side}")
 
     cmds.duplicate(f"DrvJnt_Ankle_{side}", n=f"DrvJnt_Ankle_{side}_NonRoll", po=True)
     Color.setColor(f"DrvJnt_Ankle_{side}", "orange")
@@ -410,9 +411,18 @@ def createLeg(settings, side = "L"):
     cmds.setAttr(f"Opposed_{side}.input2X", -1)
     cmds.setAttr(f"Opposed_{side}.input2Y", -1)
 
-    NonRoll_Leg = NonRollMatrix.NonRollMatrix(f"Bind_Hip_{side}", f"DrvJnt_Leg_{side}")
-    NonRoll_Foot = NonRollMatrix.NonRollMatrix(f"DrvJnt_Ankle_{side}_NonRoll", f"Bind_Foot_{side}")
+    OffsetBook = 0
+    if side == "L":
+        OffsetBook+=1
+    NonRoll_Leg = NonRollMatrix.NonRollMatrix(f"Bind_Hip_{side}", f"DrvJnt_Leg_{side}", OffsetBookmark = OffsetBook)
+    NonRoll_Foot = NonRollMatrix.NonRollMatrix(f"DrvJnt_Ankle_{side}_NonRoll", f"Bind_Foot_{side}", OffsetBookmark = OffsetBook+2)
 
+    #Bookmark parenthese
+    Bookmark.addNodeToBookmark("NonRoll", Twist_Leg, 5, OffsetBook, state = 1)
+    Bookmark.addNodeToBookmark("NonRoll", f"Opposed_{side}", 4, OffsetBook, state = 1)
+    Bookmark.addNodeToBookmark("NonRoll", f"CTRL_End_Ribbon_Leg_{side}", 6, OffsetBook, state = 1)
+    Bookmark.addNodeToBookmark("NonRoll", Twist_Ankle, 4, OffsetBook+2, state = 1)
+    Bookmark.addNodeToBookmark("NonRoll", f"CTRL_Start_Ribbon_Knee_{side}", 5, OffsetBook+2, state = 1)
 
     cmds.connectAttr(NonRoll_Foot + ".outputRotateZ", f"Opposed_{side}.input1X")
     cmds.connectAttr(f"Opposed_{side}.outputX", f"Twist_Knee_{side}_00.rotateX")
@@ -852,8 +862,8 @@ def createArm(settings, side = "L"):
 
 
     #region Twist Ex 
-    TwistExtractor.create_twist_extractor(f"Arm_{side}")
-    TwistExtractor.create_twist_extractor(f"Wrist_{side}")
+    TwistArm = TwistExtractor.create_twist_extractor(f"Arm_{side}")
+    TwistWrist = TwistExtractor.create_twist_extractor(f"Wrist_{side}")
 
     cmds.duplicate(f"DrvJnt_Wrist_{side}", n=f"DrvJnt_Wrist_{side}_NonRoll", po=True)
     Color.setColor(f"DrvJnt_Wrist_{side}", "orange")
@@ -861,12 +871,22 @@ def createArm(settings, side = "L"):
     cmds.createNode("multiplyDivide", n=f"OpposedArm_{side}")
     cmds.setAttr(f"OpposedArm_{side}.input2X", -1)
 
-    NonRoll_Arm = NonRollMatrix.NonRollMatrix(f"Bind_Clavicle_{side}", f"DrvJnt_Arm_{side}")
+    OffsetBook = 4
+    if side == "L":
+        OffsetBook+=1
+    NonRoll_Arm = NonRollMatrix.NonRollMatrix(f"Bind_Clavicle_{side}", f"DrvJnt_Arm_{side}", OffsetBookmark = OffsetBook)
 
     cmds.connectAttr(NonRoll_Arm + ".outputRotateX", f"OpposedArm_{side}.input1X")
     cmds.connectAttr(f"OpposedArm_{side}.outputX",f"Twist_Arm_{side}_00.rotateX")
 
-    cmds.connectAttr(DrvJnt_Wrist_L[0] + ".r", f"Twist_Wrist_{side}_00.r")
+    DrvJntNonRollWrist = cmds.duplicate(DrvJnt_Wrist_L[0], po=True, name=DrvJnt_Wrist_L[0] + "_NonRoll")
+    NonRoll_Hand = NonRollMatrix.NonRollMatrix(DrvJntNonRollWrist, DrvJnt_Wrist_L[0], OffsetBookmark = OffsetBook+2)
+    cmds.connectAttr(NonRoll_Hand + ".outputRotateX", f"Twist_Wrist_{side}_00.rotateX")
+
+    #Bookmark parenthese
+    Bookmark.addNodeToBookmark("NonRoll", TwistArm, 5, OffsetBook, state = 1)
+    Bookmark.addNodeToBookmark("NonRoll", f"OpposedArm_{side}", 4, OffsetBook, state = 1)
+    Bookmark.addNodeToBookmark("NonRoll", TwistWrist, 4, OffsetBook+2, state = 1)
 
     cmds.parent(f"Twist_Arm_{side}_grp", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
     cmds.parent(f"Twist_Wrist_{side}_grp", "{}|Extra_Nodes_01|Extra_Nodes_To_Hide_01".format(settings["name"]))
@@ -874,7 +894,11 @@ def createArm(settings, side = "L"):
     if side == "L":
         cmds.connectAttr(f"Twist_Arm_{side}_00.TwistEx", f"CTRL_End_Ribbon_Arm_{side}.rotateX")
         cmds.connectAttr(f"Twist_Wrist_{side}_00.TwistEx", f"CTRL_Start_Ribbon_Elbow_{side}.rotateX")
+        Bookmark.addNodeToBookmark("NonRoll", f"CTRL_End_Ribbon_Arm_{side}", 6, OffsetBook, state = 1)
+        Bookmark.addNodeToBookmark("NonRoll", f"CTRL_Start_Ribbon_Elbow_{side}", 5, OffsetBook+2, state = 1)
 
     elif side == "R":
         cmds.connectAttr(f"Twist_Arm_{side}_00.TwistEx", f"CTRL_Start_Ribbon_Arm_{side}.rotateX")
         cmds.connectAttr(f"Twist_Wrist_{side}_00.TwistEx", f"CTRL_End_Ribbon_Elbow_{side}.rotateX")
+        Bookmark.addNodeToBookmark("NonRoll", f"CTRL_Start_Ribbon_Arm_{side}", 6, OffsetBook, state = 1)
+        Bookmark.addNodeToBookmark("NonRoll", f"CTRL_End_Ribbon_Elbow_{side}", 5, OffsetBook+2, state = 1)

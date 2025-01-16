@@ -46,11 +46,11 @@ def NonRollMatrix(JntStill, JntMove, OffsetBookmark=0):
 
     Bookmark.createBookmark("NonRoll")
 
-    Bookmark.addNodeToBookmark("NonRoll", Loc_Still, 0.1 + OffsetBookmark, 0, state=0)
-    Bookmark.addNodeToBookmark("NonRoll", Loc_Move, -0.1 + OffsetBookmark, 0, state=0)
-    Bookmark.addNodeToBookmark("NonRoll", MultMatX, 0 + OffsetBookmark, 1, state=0)
-    Bookmark.addNodeToBookmark("NonRoll", DecMatX, 0 + OffsetBookmark, 2, state=0)
-    Bookmark.addNodeToBookmark("NonRoll", QuatToE, 0 + OffsetBookmark, 3, state=0)
+    Bookmark.addNodeToBookmark(bookmark_node = "NonRoll", node_name = Loc_Still, row =0.1 + row, column = 0, state=0)
+    Bookmark.addNodeToBookmark(bookmark_node = "NonRoll", node_name = Loc_Move, row =-0.1 + row, column = 0, state=0)
+    Bookmark.addNodeToBookmark(bookmark_node = "NonRoll", node_name = MultMatX, row =0 + row, column = 1, state=0)
+    Bookmark.addNodeToBookmark(bookmark_node = "NonRoll", node_name = DecMatX, row =0 + row, column = 2, state=0)
+    Bookmark.addNodeToBookmark(bookmark_node = "NonRoll", node_name = QuatToE, row =0 + row, column = 3, state=0)
 
     return QuatToE
 
