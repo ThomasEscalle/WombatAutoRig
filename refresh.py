@@ -175,9 +175,9 @@ importlib.reload(CartoonEye)
 
 
 
-# wombatAutoRig.run()  # Appeler la fonction run() après rechargement
+wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
-CartoonEye.test()
+#CartoonEye.test()
 
 #dialog = DlgControllers.DlgControllers()
 #dialog.run()  # Appeler la fonction run() après rechargement
