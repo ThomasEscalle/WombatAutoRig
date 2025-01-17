@@ -114,8 +114,13 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=Master[0], column = 0 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=ComPivMatX, column = 1 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultPivMatX, column = 2 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
-            if Offset == True:
+            if cmds.objectType(Slave) == 'joint' :
                 Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX_Offset, column = 2 +BookColumnOffset ,row = 0.2+BookRowOffset ,state=0)
+
+            if Offset == True:
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=ComposeMatX, column = 0 +BookColumnOffset ,row = -0.2+BookRowOffset ,state=0)
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultMatX_Jnt_Parent, column = 1 +BookColumnOffset ,row = -0.2+BookRowOffset ,state=0)
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=InverseMatX, column = 2 +BookColumnOffset ,row = -0.2+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultMatX, column = 3 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX, column = 4 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=Slave, column = 4 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
@@ -246,7 +251,10 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=PmaRotate, column = 4 +BookColumnOffset ,row =  0+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=PmaScale, column = 4 +BookColumnOffset ,row =  -0.1+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=ComMatX, column = 5 +BookColumnOffset ,row =  0+BookRowOffset ,state=0)
-
+            if Offset == True:
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=ComposeMatX, column = 3 +BookColumnOffset ,row = -0.2+BookRowOffset ,state=0)
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultMatX_Jnt_Parent, column = 4 +BookColumnOffset ,row = -0.2+BookRowOffset ,state=0)
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=InverseMatX, column = 5 +BookColumnOffset ,row = -0.2+BookRowOffset ,state=0)
             if Offset == True:
                 Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX_Offset, column = 5 +BookColumnOffset ,row = 0.2+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultMatX, column = 6 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
