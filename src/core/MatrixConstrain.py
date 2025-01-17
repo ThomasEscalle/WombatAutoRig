@@ -5,7 +5,7 @@ import maya.OpenMaya as OpenMaya
 import sys
 import math
 
-
+from wombatAutoRig.src.core import Bookmark
 
 ## import maya.cmds as cmds
 ## nodeName = cmds.scriptNode( st=2, afterScript='cmds.sphere()' , n='MATRIX', stp='python')
@@ -13,10 +13,10 @@ import math
 
 
 
-def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=True, rY=True, rZ=True, sX=True, sY=True, sZ=True):
+def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=True, rY=True, rZ=True, sX=True, sY=True, sZ=True, BookmarkName=None, BookRowOffset=0, BookColumnOffset=0):
     
     if len(Master)<1 :
-        print("NOTHING IS SELECTED!!!!!!!!!!!!!!!!!")
+        return "NOTHING IS SELECTED!!!!!!!!!!!!!!!!!"
 
     if len(Master) < 2 :
 
@@ -105,6 +105,21 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
         cmds.parent(locator, Slave)
 
+        #Bookmark parenthese
+        if BookmarkName == None:
+            return DecMatX
+        else :
+            Bookmark.createBookmark(BookmarkName)
+
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=Master[0], column = 0 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=ComPivMatX, column = 1 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultPivMatX, column = 2 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
+            if Offset == True:
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX_Offset, column = 2 +BookColumnOffset ,row = 0.2+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultMatX, column = 3 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX, column = 4 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=Slave, column = 4 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
+            
         return DecMatX
     else : 
         MultMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_'+Slave)
@@ -214,6 +229,29 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         Script = cmds.scriptNode(stp ='python', st = 1, afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
         cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
         cmds.parent(locator, Slave)
+
+        if BookmarkName == None:
+            return DecMatXFin
+        else :
+            Bookmark.createBookmark(BookmarkName)
+
+            for i in range(len(Master)):
+                h = 0.1*i/2
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=Master[i], column = 0 +BookColumnOffset ,row = 0.1*i-h+BookRowOffset ,state=0)
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=f'ComPivMatX_{i}'+Slave, column = 1 +BookColumnOffset ,row =  0.1*i-h+BookRowOffset ,state=0)
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=f'MultPivMatX_{i}'+Slave, column = 2 +BookColumnOffset ,row =  0.1*i-h+BookRowOffset ,state=0)
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=f'DecMatX_{i}'+Slave, column = 3 +BookColumnOffset ,row =  0.1*i-h+BookRowOffset ,state=0)
+            
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=PmaTranslate, column = 4 +BookColumnOffset ,row =  0.1+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=PmaRotate, column = 4 +BookColumnOffset ,row =  0+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=PmaScale, column = 4 +BookColumnOffset ,row =  -0.1+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=ComMatX, column = 5 +BookColumnOffset ,row =  0+BookRowOffset ,state=0)
+
+            if Offset == True:
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX_Offset, column = 5 +BookColumnOffset ,row = 0.2+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultMatX, column = 6 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX, column = 7 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=Slave, column = 8 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
 
         return DecMatXFin
 
