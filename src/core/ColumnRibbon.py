@@ -126,7 +126,8 @@ def ColumnRibbon(name="Default", height=2):
     cmds.shadingNode("multDoubleLinear", au=True, name="mult_scaleY_Mid_UpperBody")
 
     Bookmark.createBookmark("node_Ribbon_Spine_LocAxisMidSpine")
-    Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", LocAxisMidSpine + "_Move", row=-2, column=4, state=2)
+    Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", LocAxisMidSpine + "_Move", row=-2, column=4, state=1)
+    Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", LocAxisMidSpine + "_Offset", row=-1, column=4, state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", CtrlFKMid + "_Offset", row=-1, state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", CtrlFKChest + "_Offset",row=-2 ,state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", CtrlUpperBody, row=-3, state=1)
