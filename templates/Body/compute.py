@@ -27,7 +27,7 @@ def compute(settings):
     cmds.parent("CTRL_{}_Global".format(settings["name"]), "{}".format(settings["name"]))
     cmds.makeIdentity("CTRL_{}_Global".format(settings["name"]), a=True, t=True, r=True, s=True)
     Global = ["CTRL_{}_Global".format(settings["name"])]
-    MatrixConstrain.MatrixConstrain(Global, "{}|GlobalMove_01".format(settings["name"]))
+    MatrixConstrain.MatrixConstrain(Global, "{}|GlobalMove_01".format(settings["name"]), BookmarkName="MatX_Main")
 
     #Joint Root
     cmds.duplicate("PlacementJnt_Root", n="Bind_Root", po = True)
