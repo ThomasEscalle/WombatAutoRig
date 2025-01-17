@@ -195,7 +195,7 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5 , BindSet= 
 
     #Contrainte sur Mid
     MatrixConstrain.MatrixConstrain((CTRL_Start, CTRL_End), "CTRL_Mid_{}_Offset".format(Name), rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Ribbon", BookRowOffset=BookRowOffset, BookColumnOffset=BookColumnOffset)
-    MatrixConstrain.MatrixConstrain(("DrvJnt_Ribbon_BlShp_{}_Start".format(Name), "DrvJnt_Ribbon_BlShp_{}_End".format(Name)), "DrvJnt_Ribbon_BlShp_{}_Mid_Move".format(Name), rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Ribbon", BookRowOffset=BookRowOffset, BookColumnOffset=BookColumnOffset)
+    MatrixConstrain.MatrixConstrain(("DrvJnt_Ribbon_BlShp_{}_Start".format(Name), "DrvJnt_Ribbon_BlShp_{}_End".format(Name)), "DrvJnt_Ribbon_BlShp_{}_Mid_Move".format(Name), rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Ribbon", BookRowOffset=BookRowOffset-1, BookColumnOffset=BookColumnOffset)
 
 
     # Create the sets for the bind joints

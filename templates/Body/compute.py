@@ -188,9 +188,9 @@ def createLeg(settings, side = "L"):
     if side == "L":
         BookmarkRowOffset = -10
 
-    MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"DrvJnt_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Main", BookRowOffset=BookmarkRowOffset, BookmarkColumnOffset = -1)
-    MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"FK_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Main", BookRowOffset=BookmarkRowOffset, BookmarkColumnOffset = -2)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"Preserve_Knee_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Main", BookRowOffset=BookmarkRowOffset, BookmarkColumnOffset = -3)
+    MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"DrvJnt_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Main", BookColumnOffset=BookmarkRowOffset, BookRowOffset = -1)
+    MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"FK_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Main", BookColumnOffset=BookmarkRowOffset, BookRowOffset = -2)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"Preserve_Knee_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Main", BookColumnOffset=BookmarkRowOffset, BookRowOffset = -3)
     
     #region switch IK FK 
     cmds.duplicate(f"PlacementCtrl_Settings_Leg_{side}", n=f"Settings_Leg_{side}")
@@ -213,8 +213,8 @@ def createLeg(settings, side = "L"):
     #A contraindre par le CTRL Global
     
     #region Ribbon
-    Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5, BindSet= "Bind_JNTs", BookRowOffset=BookmarkRowOffset, BookColumnOffset=0)
-    Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5, BindSet= "Bind_JNTs", BookRowOffset=BookmarkRowOffset, BookColumnOffset=-1)
+    Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5, BindSet= "Bind_JNTs", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-2)
+    Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5, BindSet= "Bind_JNTs", BookColumnOffset=BookmarkRowOffset, BookRowOffset=0)
 
     Global = ["CTRL_{}_Global".format(settings["name"])]
     
@@ -231,12 +231,12 @@ def createLeg(settings, side = "L"):
     cmds.parent(f"Grp_Ribbon_Leg_{side}", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs".format(settings["name"]))
     
     DrvJnt_Leg_L = [f"DrvJnt_Leg_{side}"]
-    MatrixConstrain.MatrixConstrain((f"DrvJnt_Leg_{side}", f"DrvJnt_Knee_{side}"), f"CTRL_Global_Ribbon_Leg_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Leg_{}|CTRL_Global_Ribbon_Leg_{}".format(settings["name"], side,side), Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain((f"DrvJnt_Leg_{side}", f"DrvJnt_Knee_{side}"), f"CTRL_Global_Ribbon_Leg_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=0)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Leg_{}|CTRL_Global_Ribbon_Leg_{}".format(settings["name"], side,side), Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-1)
     cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Leg_{}|CTRL_Global_Ribbon_Leg_{}|IS_CONSTRAIN_BY___DrvJnt_Leg_{}__".format(settings["name"], side ,side ,side))
     cmds.rotate(90, 0, 0, f"CTRL_Global_Ribbon_Leg_{side}", r=True, os=True)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"CTRL_Global_Ribbon_Leg_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Leg_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"CTRL_Global_Ribbon_Leg_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-2)
+    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Leg_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-3)
     CTRL_Shape_Leg = cmds.listRelatives(f"CTRL_Global_Ribbon_Knee_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Leg[0] + ".lodVisibility", 0)
     
@@ -245,22 +245,22 @@ def createLeg(settings, side = "L"):
     cmds.parent(f"Grp_Ribbon_Knee_{side}", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs".format(settings["name"]))
     
     DrvJnt_Knee_L = [f"DrvJnt_Knee_{side}"]
-    MatrixConstrain.MatrixConstrain((f"DrvJnt_Knee_{side}", f"DrvJnt_Ankle_{side}"), f"CTRL_Global_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, f"CTRL_Global_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain((f"DrvJnt_Knee_{side}", f"DrvJnt_Ankle_{side}"), f"CTRL_Global_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-4)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, f"CTRL_Global_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-5)
     cmds.delete("{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Legs|Grp_Ribbon_Knee_{}|CTRL_Global_Ribbon_Knee_{}|IS_CONSTRAIN_BY___DrvJnt_Knee_{}__".format(settings["name"], side , side ,side))
     cmds.rotate(90, 0, 0, f"CTRL_Global_Ribbon_Knee_{side}", r=True, os=True)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, f"CTRL_Global_Ribbon_Knee_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Knee_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Knee_L, f"CTRL_Global_Ribbon_Knee_{side}", Offset=True, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-6)
+    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Knee_{side}", Offset=True, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-7)
     CTRL_Shape_Knee = cmds.listRelatives(f"CTRL_Global_Ribbon_Leg_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Knee[0] + ".lodVisibility", 0)
     
     DrvJnt_Ankle_L = [f"DrvJnt_Ankle_{side}"]
     Preserve_Knee_L = [f"Preserve_Knee_{side}"]
     cmds.sets(f"Preserve_Knee_{side}", add="Bind_JNTs")
-    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"CTRL_End_Ribbon_Leg_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Ankle_L, f"CTRL_Start_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(Preserve_Knee_L, f"CTRL_End_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(Preserve_Knee_L, f"CTRL_Start_Ribbon_Leg_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"CTRL_End_Ribbon_Leg_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-8)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Ankle_L, f"CTRL_Start_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-9)
+    MatrixConstrain.MatrixConstrain(Preserve_Knee_L, f"CTRL_End_Ribbon_Knee_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-10)
+    MatrixConstrain.MatrixConstrain(Preserve_Knee_L, f"CTRL_Start_Ribbon_Leg_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-11)
     
     #Bend
     BendLeg = NewCTRL.Bend(f"PlacementCtrl_Ribbon_Leg_{side}", f"CTRL_Mid_Ribbon_Leg_{side}", name=f"CTRL_Mid_Ribbon_Leg_{side}")
@@ -335,13 +335,13 @@ def createLeg(settings, side = "L"):
     FK_Knee = [f"CTRL_FK_Knee_{side}"]
     FK_Ankle = [f"CTRL_FK_Ankle_{side}"]
     FK_Ball = [f"CTRL_FK_Ball_{side}"]
-    MatrixConstrain.MatrixConstrain(FK_Leg, f"FK_Leg_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
-    MatrixConstrain.MatrixConstrain(FK_Knee, f"FK_Knee_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
-    MatrixConstrain.MatrixConstrain(FK_Ankle, f"FK_Ankle_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
-    MatrixConstrain.MatrixConstrain(FK_Ball, f"FK_Ball_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+    MatrixConstrain.MatrixConstrain(FK_Leg, f"FK_Leg_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-12)
+    MatrixConstrain.MatrixConstrain(FK_Knee, f"FK_Knee_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-13)
+    MatrixConstrain.MatrixConstrain(FK_Ankle, f"FK_Ankle_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-14)
+    MatrixConstrain.MatrixConstrain(FK_Ball, f"FK_Ball_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-15)
 
     Bind_Hip = [f"Bind_Hip_{side}"]
-    MatrixConstrain.MatrixConstrain(Bind_Hip, f"CTRL_FK_Leg_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False,)
+    MatrixConstrain.MatrixConstrain(Bind_Hip, f"CTRL_FK_Leg_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-16)
 
 
     
@@ -359,7 +359,7 @@ def createLeg(settings, side = "L"):
     cmds.matchTransform(f"Locator_Ankle_{side}", f"Bind_Foot_{side}", pos=True)
     cmds.matchTransform(f"Locator_Ankle_{side}", f"Bind_Foot_{side}", pos=True)
     CTRL_Foot_L = [f"CTRL_Foot_{side}"]
-    MatrixConstrain.MatrixConstrain(CTRL_Foot_L, f"Locator_Ankle_{side}", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(CTRL_Foot_L, f"Locator_Ankle_{side}", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-17)
     
     #Creating the nodes for the stretch
     cmds.createNode("distanceBetween", n=f"Distance_Leg_{side}")
@@ -650,10 +650,13 @@ def createArm(settings, side = "L"):
 
 
     #region Creating the IK handle
+    BookmarkColumnOffset =0
+    if side == "L":
+        BookmarkColumnOffset=-10
     cmds.ikHandle(n=f"IK_Arm_{side}", sj=f"DrvJnt_Arm_{side}", ee=f"DrvJnt_Wrist_{side}", sol="ikRPsolver")
     cmds.parent(f"IK_Arm_{side}", "{}|GlobalMove_01|IKs_01".format(settings["name"]))
     CTRL_Wrist_L = [f"CTRL_Wrist_{side}"]  
-    MatrixConstrain.MatrixConstrain(CTRL_Wrist_L, f"IK_Arm_{side}")
+    MatrixConstrain.MatrixConstrain(CTRL_Wrist_L, f"IK_Arm_{side}", BookmarkName="MatX_Arm", BookRowOffset=0, BookColumnOffset=BookmarkColumnOffset)
     #pole vector
     #Locator = cmds.spaceLocator(n=f"PoleVector_Arm_{side}")
     #Color.setColor(f"PoleVector_Arm_{side}", "green")
@@ -666,9 +669,9 @@ def createArm(settings, side = "L"):
     #region Attach Joints 
     DrvJnt_Arm_L = [f"DrvJnt_Arm_{side}"]
     Bind_Clavicle_end = [f"Bind_Clavicle_end_{side}"]
-    MatrixConstrain.MatrixConstrain(Bind_Clavicle_end, f"FK_Arm_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(Bind_Clavicle_end, f"DrvJnt_Arm_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, f"Preserve_Elbow_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False)
+    MatrixConstrain.MatrixConstrain(Bind_Clavicle_end, f"FK_Arm_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-1, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(Bind_Clavicle_end, f"DrvJnt_Arm_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-2, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, f"Preserve_Elbow_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-3, BookColumnOffset=BookmarkColumnOffset)
     
     #region switch IK FK 
     cmds.duplicate(f"PlacementCtrl_Settings_Arm_{side}", n=f"Settings_Arm_{side}")
@@ -688,8 +691,8 @@ def createArm(settings, side = "L"):
     Offset.offset(f"Settings_Arm_{side}", nbr=2)
     
     #region Ribbon
-    Ribbon.Ribbon(Name=f"Ribbon_Arm_{side}", Span=5, BindSet = "Bind_JNTs")
-    Ribbon.Ribbon(Name=f"Ribbon_Elbow_{side}", Span=5, BindSet = "Bind_JNTs")
+    Ribbon.Ribbon(Name=f"Ribbon_Arm_{side}", Span=5, BindSet = "Bind_JNTs", BookRowOffset=-6, BookColumnOffset=BookmarkColumnOffset)
+    Ribbon.Ribbon(Name=f"Ribbon_Elbow_{side}", Span=5, BindSet = "Bind_JNTs", BookRowOffset=-4, BookColumnOffset=BookmarkColumnOffset)
 
     Global = ["CTRL_{}_Global".format(settings["name"])]
     
@@ -706,9 +709,9 @@ def createArm(settings, side = "L"):
     cmds.parent(f"Grp_Ribbon_Arm_{side}", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms".format(settings["name"]))
     
     DrvJnt_Arm_L = [f"DrvJnt_Arm_{side}"]
-    MatrixConstrain.MatrixConstrain((f"DrvJnt_Arm_{side}", f"DrvJnt_Elbow_{side}"), f"CTRL_Global_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms|Grp_Ribbon_Arm_{}|CTRL_Global_Ribbon_Arm_{}".format(settings["name"], side,side), Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    MatrixConstrain.MatrixConstrain(Global, "CTRL_Global_Ribbon_Arm_{}".format(side), Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain((f"DrvJnt_Arm_{side}", f"DrvJnt_Elbow_{side}"), f"CTRL_Global_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-4, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms|Grp_Ribbon_Arm_{}|CTRL_Global_Ribbon_Arm_{}".format(settings["name"], side,side), Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Arm", BookRowOffset=-5, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(Global, "CTRL_Global_Ribbon_Arm_{}".format(side), Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Arm", BookRowOffset=-6, BookColumnOffset=BookmarkColumnOffset)
     CTRL_Shape_Arm = cmds.listRelatives(f"CTRL_Global_Ribbon_Arm_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Arm[0] + ".lodVisibility", 0)
     
@@ -717,9 +720,9 @@ def createArm(settings, side = "L"):
     cmds.parent(f"Grp_Ribbon_Elbow_{side}", "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01|Ribbons_Arms".format(settings["name"]))
     
     DrvJnt_Elbow_L = [f"DrvJnt_Elbow_{side}"]
-    MatrixConstrain.MatrixConstrain((f"DrvJnt_Elbow_{side}", f"DrvJnt_Wrist_{side}"), f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Elbow_L, f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
-    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False)
+    MatrixConstrain.MatrixConstrain((f"DrvJnt_Elbow_{side}", f"DrvJnt_Wrist_{side}"), f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-7, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Elbow_L, f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Arm", BookRowOffset=-8, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(Global, f"CTRL_Global_Ribbon_Elbow_{side}", Offset=False, rX=False, rY=False, rZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Arm", BookRowOffset=-9, BookColumnOffset=BookmarkColumnOffset)
 
     CTRL_Shape_Elbow = cmds.listRelatives(f"CTRL_Global_Ribbon_Elbow_{side}", shapes=True)
     cmds.setAttr(CTRL_Shape_Elbow[0] + ".lodVisibility", 0)
@@ -727,15 +730,15 @@ def createArm(settings, side = "L"):
     DrvJnt_Wrist_L = [f"DrvJnt_Wrist_{side}"]
     Preserve_Elbow_L = [f"Preserve_Elbow_{side}"]
     if side =="L":
-        MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, f"CTRL_End_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-        MatrixConstrain.MatrixConstrain(DrvJnt_Wrist_L, f"CTRL_Start_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-        MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_End_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-        MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_Start_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+        MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, f"CTRL_End_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-10, BookColumnOffset=BookmarkColumnOffset)
+        MatrixConstrain.MatrixConstrain(DrvJnt_Wrist_L, f"CTRL_Start_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-11, BookColumnOffset=BookmarkColumnOffset)
+        MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_End_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-12, BookColumnOffset=BookmarkColumnOffset)
+        MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_Start_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-13, BookColumnOffset=BookmarkColumnOffset)
     elif side =="R":
-        MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, f"CTRL_Start_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-        MatrixConstrain.MatrixConstrain(DrvJnt_Wrist_L, f"CTRL_End_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-        MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_Start_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
-        MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_End_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+        MatrixConstrain.MatrixConstrain(DrvJnt_Arm_L, f"CTRL_Start_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-10, BookColumnOffset=BookmarkColumnOffset)
+        MatrixConstrain.MatrixConstrain(DrvJnt_Wrist_L, f"CTRL_End_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-11, BookColumnOffset=BookmarkColumnOffset)
+        MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_Start_Ribbon_Elbow_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-12, BookColumnOffset=BookmarkColumnOffset)
+        MatrixConstrain.MatrixConstrain(Preserve_Elbow_L, f"CTRL_End_Ribbon_Arm_{side}", Offset=False, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-13, BookColumnOffset=BookmarkColumnOffset)
     
     #Bend
     BendArm = NewCTRL.Bend(f"PlacementCtrl_Ribbon_Arm_{side}", f"CTRL_Mid_Ribbon_Arm_{side}", name=f"CTRL_Mid_Ribbon_Arm_{side}")
@@ -778,12 +781,12 @@ def createArm(settings, side = "L"):
     FK_Arm = [f"CTRL_FK_Arm_{side}"]
     FK_Elbow = [f"CTRL_FK_Elbow_{side}"]
     FK_Wrist = [f"CTRL_FK_Wrist_{side}"]
-    MatrixConstrain.MatrixConstrain(FK_Arm, f"FK_Arm_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
-    MatrixConstrain.MatrixConstrain(FK_Elbow, f"FK_Elbow_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
-    MatrixConstrain.MatrixConstrain(FK_Wrist, f"FK_Wrist_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+    MatrixConstrain.MatrixConstrain(FK_Arm, f"FK_Arm_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-14, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(FK_Elbow, f"FK_Elbow_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-15, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(FK_Wrist, f"FK_Wrist_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-16, BookColumnOffset=BookmarkColumnOffset)
 
     Bind_Clavicle = [f"Bind_Clavicle_{side}"]
-    MatrixConstrain.MatrixConstrain(Bind_Clavicle, f"CTRL_FK_Arm_{side}_Hook", Offset=True, rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False,)
+    MatrixConstrain.MatrixConstrain(Bind_Clavicle, f"CTRL_FK_Arm_{side}_Hook", Offset=True, rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-17, BookColumnOffset=BookmarkColumnOffset)
 
     
     #region Stretch Arm 
@@ -797,7 +800,7 @@ def createArm(settings, side = "L"):
     cmds.parent(f"Locator_Wrist_{side}", f"Bind_Clavicle_{side}")
     cmds.matchTransform(f"Locator_Arm_{side}", f"Bind_Clavicle_end_{side}", pos=True)
     cmds.matchTransform(f"Locator_Wrist_{side}", f"DrvJnt_Wrist_{side}", pos=True)
-    MatrixConstrain.MatrixConstrain(CTRL_Wrist_L, f"Locator_Wrist_{side}", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False)
+    MatrixConstrain.MatrixConstrain(CTRL_Wrist_L, f"Locator_Wrist_{side}", Offset=True, sX=False, sY=False, sZ=False, rX=False, rY=False, rZ=False, BookmarkName="MatX_Arm", BookRowOffset=-18, BookColumnOffset=BookmarkColumnOffset)
     
     #Creating the nodes for the stretch
     cmds.createNode("distanceBetween", n=f"Distance_Arm_{side}")
@@ -846,17 +849,17 @@ def createArm(settings, side = "L"):
 
     #DrvJnt wrsit constraint bind hand and is constraint by FK and IK
     DrvJntWrist = [f"DrvJnt_Wrist_{side}"]
-    MatrixConstrain.MatrixConstrain(DrvJntWrist, f"Bind_Hand_{side}_Hook", sX=False, sY=False, sZ=False)
+    MatrixConstrain.MatrixConstrain(DrvJntWrist, f"Bind_Hand_{side}_Hook", sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-19, BookColumnOffset=BookmarkColumnOffset)
 
     #Node Conditon
     cmds.createNode("condition", n=f"Cond_Constraint_DrvJnt_{side}")
     CTRL_IK_Wrist = [f"CTRL_Wrist_{side}"]
-    FK_Constraint = MatrixConstrain.MatrixConstrain(FK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    FK_Constraint = MatrixConstrain.MatrixConstrain(FK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Arm", BookRowOffset=-20, BookColumnOffset=BookmarkColumnOffset)
     cmds.disconnectAttr(f"{FK_Constraint}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
     cmds.disconnectAttr(f"{FK_Constraint}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
     cmds.disconnectAttr(f"{FK_Constraint}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ")
     cmds.connectAttr(f"{FK_Constraint}.outputRotate", f"Cond_Constraint_DrvJnt_{side}.colorIfTrue")
-    IK_Constraint = MatrixConstrain.MatrixConstrain(CTRL_IK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False)
+    IK_Constraint = MatrixConstrain.MatrixConstrain(CTRL_IK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Arm", BookRowOffset=-21, BookColumnOffset=BookmarkColumnOffset)
     cmds.disconnectAttr(f"{IK_Constraint}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
     cmds.disconnectAttr(f"{IK_Constraint}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
     cmds.disconnectAttr(f"{IK_Constraint}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ") 
