@@ -115,15 +115,15 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=ComPivMatX, column = 1 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultPivMatX, column = 2 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
             if cmds.objectType(Slave) == 'joint' :
-                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX_Offset, column = 2 +BookColumnOffset ,row = 0.2+BookRowOffset ,state=0)
-
-            if Offset == True:
                 Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=ComposeMatX, column = 0 +BookColumnOffset ,row = -0.2+BookRowOffset ,state=0)
                 Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultMatX_Jnt_Parent, column = 1 +BookColumnOffset ,row = -0.2+BookRowOffset ,state=0)
                 Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=InverseMatX, column = 2 +BookColumnOffset ,row = -0.2+BookRowOffset ,state=0)
+
+            if Offset == True:
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX_Offset, column = 2 +BookColumnOffset ,row = 0.2+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultMatX, column = 3 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX, column = 4 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
-            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=Slave, column = 4 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=Slave, column = 5 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
             
         return DecMatX
     else : 
@@ -241,24 +241,24 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
             Bookmark.createBookmark(BookmarkName)
 
             for i in range(len(Master)):
-                h = 0.1*i/2
-                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=Master[i], column = 0 +BookColumnOffset ,row = 0.1*i-h+BookRowOffset ,state=0)
-                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=f'ComPivMatX_{i}'+Slave, column = 1 +BookColumnOffset ,row =  0.1*i-h+BookRowOffset ,state=0)
-                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=f'MultPivMatX_{i}'+Slave, column = 2 +BookColumnOffset ,row =  0.1*i-h+BookRowOffset ,state=0)
-                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=f'DecMatX_{i}'+Slave, column = 3 +BookColumnOffset ,row =  0.1*i-h+BookRowOffset ,state=0)
+                h = 0.15*i/2
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=Master[i], column = 0 +BookColumnOffset ,row = 0.15*i-h+BookRowOffset ,state=0)
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=f'ComPivMatX_{i}'+Slave, column = 1 +BookColumnOffset ,row =  0.15*i-h+BookRowOffset ,state=0)
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=f'MultPivMatX_{i}'+Slave, column = 2 +BookColumnOffset ,row =  0.15*i-h+BookRowOffset ,state=0)
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=f'DecMatX_{i}'+Slave, column = 3 +BookColumnOffset ,row =  0.15*i-h+BookRowOffset ,state=0)
             
-            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=PmaTranslate, column = 4 +BookColumnOffset ,row =  0.1+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=PmaTranslate, column = 4 +BookColumnOffset ,row =  0.15+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=PmaRotate, column = 4 +BookColumnOffset ,row =  0+BookRowOffset ,state=0)
-            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=PmaScale, column = 4 +BookColumnOffset ,row =  -0.1+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=PmaScale, column = 4 +BookColumnOffset ,row =  -0.15+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=ComMatX, column = 5 +BookColumnOffset ,row =  0+BookRowOffset ,state=0)
-            if Offset == True:
-                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=ComposeMatX, column = 3 +BookColumnOffset ,row = -0.2+BookRowOffset ,state=0)
-                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultMatX_Jnt_Parent, column = 4 +BookColumnOffset ,row = -0.2+BookRowOffset ,state=0)
-                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=InverseMatX, column = 5 +BookColumnOffset ,row = -0.2+BookRowOffset ,state=0)
+            if cmds.objectType(Slave) == 'joint' :
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=ComposeMatX, column = 3 +BookColumnOffset ,row = -0.25+BookRowOffset ,state=0)
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultMatX_Jnt_Parent, column = 4 +BookColumnOffset ,row = -0.25+BookRowOffset ,state=0)
+                Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=InverseMatX, column = 5 +BookColumnOffset ,row = -0.25+BookRowOffset ,state=0)
             if Offset == True:
                 Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX_Offset, column = 5 +BookColumnOffset ,row = 0.2+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=MultMatX, column = 6 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
-            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX, column = 7 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
+            Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatXFin, column = 7 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=Slave, column = 8 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
 
         return DecMatXFin

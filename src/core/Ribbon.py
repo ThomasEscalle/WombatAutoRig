@@ -72,7 +72,7 @@ def build_Rivet(name, Nurbs):
         cmds.setAttr('%sShape.localPosition%s' %(Rivet, axis), k=False, cb=False)
 
 
-def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5 , BindSet= None):
+def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5 , BindSet= None, BookRowOffset=0, BookColumnOffset=0):
 
     #Hierarchie groupes
     group_Global= cmds.group(name="Grp_"+Name, empty=True)
@@ -194,8 +194,8 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5 , BindSet= 
     cmds.connectAttr("CTRL_End_{}.r".format(Name), "DrvJnt_Ribbon_BlShp_{}_End.r".format(Name))
 
     #Contrainte sur Mid
-    MatrixConstrain.MatrixConstrain((CTRL_Start, CTRL_End), "CTRL_Mid_{}_Offset".format(Name), rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False)
-    MatrixConstrain.MatrixConstrain(("DrvJnt_Ribbon_BlShp_{}_Start".format(Name), "DrvJnt_Ribbon_BlShp_{}_End".format(Name)), "DrvJnt_Ribbon_BlShp_{}_Mid_Move".format(Name), rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False)
+    MatrixConstrain.MatrixConstrain((CTRL_Start, CTRL_End), "CTRL_Mid_{}_Offset".format(Name), rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Ribbon", BookRowOffset=BookRowOffset, BookColumnOffset=BookColumnOffset)
+    MatrixConstrain.MatrixConstrain(("DrvJnt_Ribbon_BlShp_{}_Start".format(Name), "DrvJnt_Ribbon_BlShp_{}_End".format(Name)), "DrvJnt_Ribbon_BlShp_{}_Mid_Move".format(Name), rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Ribbon", BookRowOffset=BookRowOffset, BookColumnOffset=BookColumnOffset)
 
 
     # Create the sets for the bind joints
