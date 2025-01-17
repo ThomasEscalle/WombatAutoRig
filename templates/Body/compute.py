@@ -183,9 +183,14 @@ def createLeg(settings, side = "L"):
     #region Attach Joints 
     Bind_Hip_L = [f"Bind_Hip_{side}"]
     DrvJnt_Leg_L = [f"DrvJnt_Leg_{side}"]
-    MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"DrvJnt_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False)
-    MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"FK_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"Preserve_Knee_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False)
+
+    BookmarkRowOffset = 0
+    if side == "L":
+        BookmarkRowOffset = -10
+
+    MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"DrvJnt_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Main", BookRowOffset=BookmarkRowOffset, BookmarkColumnOffset = -1)
+    MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"FK_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Main", BookRowOffset=BookmarkRowOffset, BookmarkColumnOffset = -2)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"Preserve_Knee_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Main", BookRowOffset=BookmarkRowOffset, BookmarkColumnOffset = -3)
     
     #region switch IK FK 
     cmds.duplicate(f"PlacementCtrl_Settings_Leg_{side}", n=f"Settings_Leg_{side}")
@@ -208,8 +213,8 @@ def createLeg(settings, side = "L"):
     #A contraindre par le CTRL Global
     
     #region Ribbon
-    Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5, BindSet= "Bind_JNTs")
-    Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5, BindSet= "Bind_JNTs")
+    Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5, BindSet= "Bind_JNTs", BookRowOffset=BookmarkRowOffset, BookColumnOffset=0)
+    Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5, BindSet= "Bind_JNTs", BookRowOffset=BookmarkRowOffset, BookColumnOffset=-1)
 
     Global = ["CTRL_{}_Global".format(settings["name"])]
     
