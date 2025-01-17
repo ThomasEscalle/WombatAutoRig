@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1056</width>
-    <height>1020</height>
+    <width>391</width>
+    <height>321</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -71,8 +71,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1056</width>
-     <height>29</height>
+     <width>391</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -97,6 +97,7 @@
      <string>Edit</string>
     </property>
     <addaction name="actionPreferences"/>
+    <addaction name="actionQuick_Load"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -168,6 +169,11 @@
    </property>
    <property name="shortcut">
     <string>F</string>
+   </property>
+  </action>
+  <action name="actionQuick_Load">
+   <property name="text">
+    <string>Quick Load</string>
    </property>
   </action>
  </widget>

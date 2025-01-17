@@ -1,0 +1,6 @@
+from maya import cmds
+
+
+
+
+

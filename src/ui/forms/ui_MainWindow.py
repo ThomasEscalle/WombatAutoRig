@@ -17,7 +17,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1056, 1020)
+        MainWindow.resize(391, 321)
         self.actionNew_template = QAction(MainWindow)
         self.actionNew_template.setObjectName(u"actionNew_template")
         self.actionAbout = QAction(MainWindow)
@@ -36,6 +36,8 @@ class Ui_MainWindow(object):
         self.actionAdd_to_shelf.setObjectName(u"actionAdd_to_shelf")
         self.actionAuto_Fill = QAction(MainWindow)
         self.actionAuto_Fill.setObjectName(u"actionAuto_Fill")
+        self.actionQuick_Load = QAction(MainWindow)
+        self.actionQuick_Load.setObjectName(u"actionQuick_Load")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -70,7 +72,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1056, 29))
+        self.menubar.setGeometry(QRect(0, 0, 391, 21))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuHelp = QMenu(self.menubar)
@@ -96,6 +98,7 @@ class Ui_MainWindow(object):
         self.menuHelp.addAction(self.actionAbout)
         self.menuHelp.addAction(self.actionHelp)
         self.menuEdit.addAction(self.actionPreferences)
+        self.menuEdit.addAction(self.actionQuick_Load)
         self.menuTools.addAction(self.actionAdd_to_shelf)
 
         self.retranslateUi(MainWindow)
@@ -129,6 +132,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(shortcut)
         self.actionAuto_Fill.setShortcut(QCoreApplication.translate("MainWindow", u"F", None))
 #endif // QT_CONFIG(shortcut)
+        self.actionQuick_Load.setText(QCoreApplication.translate("MainWindow", u"Quick Load", None))
         self.btnCancel.setText(QCoreApplication.translate("MainWindow", u"Cancel", None))
         self.btnNext.setText(QCoreApplication.translate("MainWindow", u"Next", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
