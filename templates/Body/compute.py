@@ -299,11 +299,6 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"FK_Ankle_{side}.rotate", f"Bind_Foot_{side}.rotate")
     cmds.connectAttr(f"FK_Ball_{side}.rotate", f"Bind_Ball_{side}.rotate")
     cmds.connectAttr(f"FK_Toe_{side}.rotate", f"Bind_Toe_{side}.rotate")
-
-
-
-
-
     
     cmds.createNode("reverse", n="Reverse_Leg_{}".format(side))
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"Reverse_Leg_{side}.inputX")
@@ -405,6 +400,35 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"Cond_FK_Leg_{side}.outColor", f"DrvJnt_Knee_{side}.s")
     cmds.connectAttr(f"Cond_FK_Leg_{side}.outColor", f"DrvJnt_Leg_{side}.s")
 
+    #Bookmark
+    Bookmark.createBookmark("IkFk_Leg")
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"Settings_Leg_{side}", BookColumnOffset=BookmarkRowOffset, BookRowOffset=0, state=2)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"Locator_Hip_{side}", BookColumnOffset=BookmarkRowOffset, BookRowOffset=1, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"Locator_Ankle_{side}", BookColumnOffset=BookmarkRowOffset, BookRowOffset=1.2, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"Distance_Leg_{side}", BookColumnOffset=BookmarkRowOffset+0.2, BookRowOffset=1.1, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", "{}|GlobalMove_01", BookColumnOffset=BookmarkRowOffset+0.2, BookRowOffset=1.3, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"MD_Distance_Leg_{side}_GlobalRelativeScale", BookColumnOffset=BookmarkRowOffset+0.4, BookRowOffset=1.1, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"MD_Distance_Leg_{side}_Divide", BookColumnOffset=BookmarkRowOffset+0.6, BookRowOffset=1.1, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"MD_Distance_Leg_{side}_Power", BookColumnOffset=BookmarkRowOffset+0.8, BookRowOffset=1.1, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"CTRL_Foot_{side}", BookColumnOffset=BookmarkRowOffset+0.4, BookRowOffset=0, state=1)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"Cond_Distance_Leg_{side}", BookColumnOffset=BookmarkRowOffset+0.6, BookRowOffset=0, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"Cond_Boolean_Leg_{side}", BookColumnOffset=BookmarkRowOffset+0.8, BookRowOffset=0, state=0)
+
+    Bookmark.addNodeToBookmark("IkFk_Leg", "Reverse_Leg_{}".format(side), BookColumnOffset=BookmarkRowOffset+0.2, BookRowOffset=-0.2, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"IK_Leg_{side}", BookColumnOffset=BookmarkRowOffset+0.2, BookRowOffset=-0.3, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"IK_Ball_{side}", BookColumnOffset=BookmarkRowOffset+0.2, BookRowOffset=-0.4, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"IK_Toe_{side}", BookColumnOffset=BookmarkRowOffset+0.2, BookRowOffset=-0.5, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"Bind_Foot_{side}", BookColumnOffset=BookmarkRowOffset+0.2, BookRowOffset=-0.6, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"PV_Leg_{side}", BookColumnOffset=BookmarkRowOffset+0.2, BookRowOffset=-0.7, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"CTRL_Pin_Knee_{side}", BookColumnOffset=BookmarkRowOffset+0.2, BookRowOffset=-0.8, state=0)
+
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"FK_Leg_{side}", BookColumnOffset=BookmarkRowOffset+1, BookRowOffset=-0.2, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"FK_Knee_{side}", BookColumnOffset=BookmarkRowOffset+1, BookRowOffset=-0.4, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"FK_Ankle_{side}", BookColumnOffset=BookmarkRowOffset+1, BookRowOffset=-0.6, state=0)
+
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"DrvJnt_Leg_{side}", BookColumnOffset=BookmarkRowOffset+1.2, BookRowOffset=-0.2, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"DrvJnt_Knee_{side}", BookColumnOffset=BookmarkRowOffset+1.2, BookRowOffset=-0.4, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Leg", f"DrvJnt_Ankle_{side}", BookColumnOffset=BookmarkRowOffset+1.2, BookRowOffset=-0.6, state=0)
 
     #region Twist Ex 
     Twist_Leg = TwistExtractor.create_twist_extractor(f"Leg_{side}")
