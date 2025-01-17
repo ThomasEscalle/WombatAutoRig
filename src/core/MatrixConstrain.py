@@ -95,7 +95,6 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         afterScript += 'cmds.delete("{}")\n'.format(MultMatX, DecMatX)
         afterScript += 'cmds.delete("{}")\n'.format(MultPivMatX)
         afterScript += 'cmds.delete("{}")\n'.format(ComPivMatX)
-        afterScript += 'cmds.delete("{}")\n'.format(InversePivMatX)
         
         if Offset == True:
             afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
@@ -202,9 +201,10 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         afterScript += 'cmds.delete("{}")\n'.format(PmaScale)
         afterScript += 'cmds.delete("{}")\n'.format(PmaRotate)
         afterScript += 'cmds.delete("{}")\n'.format(PmaTranslate)
-        afterScript += 'cmds.delete("{}")\n'.format('DecMatX_0'+Slave)
-        afterScript += 'cmds.delete("{}")\n'.format('ComPivMatX_0'+Slave)
-        afterScript += 'cmds.delete("{}")\n'.format('MultPivMatX_0'+Slave)
+        for i in range(len(Master)):
+            afterScript += 'cmds.delete("{}")\n'.format(f'DecMatX_{i}'+Slave)
+            afterScript += 'cmds.delete("{}")\n'.format(f'ComPivMatX_{i}'+Slave)
+            afterScript += 'cmds.delete("{}")\n'.format(f'MultPivMatX_{i}'+Slave)
 
         if Offset == True:
             afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Offset)
