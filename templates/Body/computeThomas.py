@@ -274,7 +274,9 @@ def createFoot(settings, side = "L"):
 
 
     # endregion Connections
-
+    #region Bookmark
+    #a faire
+    #endregionBookmark
 
     # Move the CTRL_Foot_L to the group CTRLs_01
     cmds.parent(f"CTRL_Foot_{side}", "CTRLs_01")
