@@ -126,13 +126,31 @@ def ColumnRibbon(name="Default", height=2):
     cmds.shadingNode("multDoubleLinear", au=True, name="mult_scaleY_Mid_UpperBody")
 
     Bookmark.createBookmark("node_Ribbon_Spine_LocAxisMidSpine")
-    Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", LocAxisMidSpine, state=2)
+    Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", LocAxisMidSpine + "_Move", row=-2, column=4, state=2)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", CtrlFKMid + "_Offset", row=-1, state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", CtrlFKChest + "_Offset",row=-2 ,state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", CtrlUpperBody, row=-3, state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", "add_tx_Mid_Chest", row=-1, column=1, state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", "add_ty_Mid_Chest", row=-2, column=1, state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", "add_tz_Mid_Chest", row=-3, column=1, state=1)
+    Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", "mult_scaleY_Mid_UpperBody", row=-2, column=2, state=1)
+
+    cmds.connectAttr(CtrlFKMid + "_Offset.translateX", "add_tx_Mid_Chest.input1")
+    cmds.connectAttr(CtrlFKChest + "_Offset.translateX", "add_tx_Mid_Chest.input2")
+
+    cmds.connectAttr(CtrlFKMid + "_Offset.translateY", "add_ty_Mid_Chest.input1")
+    cmds.connectAttr(CtrlFKChest + "_Offset.translateY", "add_ty_Mid_Chest.input2")
+
+    cmds.connectAttr(CtrlFKMid + "_Offset.translateZ", "add_tz_Mid_Chest.input1")
+    cmds.connectAttr(CtrlFKChest + "_Offset.translateZ", "add_tz_Mid_Chest.input2")
+
+    cmds.connectAttr("add_ty_Mid_Chest.output", "mult_scaleY_Mid_UpperBody.input1")
+    cmds.connectAttr(CtrlUpperBody, "mult_scaleY_Mid_UpperBody.input2")
+
+    cmds.connectAttr("add_tx_Mid_Chest.output", LocAxisMidSpine + "_Move.translateX")
+    cmds.connectAttr("mult_scaleY_Mid_UpperBody.output", LocAxisMidSpine + "_Move.translateY")
+    cmds.connectAttr("add_tz_Mid_Chest.output", LocAxisMidSpine + "_Move.translateZ")
+
 
 
 
