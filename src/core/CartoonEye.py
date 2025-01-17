@@ -199,6 +199,7 @@ def joint_on_curve(curve: str, num: int, name: str = "jnt"):
 
 
 # Create a cartoon eye rig
+# region main
 def cartoonEye(eyeGeo,faceGeo, upLidVertices, downLidVertices, side = "L"):
 
     print("Cartoon Eye Rig for the geometry: " + eyeGeo)

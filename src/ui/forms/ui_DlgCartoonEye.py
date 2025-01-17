@@ -17,7 +17,7 @@ class Ui_DlgCartoonEye(object):
     def setupUi(self, DlgCartoonEye):
         if not DlgCartoonEye.objectName():
             DlgCartoonEye.setObjectName(u"DlgCartoonEye")
-        DlgCartoonEye.resize(436, 215)
+        DlgCartoonEye.resize(476, 332)
         self.verticalLayout = QVBoxLayout(DlgCartoonEye)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.formLayout = QFormLayout()
@@ -31,6 +31,7 @@ class Ui_DlgCartoonEye(object):
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.leTopVtx = QLineEdit(DlgCartoonEye)
         self.leTopVtx.setObjectName(u"leTopVtx")
+        self.leTopVtx.setReadOnly(True)
 
         self.horizontalLayout.addWidget(self.leTopVtx)
 
@@ -56,6 +57,7 @@ class Ui_DlgCartoonEye(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.leBottomVtx = QLineEdit(DlgCartoonEye)
         self.leBottomVtx.setObjectName(u"leBottomVtx")
+        self.leBottomVtx.setReadOnly(True)
 
         self.horizontalLayout_2.addWidget(self.leBottomVtx)
 
@@ -81,6 +83,7 @@ class Ui_DlgCartoonEye(object):
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.leEyeGeo = QLineEdit(DlgCartoonEye)
         self.leEyeGeo.setObjectName(u"leEyeGeo")
+        self.leEyeGeo.setReadOnly(True)
 
         self.horizontalLayout_3.addWidget(self.leEyeGeo)
 
@@ -96,6 +99,7 @@ class Ui_DlgCartoonEye(object):
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.leFaceGeo = QLineEdit(DlgCartoonEye)
         self.leFaceGeo.setObjectName(u"leFaceGeo")
+        self.leFaceGeo.setReadOnly(True)
 
         self.horizontalLayout_4.addWidget(self.leFaceGeo)
 
@@ -112,10 +116,22 @@ class Ui_DlgCartoonEye(object):
 
         self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_4)
 
+        self.label_5 = QLabel(DlgCartoonEye)
+        self.label_5.setObjectName(u"label_5")
+
+        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.label_5)
+
+        self.cbSide = QComboBox(DlgCartoonEye)
+        self.cbSide.addItem("")
+        self.cbSide.addItem("")
+        self.cbSide.setObjectName(u"cbSide")
+
+        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.cbSide)
+
 
         self.verticalLayout.addLayout(self.formLayout)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
@@ -157,6 +173,10 @@ class Ui_DlgCartoonEye(object):
         self.btnEyeGeoAdd.setText(QCoreApplication.translate("DlgCartoonEye", u"+", None))
         self.btnFaceGeoAdd.setText(QCoreApplication.translate("DlgCartoonEye", u"+", None))
         self.label_4.setText(QCoreApplication.translate("DlgCartoonEye", u"Face Geo :", None))
+        self.label_5.setText(QCoreApplication.translate("DlgCartoonEye", u"Side", None))
+        self.cbSide.setItemText(0, QCoreApplication.translate("DlgCartoonEye", u"L", None))
+        self.cbSide.setItemText(1, QCoreApplication.translate("DlgCartoonEye", u"R", None))
+
         self.btnApply.setText(QCoreApplication.translate("DlgCartoonEye", u"Apply", None))
         self.btnCreate.setText(QCoreApplication.translate("DlgCartoonEye", u"Create", None))
         self.btnCancel.setText(QCoreApplication.translate("DlgCartoonEye", u"Cancel", None))

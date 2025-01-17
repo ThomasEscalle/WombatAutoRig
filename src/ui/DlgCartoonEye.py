@@ -12,6 +12,8 @@ import maya.cmds as cmds
 from maya.OpenMayaUI import MQtUtil
 
 from wombatAutoRig.src.ui.forms.ui_DlgCartoonEye import Ui_DlgCartoonEye
+from wombatAutoRig.src.core import CartoonEye
+
 
 def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
@@ -51,7 +53,24 @@ class DlgCartoonEye(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
     # Apply the changes
     def apply(self):
-        print("Apply")
+        # Get the values from the UI
+        eyeGeo = self.ui.leEyeGeo.text()
+        faceGeo = self.ui.leFaceGeo.text()
+        
+        
+        topVtx = self.ui.leTopVtx.text()
+        topVtx = topVtx.split(" ")
+
+        bottomVtx = self.ui.leBottomVtx.text()
+        bottomVtx = bottomVtx.split(" ")
+
+        # Get the side of the eye (cbSide)
+        side = self.ui.cbSide.currentText()
+
+        CartoonEye.cartoonEye(eyeGeo, faceGeo, topVtx, bottomVtx, side)
+
+
+
 
     # Create and close
     def create(self):
