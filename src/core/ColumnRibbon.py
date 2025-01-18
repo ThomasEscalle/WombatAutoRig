@@ -3,8 +3,9 @@ from wombatAutoRig.src.core import Bookmark
 from wombatAutoRig.src.core import Offset
 from wombatAutoRig.src.core import Controllers
 
-
-def ColumnRibbon(name="Default", height=2):
+def MatrixConstraint(Master, Slave, mode=1):
+    pass
+def ColumnRibbon(name="Default", height=2, JntNbr=7):
     #Create a nurbs plane
     RibbonLowDef = cmds.nurbsPlane(axis=[0,0,1], w=1, lr=height, u=1, v=2, p=[0,1,0], name=f"ColumnRibbon_{name}_LowDef")
 
@@ -71,11 +72,10 @@ def ColumnRibbon(name="Default", height=2):
 
     #CTRL IK Chest
     CTRLIK = cmds.circle(center=[0,height,0], nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Chest")
-    cmds.matchTransform(CTRLIK, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Locs|Loc_Info_Init_Lenght_Offset", piv=True)
     cmds.setAttr(MovablePivot + ".translateY", 7*height/8)
-    cmds.parent(MovablePivot, CTRLIK)
-    cmds.parent(CTRLIK, f"Ribbon_Spine_{name}")
-    Offset.Offset(CTRLIK, nbr=1)
+    cmds.parent(MovablePivot, CTRLIK[0])
+    cmds.parent(CTRLIK[0], f"Ribbon_Spine_{name}")
+    Offset.offset(CTRLIK[0], nbr=1)
     cmds.connectAttr(MovablePivot + ".translate", CTRLIK[0] + ".rotatePivot")
 
     #Curve Squash Offset
@@ -100,22 +100,23 @@ def ColumnRibbon(name="Default", height=2):
     cmds.connectAttr("attachCurve_Ribbon.outputCurve", "rebuildCurve_Ribbon.inputCurve")
 
     #region FK CTRLs
-    CtrlUpperBody = Controllers.createController("3D_Shapes/boat", "CTRL_UpperBody")
-    Offset.Offset(CtrlUpperBody, nbr=1)
-    CtrlFKMid = cmds.circle(center=[0,0,0], nr=[0,1,0], radius=height/2.5, name="CTRL_FK_Mid")
-    Offset.Offset(CtrlFKMid, nbr=1)
-    CtrlFKChest = Controllers.createController("3D_Shapes/corner", "CTRL_FK_Chest")
-    Offset.Offset(CtrlFKChest, nbr=1)
+    CtrlUpperBody = cmds.nurbsSquare(normal=(0,1,0), name = "CTRL_UpperBody")                        #Controllers.createController("3D_Shapes/boat", "CTRL_UpperBody")
+    Offset.offset(CtrlUpperBody[0], nbr=1)
+    CtrlFKMid = cmds.circle(center=[0,height/2,0], nr=[0,1,0], radius=height/2.5, name="CTRL_FK_Mid")
+    Offset.offset("CTRL_FK_Mid", nbr=1)
+    CtrlFKChest = cmds.nurbsSquare(normal=(0,1,0), name = "CTRL_FK_Chest")                          #Controllers.createController("3D_Shapes/corner", "CTRL_FK_Chest")
+    cmds.setAttr("CTRL_FK_Chest.translateY", 2)
+    Offset.offset(CtrlFKChest[0], nbr=1)
 
     #Hierarchy
-    cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_01")
-    cmds.parent(CtrlFKMid + "_Offset", CtrlUpperBody)
-    cmds.parent(CtrlFKChest + "_Offset", CtrlFKMid)
-    cmds.parent(CTRLIK + "_Offset", CtrlFKChest)
+    cmds.parent(CtrlUpperBody[0] + "_Offset", "CTRLs_01")
+    cmds.parent(CtrlFKMid[0] + "_Offset", CtrlUpperBody)
+    cmds.parent(CtrlFKChest[0] + "_Offset", CtrlFKMid)
+    cmds.parent(CTRLIK[0] + "_Offset", CtrlFKChest)
 
     #region Loc Axis mid Spine Info
     LocAxisMidSpine = cmds.spaceLocator(n="Loc_Axis_Mid_Spine_Info")[0]
-    Offset.Offset(LocAxisMidSpine, nbr=2)
+    Offset.offset(LocAxisMidSpine, nbr=2)
 
     cmds.parent(LocAxisMidSpine + "_Offset", "Grp_Locs")
 
@@ -128,29 +129,162 @@ def ColumnRibbon(name="Default", height=2):
     Bookmark.createBookmark("node_Ribbon_Spine_LocAxisMidSpine")
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", LocAxisMidSpine + "_Move", row=-2, column=4, state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", LocAxisMidSpine + "_Offset", row=-1, column=4, state=1)
-    Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", CtrlFKMid + "_Offset", row=-1, state=1)
-    Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", CtrlFKChest + "_Offset",row=-2 ,state=1)
-    Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", CtrlUpperBody, row=-3, state=1)
+    Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", CtrlFKMid[0] + "_Offset", row=-1, state=1)
+    Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", CtrlFKChest[0] + "_Offset",row=-2 ,state=1)
+    Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", CtrlUpperBody[0], row=-3, state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", "add_tx_Mid_Chest", row=-1, column=1, state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", "add_ty_Mid_Chest", row=-2, column=1, state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", "add_tz_Mid_Chest", row=-3, column=1, state=1)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", "mult_scaleY_Mid_UpperBody", row=-2, column=2, state=1)
 
-    cmds.connectAttr(CtrlFKMid + "_Offset.translateX", "add_tx_Mid_Chest.input1")
-    cmds.connectAttr(CtrlFKChest + "_Offset.translateX", "add_tx_Mid_Chest.input2")
+    cmds.connectAttr(CtrlFKMid[0] + "_Offset.translateX", "add_tx_Mid_Chest.input1")
+    cmds.connectAttr(CtrlFKChest[0] + "_Offset.translateX", "add_tx_Mid_Chest.input2")
 
-    cmds.connectAttr(CtrlFKMid + "_Offset.translateY", "add_ty_Mid_Chest.input1")
-    cmds.connectAttr(CtrlFKChest + "_Offset.translateY", "add_ty_Mid_Chest.input2")
+    cmds.connectAttr(CtrlFKMid[0] + "_Offset.translateY", "add_ty_Mid_Chest.input1")
+    cmds.connectAttr(CtrlFKChest[0] + "_Offset.translateY", "add_ty_Mid_Chest.input2")
 
-    cmds.connectAttr(CtrlFKMid + "_Offset.translateZ", "add_tz_Mid_Chest.input1")
-    cmds.connectAttr(CtrlFKChest + "_Offset.translateZ", "add_tz_Mid_Chest.input2")
+    cmds.connectAttr(CtrlFKMid[0] + "_Offset.translateZ", "add_tz_Mid_Chest.input1")
+    cmds.connectAttr(CtrlFKChest[0] + "_Offset.translateZ", "add_tz_Mid_Chest.input2")
 
     cmds.connectAttr("add_ty_Mid_Chest.output", "mult_scaleY_Mid_UpperBody.input1")
-    cmds.connectAttr(CtrlUpperBody, "mult_scaleY_Mid_UpperBody.input2")
+    cmds.connectAttr(CtrlUpperBody[0] + ".scaleY", "mult_scaleY_Mid_UpperBody.input2")
 
     cmds.connectAttr("add_tx_Mid_Chest.output", LocAxisMidSpine + "_Move.translateX")
     cmds.connectAttr("mult_scaleY_Mid_UpperBody.output", LocAxisMidSpine + "_Move.translateY")
     cmds.connectAttr("add_tz_Mid_Chest.output", LocAxisMidSpine + "_Move.translateZ")
+
+    cmds.connectAttr(CtrlUpperBody[0] + ".scale", LocAxisMidSpine + "_Move.scale")
+
+    #region CTRL Option
+    CtrlOption = Controllers.createController("2D_Shapes/star", "CTRL_Option")
+    cmds.setAttr(CtrlOption + ".tx", keyable=False, channelBox=False)
+    cmds.setAttr(CtrlOption + ".ty", keyable=False, channelBox=False)
+    cmds.setAttr(CtrlOption + ".tz", keyable=False, channelBox=False)
+    cmds.setAttr(CtrlOption + ".rx", keyable=False, channelBox=False)
+    cmds.setAttr(CtrlOption + ".ry", keyable=False, channelBox=False)
+    cmds.setAttr(CtrlOption + ".rz", keyable=False, channelBox=False)
+    cmds.setAttr(CtrlOption + ".sx", keyable=False, channelBox=False)
+    cmds.setAttr(CtrlOption + ".sy", keyable=False, channelBox=False)
+    cmds.setAttr(CtrlOption + ".sz", keyable=False, channelBox=False)
+
+    cmds.addAttr(CtrlOption, ln="STRETCH", at="double", min=0, max=1, dv=0, k=True)
+    cmds.addAttr(CtrlOption, ln="SQUASH", at="double", min=0, max=1, dv=0, k=True)
+    cmds.addAttr(CtrlOption, ln="_________",sn = "_________", at="enum", en="_________", keyable=True)
+    cmds.addAttr(CtrlOption, ln=f"IkVisibility", at="bool", dv=False, k=True)
+    cmds.addAttr(CtrlOption, ln=f"FkVisibility", at="bool", dv=False, k=True)
+    cmds.addAttr(CtrlOption, ln="________",sn = "________", at="enum", en="________", keyable=True)
+    cmds.addAttr(CtrlOption, ln="TwistChest", at="double", dv=0, k=True)
+    cmds.addAttr(CtrlOption, ln="TwistMid", at="double", dv=0, k=True)
+    cmds.addAttr(CtrlOption, ln="TwistRoot", at="double", dv=0, k=True)
+    cmds.addAttr(CtrlOption, ln="__________",sn = "__________", at="enum", en="__________", keyable=True)
+    cmds.addAttr(CtrlOption, ln=f"VolumeActivation", at="bool", dv=False, k=True)
+    cmds.addAttr(CtrlOption, ln="VolumeFactor", at="double", min=0, max=10, dv=0, k=True)
+    cmds.addAttr(CtrlOption, ln="VolumeOffset", at="double", min=-1, max=1, dv=0, k=True)
+    cmds.addAttr(CtrlOption, ln="VolumeIntensity", at="double", min=0, max=1, dv=0, k=True)
+    cmds.addAttr(CtrlOption, ln="___________",sn = "___________", at="enum", en="___________", keyable=True)
+    cmds.addAttr(CtrlOption, ln=f"StretchVolume", at="bool", dv=False, k=True)
+    cmds.addAttr(CtrlOption, ln=f"SquashVolume", at="bool", dv=False, k=True)
+
+    Offset.offset(CtrlOption, nbr=1)
+    cmds.parent(CtrlOption + "_Offset", CtrlFKMid)
+
+
+    #region Translate point with NoStretch posibility
+    CurveInfoIso = cmds.shadingNode("curveInfo", au=True, name="curveInfo_Ribbon_Iso")
+    cmds.connectAttr(curveFromSurfaceIso + "outputCurve", CurveInfoIso +".inputCurve")
+
+    for i in range(JntNbr):
+        #Creation des joints
+        if i == 0:
+            cmds.joint(n="Bind_Root")
+        elif i == JntNbr :
+            cmds.joint(n="Bind_Chest")
+        else :
+            cmds.joint(n=f"Bind_RibbonSpine_0{i}")
+
+        #creation CTRLS
+        if i !=0 and i !=JntNbr:
+            cmds.circle(radius=height/4, name=f"CTRL_RibbonSpine_0{i}")
+            cmds.group(empty=True, name=f"TwistScale_RibbonSpine_0{i}")
+            cmds.group(empty=True, name=f"Offset_RibbonSpine_0{i}")
+        
+        if i == JntNbr:
+            cmds.group(empty=True, name="Offset_Bind_Chest")
+        if i == 0 :
+            cmds.group(empty=True, name="Offset_Bind_Root")
+        
+        #Hierarchy
+        if i !=0 and i !=JntNbr:
+            cmds.parent(f"Bind_RibbonSpine_0{i}", f"CTRL_RibbonSpine_0{i}")
+            cmds.parent(f"CTRL_RibbonSpine_0{i}", f"TwistScale_RibbonSpine_0{i}")
+            cmds.parent(f"TwistScale_RibbonSpine_0{i}", f"Offset_RibbonSpine_0{i}")
+            cmds.parent(f"Offset_RibbonSpine_0{i}", f"Ribbon_Spine_{name}|Global_Move_01|Joints_01")
+        
+        if i == JntNbr:
+            cmds.parent("Bind_Chest", "Offset_Bind_Chest")
+        if i == 0 :
+            cmds.parent("Bind_Root", "Offset_Bind_Root")
+
+        #Creation nodes
+        MultNoStretch = cmds.shadingNode("multDoubleLinear", au=True, name=f"mult_Param_0{i}_NoStretch_Defaut")
+        cmds.setAttr(MultNoStretch + ".input1", i*height/JntNbr)
+        DivLength = cmds.shadingNode("multiplyDivide", au=True, name=f"Div_Param_Point_0{i}_by_arcLength")
+        cmds.setAttr(DivLength + ".operation", 2)
+        Cond_NoStretch = cmds.shadingNode("condition", au=True, name=f"cond_StretchFactor_negativeValues_0{i}")
+        cmds.setAttr(Cond_NoStretch + ".operation", 4)
+        blendColors = cmds.shadingNode("blendColors", au=True, name=f"Blend_StretchFactor_0{i}")
+        pointOnCurveInfo = cmds.shadingNode("pointOnCurveInfo", au=True, name=f"pointCrvInf_First_Joint_0{i}")
+
+        #Connection Nodes
+        cmds.connectAttr(LocAxisMidSpine + "_Move.translateY", MultNoStretch + ".input2")
+
+        cmds.connectAttr(MultNoStretch + ".output", DivLength + ".input1X")
+        cmds.connectAttr(CurveInfoIso + ".arcLength", DivLength + ".input2X")
+
+        cmds.connectAttr(DivLength + ".outputX" , Cond_NoStretch + ".firstTerm")
+        cmds.connectAttr(DivLength + ".outputX" , Cond_NoStretch + ".colorIfTrueR")
+        cmds.connectAttr(MultNoStretch + ".input1" , Cond_NoStretch + ".secondTerm")
+        cmds.connectAttr(MultNoStretch + ".input1" , Cond_NoStretch + ".colorIfFalseR")
+
+        cmds.connectAttr(MultNoStretch + ".input1", blendColors + ".color1R")
+        cmds.connectAttr(Cond_NoStretch + ".outColorR", blendColors + ".color2R")
+        cmds.connectAttr(CtrlOption + ".STRETCH", blendColors + ".blender")
+
+        cmds.connectAttr(blendColors+ ".outputR", pointOnCurveInfo + ".parameter")
+        cmds.connectAttr("rebuildCurve_Ribbon.outputCurve", pointOnCurveInfo + ".inputCurve")
+
+        if i !=0 and i !=JntNbr:
+            cmds.connectAttr(pointOnCurveInfo + ".position", f"Offset_RibbonSpine_0{i}")
+        
+        if i == JntNbr:
+            cmds.connectAttr(pointOnCurveInfo + ".position", "Offset_Bind_Chest.t")
+
+        if i == 0 :
+            cmds.connectAttr(pointOnCurveInfo + ".position", "Offset_Bind_Root.t")
+
+        #Bookmark
+        BookRowOffset = 5*i
+        Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", MultNoStretch, row=BookRowOffset-2, column=5, state=1)
+        Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", DivLength, row=BookRowOffset-2, column=6, state=1)
+        Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", Cond_NoStretch, row=BookRowOffset-2, column=6, state=1)
+        Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", Cond_NoStretch, row=BookRowOffset-2, column=7, state=1)
+        Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", pointOnCurveInfo, row=BookRowOffset-1, column=8, state=1)
+
+        if i !=0 and i !=JntNbr:
+            Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", f"Offset_RibbonSpine_0{i}", row=BookRowOffset-1, column=12, state=1)
+        
+        if i == JntNbr:
+            Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", "Offset_Bind_Chest", row=BookRowOffset-1, column=12, state=1)
+
+        if i == 0 :
+            Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", f"Offset_Bind_Root", row=BookRowOffset-1, column=12, state=1)
+
+
+
+
+
+
+
 
 
 
