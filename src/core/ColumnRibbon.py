@@ -149,6 +149,10 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.shadingNode("addDoubleLinear", au=True, name="add_ty_Mid_Chest")
     cmds.shadingNode("addDoubleLinear", au=True, name="add_tz_Mid_Chest")
     cmds.shadingNode("multDoubleLinear", au=True, name="mult_scaleY_Mid_UpperBody")
+    cmds.shadingNode("addDoubleLinear", au=True, name="add_tx_Chest_Chest")
+    cmds.shadingNode("addDoubleLinear", au=True, name="add_ty_Chest_Chest")
+    cmds.shadingNode("addDoubleLinear", au=True, name="add_tz_Chest_Chest")
+
 
     Bookmark.createBookmark("node_Ribbon_Spine_LocAxisMidSpine")
     Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", LocAxisMidSpine + "_Move", row=-2, column=4, state=1)
@@ -178,6 +182,14 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.connectAttr("add_tz_Mid_Chest.output", LocAxisMidSpine + "_Move.translateZ")
 
     cmds.connectAttr(CtrlUpperBody + ".scale", LocAxisMidSpine + "_Move.scale")
+
+    cmds.connectAttr(CtrlFKChest + ".translateX", "add_tx_Chest_Chest.input1")
+    cmds.connectAttr(CtrlFKChest + ".translateY", "add_ty_Chest_Chest.input1")
+    cmds.connectAttr(CtrlFKChest + ".translateZ", "add_tz_Chest_Chest.input1")
+    cmds.connectAttr(CTRLIK[0] + ".translateX", "add_tx_Chest_Chest.input2")
+    cmds.connectAttr(CTRLIK[0] + ".translateY", "add_ty_Chest_Chest.input2")
+    cmds.connectAttr(CTRLIK[0] + ".translateZ", "add_tz_Chest_Chest.input2")
+
 
     #region CTRL Option
     CtrlOption = Controllers.createController("2D_Shapes/star", "CTRL_Option")
@@ -387,7 +399,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     #connection
     cmds.connectAttr(CtrlFKMid[0] + "_Offset" + ".translateY", ComMatX + ".inputTranslateY")
     cmds.connectAttr(ComMatX + ".outputMatrix", MultMatX + ".matrixIn[0]")
-    cmds.connectAttr("LocAxisMidPelvis.worldMatrix[0]", MultMatX + ".matrixIn[1]")
+    cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatX + ".matrixIn[1]")
     cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX + ".matrixIn[2]")
 
     cmds.connectAttr(MultMatX + ".matrixSum", DecMatX + ".inputMatrix")
@@ -395,17 +407,18 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.connectAttr(DecMatX + ".outputTranslate", "cstr_Ik_Mid.t")
     cmds.connectAttr(DecMatX + ".outputRotate", "cstr_Ik_Mid.r")
 
-    cmds.connectAttr(CtrlFKMid[0] + ".t", "cstr_Ik_Mid.t")
-    cmds.connectAttr(CtrlFKMid[0] + ".rotateY", "cstr_Ik_Mid.rotateY")
+    cmds.connectAttr(CtrlFKMid[0] + ".t", "Offset_Rotation_Ik_Mid.t")
+    cmds.connectAttr(CtrlFKMid[0] + ".rotateY", "Offset_Rotation_Ik_Mid.rotateY")
 
     #CTRL Tangent
     CtrlTanChest = cmds.curve(name="CTRL_Tangent_Chest", p=[(1,0,0),(1.05,0.18,0),(1.25,0.25,0),(1.45,0.18,0),(1.5,0,0),(1.45,-0.18,0),(1.25,-0.25,0),(1.05,-0.18,0),(1,0,0)])
-    cmds.parent(CTRLIK[0], CtrlTanChest)
-    cmds.setAttr(CtrlTanChest + ".t", 0,0,0)
+    cmds.parent(CtrlTanChest, CTRLIK[0])
+    cmds.setAttr(CtrlTanChest + ".t", 0,height,0)
     Offset.offset(CtrlTanChest, nbr=1)
+    cmds.makeIdentity(CtrlTanChest + "_Offset", t=True, apply=True)
 
     CtrlTanRoot = cmds.curve(name="CTRL_Tangent_Root", p=[(1,0,0),(1.05,0.18,0),(1.25,0.25,0),(1.45,0.18,0),(1.5,0,0),(1.45,-0.18,0),(1.25,-0.25,0),(1.05,-0.18,0),(1,0,0)])
-    cmds.parent(CTRLIKRoot[0], CtrlTanRoot)
+    cmds.parent(CtrlTanRoot, CTRLIKRoot[0])
     Offset.offset(CtrlTanRoot, nbr=1)
     cmds.group(CtrlTanRoot, name="Offset_Rotation_Tangent_Root")
 
@@ -427,17 +440,43 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     MDL_Z_02 = cmds.shadingNode("multDoubleLinear", au=True, name="mult_Rotation_Z_Ik_Mid_02")
 
     #Connection
-    LocAxisMidSpineShape = cmds.listRelative(LocAxisMidSpine, s=True)
-    LocAxisMidPelvisShape = cmds.listRelative(LocAxisMidPelvis, s=True)
+    LocAxisMidSpineShape = cmds.listRelatives(LocAxisMidSpine, s=True)
+    LocAxisMidPelvisShape = cmds.listRelatives(LocAxisMidPelvis, s=True)
 
     cmds.connectAttr(LocAxisMidSpineShape[0] + ".worldPosition[0]", DistB + ".point1")
     cmds.connectAttr(LocAxisMidPelvisShape[0] + ".worldPosition[0]", DistB + ".point2")
 
-    cmds.connectAttr(CtrlFKChest + ".TangentfactorUp", FactorTangentChest + ".input1")
+    cmds.connectAttr(CtrlFKChest + ".TangentFactorUp", FactorTangentChest + ".input1")
 
     cmds.connectAttr(CtrlUpperBody + ".TangentFactorDwn", ArcLengthChest + ".input1")
     cmds.connectAttr(DistB + ".distance", ArcLengthChest + ".input2")
     
+    cmds.connectAttr(ArcLengthChest + ".output", Div_Scale_Root + ".input1X")
+    cmds.connectAttr(ArcLengthChest + ".output", Div_Scale_Chest + ".input1X")
+    cmds.connectAttr(CtrlUpperBody + ".scaleY", Div_Scale_Root + ".input2X")
+    cmds.connectAttr(CtrlUpperBody + ".scaleY", Div_Scale_Chest + ".input2X")
+
+    cmds.connectAttr(Div_Scale_Root + ".outputX", CtrlTanRoot + "_Offset.translateY")
+    cmds.connectAttr(Div_Scale_Chest + ".outputX", CtrlTanChest + "_Offset.translateY")
+
+    cmds.connectAttr(CtrlIkMid[0] + ".RotationFactor", OpposedFactorMid + ".input1")
+
+    cmds.connectAttr(CtrlIkMid[0] + ".rotateX", MDL_X_01 + ".input1")
+    cmds.connectAttr(CtrlIkMid[0] + ".rotateX", MDL_X_02 + ".input1")
+    cmds.connectAttr(CtrlIkMid[0] + ".rotateZ", MDL_Z_01 + ".input1")
+    cmds.connectAttr(CtrlIkMid[0] + ".rotateZ", MDL_Z_02 + ".input1")
+
+    cmds.connectAttr(CtrlIkMid[0] + ".RotationFactor", MDL_Z_02 + ".input2")
+    cmds.connectAttr(CtrlIkMid[0] + ".RotationFactor", MDL_X_01 + ".input2")
+    cmds.connectAttr(OpposedFactorMid + ".output", MDL_X_02 + ".input2")
+    cmds.connectAttr(OpposedFactorMid + ".output", MDL_Z_01 + ".input2")
+
+    cmds.connectAttr(MDL_X_01 + ".output", CtrlTanChest + "_Offset.translateX")
+    cmds.connectAttr(MDL_Z_01 + ".output", CtrlTanChest + "_Offset.translateZ")
+    cmds.connectAttr(MDL_X_02 + ".output", CtrlTanRoot + "_Offset.translateX")
+    cmds.connectAttr(MDL_Z_02 + ".output", CtrlTanRoot + "_Offset.translateZ")
+
+
 
 
 ColumnRibbon("01")
