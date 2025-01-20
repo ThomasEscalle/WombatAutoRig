@@ -25,9 +25,41 @@ def MatrixConstraint(Master, Slave, mode=1, t=True, r=True, s=False):
     if s == True :
         cmds.connectAttr(DecMatX + ".outputScale", Slave + ".s")
 
+def MatrixInputRibbon(CTRL, side, point, surface):
+    # creation Node
+    Mult = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_{CTRL}_{side}")
+    Decompose = cmds.shadingNode("decomposeMatrix", au=True, name=f"DecMatX_{CTRL}_{side}")
+    MultPiv = cmds.shadingNode("multMatrix", au=True, name=f"MultPivMatX_{CTRL}_{side}")
+    ComPiv = cmds.shadingNode("composeMatrix", au=True, name=f"ComPivMatX_{CTRL}_{side}")
+
+    #connection
+    cmds.connectAttr(CTRL + ".scalePivot", ComPiv + ".inputTranslate")
+
+    cmds.connectAttr(ComPiv + ".outputMatrix", MultPiv + ".matrixIn[0]")
+    cmds.connectAttr(CTRL + ".worldMatrix[0]", MultPiv + ".matrixIn[1]")
+    
+    cmds.connectAttr(side + ".outputMatrix", Mult + ".matrixIn[0]")
+    cmds.connectAttr(MultPiv + ".matrixSum", Mult + ".matrixIn[1]")
+
+    cmds.connectAttr(Mult + ".matrixSum", Decompose + ".inputMatrix")
+
+    cmds.connectAttr(Decompose + ".outputTranslate", surface + f".controlPoints[{point}]")
+
+    #Bookmark
+    Bookmark.addNodeToBookmark("Ribbon_input", Mult, row=point, column=0, state=0)
+    Bookmark.addNodeToBookmark("Ribbon_input", Decompose, row=point, column=1, state=0)
+    Bookmark.addNodeToBookmark("Ribbon_input", MultPiv, row=point-0.1, column=-0.5, state=0)
+    Bookmark.addNodeToBookmark("Ribbon_input", ComPiv, row=point-0.1, column=-1, state=0)
+
 def ColumnRibbon(name="Default", height=2, JntNbr=7):
     #Create a nurbs plane
-    RibbonLowDef = cmds.nurbsPlane(axis=[0,0,1], w=1, lr=height, u=1, v=2, p=[0,1,0], name=f"ColumnRibbon_{name}_LowDef")
+    RibbonLowDef = cmds.surface( dv=3, du=1, fu='open', fv='open', kv=(0, 0, 0, 0.5, 1, 1, 1), ku=(0, 1), pw=((-0.5, 0, 0,1), (-0.5, height/3,0,1), (-0.5, height/2,0,1), (-0.5, 2*height/3,0,1), (-0.5, height,0,1), (0.5, 0,0,1), (0.5, height/3, 0,1), (-0.5, height/2,0,1), (0.5, 2*height/3, 0,1), (0.5, height, 0,1)), name=f"ColumnRibbon_{name}_LowDef")
+    #cmds.nurbsPlane(axis=[0,0,1], w=1, lr=height, u=1, v=2, p=[0,1,0], name=f"ColumnRibbon_{name}_LowDef")
+    LambertBlue = cmds.shadingNode("lambert", asShader=True, name="Lambert_Ribbon")
+    cmds.setAttr(LambertBlue + ".color", 0, 0, 1)
+    cmds.setAttr(LambertBlue + ".transparency", 0.3, 0.3, 0.3)
+    cmds.select(RibbonLowDef)
+    cmds.hyperShade(assign=LambertBlue)
 
     #region Hierarchy
     GrpAll = cmds.group(empty=True, n=f"Ribbon_Spine_{name}")
@@ -94,12 +126,16 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.parent(SquashChestOffset, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Locs")
 
     #CTRL IK Chest
-    CTRLIK = cmds.circle(center=[0,height,0], nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Chest")
+    ComOffset = cmds.shadingNode("composeMatrix", au=True, name="Offset")
+    CTRLIK = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Chest")
     cmds.setAttr(MovablePivot + ".translateY", 7*height/8)
     cmds.parent(MovablePivot, CTRLIK[0])
     cmds.parent(CTRLIK[0], f"Ribbon_Spine_{name}")
     Offset.offset(CTRLIK[0], nbr=1)
     cmds.connectAttr(MovablePivot + ".translate", CTRLIK[0] + ".rotatePivot")
+    cmds.setAttr(ComOffset + ".inputTranslateY", height)
+    cmds.connectAttr(ComOffset + ".outputMatrix", CTRLIK[0] + ".offsetParentMatrix")
+    cmds.disconnectAttr(ComOffset + ".outputMatrix", CTRLIK[0] + ".offsetParentMatrix")
 
     #Curve Squash Offset
     cmds.curve(p=[(0,0,0), (0,height,0)], degree=1, name="Crv_Squash_Offset")
@@ -421,17 +457,24 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     #CTRL Tangent
     CtrlTanChest = cmds.curve(name="CTRL_Tangent_Chest", p=[(1,0,0),(1.05,0.18,0),(1.25,0.25,0),(1.45,0.18,0),(1.5,0,0),(1.45,-0.18,0),(1.25,-0.25,0),(1.05,-0.18,0),(1,0,0)])
     cmds.parent(CtrlTanChest, CTRLIK[0])
-    cmds.setAttr(CtrlTanChest + ".t", 0,height,0)
     Offset.offset(CtrlTanChest, nbr=1)
-    cmds.makeIdentity(CtrlTanChest + "_Offset", t=True, apply=True)
+    cmds.setAttr(ComOffset + ".inputTranslateY", 7*height/8)
+    cmds.connectAttr(ComOffset + ".outputMatrix", CtrlTanChest + "_Offset.offsetParentMatrix")
+    cmds.disconnectAttr(ComOffset + ".outputMatrix", CtrlTanChest + "_Offset.offsetParentMatrix")
 
     CtrlTanRoot = cmds.curve(name="CTRL_Tangent_Root", p=[(1,0,0),(1.05,0.18,0),(1.25,0.25,0),(1.45,0.18,0),(1.5,0,0),(1.45,-0.18,0),(1.25,-0.25,0),(1.05,-0.18,0),(1,0,0)])
     cmds.parent(CtrlTanRoot, CTRLIKRoot[0])
     Offset.offset(CtrlTanRoot, nbr=1)
     cmds.group(CtrlTanRoot, name="Offset_Rotation_Tangent_Root")
+    cmds.setAttr(ComOffset + ".inputTranslateY", height/8)
+    cmds.connectAttr(ComOffset + ".outputMatrix", CtrlTanRoot + "_Offset.offsetParentMatrix")
+    cmds.disconnectAttr(ComOffset + ".outputMatrix", CtrlTanRoot + "_Offset.offsetParentMatrix")
 
     #Offset Input
-                                            #LocInfoPelvis SKip voir si pb ou pas
+    LocInfoPelvis = cmds.spaceLocator(n="Loc_Info_Pelvis")[0]
+    cmds.parent(LocInfoPelvis, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Locs")
+    Offset.offset(LocInfoPelvis, nbr=1)
+    MatrixConstraint(CTRLIKRoot[0], LocInfoPelvis + "_Offset", s=True)
     #Creation Nodes
     FactorTangentChest = cmds.shadingNode("multDoubleLinear", au=True, name="Factor_Tangent_Chest")
     cmds.setAttr(FactorTangentChest + ".input2",-1)
@@ -449,7 +492,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
 
     #Connection
     LocAxisMidSpineShape = cmds.listRelatives(LocAxisMidSpine, s=True)
-    LocAxisMidPelvisShape = cmds.listRelatives(LocAxisMidPelvis, s=True)
+    LocAxisMidPelvisShape = cmds.listRelatives(LocInfoPelvis, s=True)
 
     cmds.connectAttr(LocAxisMidSpineShape[0] + ".worldPosition[0]", DistB + ".point1")
     cmds.connectAttr(LocAxisMidPelvisShape[0] + ".worldPosition[0]", DistB + ".point2")
@@ -493,4 +536,35 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.connectAttr(LocAxisMidSpine + "_Move" + ".translateY", DivByLength + ".input2X")
     cmds.connectAttr(DivByLength + ".outputX", LocAxisMidPelvis + ".scaleY")
 
+
+    #region connect control point 
+    Bookmark.createBookmark("Ribbon_input")
+    #compose Matrix side
+    cM_L = cmds.shadingNode("composeMatrix", au=True, name="cM_Side_Offset_L")
+    cmds.setAttr(cM_L + ".inputTranslateX", -0.5)
+    cM_R = cmds.shadingNode("composeMatrix", au=True, name="cM_Side_Offset_R")
+    cmds.setAttr(cM_R + ".inputTranslateX", 0.5)
+
+    MatrixInputRibbon(CTRL=CTRLIKRoot[0], side=cM_R, point=0, surface=ShapeRibbon[0])
+    MatrixInputRibbon(CTRL=CtrlTanRoot, side=cM_R, point=1, surface=ShapeRibbon[0])
+    MatrixInputRibbon(CTRL=CtrlIkMid[0], side=cM_R, point=2, surface=ShapeRibbon[0])
+    MatrixInputRibbon(CTRL=CtrlTanChest, side=cM_R, point=3, surface=ShapeRibbon[0])
+    MatrixInputRibbon(CTRL=CTRLIK[0], side=cM_R, point=4, surface=ShapeRibbon[0])
+    MatrixInputRibbon(CTRL=CTRLIKRoot[0], side=cM_L, point=5, surface=ShapeRibbon[0])
+    MatrixInputRibbon(CTRL=CtrlTanRoot, side=cM_L, point=6, surface=ShapeRibbon[0])
+    MatrixInputRibbon(CTRL=CtrlIkMid[0], side=cM_L, point=7, surface=ShapeRibbon[0])
+    MatrixInputRibbon(CTRL=CtrlTanChest, side=cM_L, point=8, surface=ShapeRibbon[0])
+    MatrixInputRibbon(CTRL=CTRLIK[0], side=cM_L, point=9, surface=ShapeRibbon[0])
+
+    #Bookmark
+    Bookmark.addNodeToBookmark("Ribbon_input", CTRLIKRoot[0], row=0, column=-2, state=0)
+    Bookmark.addNodeToBookmark("Ribbon_input", CtrlTanRoot, row=2.25, column=-2, state=0)
+    Bookmark.addNodeToBookmark("Ribbon_input", CtrlIkMid[0], row=4.5, column=-2, state=0)
+    Bookmark.addNodeToBookmark("Ribbon_input", CtrlTanChest, row=6.75, column=-2, state=0)
+    Bookmark.addNodeToBookmark("Ribbon_input", CTRLIK[0], row=9, column=-2, state=0)
+
+    Bookmark.addNodeToBookmark("Ribbon_input", cM_L, row=1.125, column=-1, state=0)
+    Bookmark.addNodeToBookmark("Ribbon_input", cM_R, row=7.875, column=-1, state=0)
+
+    Bookmark.addNodeToBookmark("Ribbon_input", ShapeRibbon[0], row=4.5, column=2, state=0)
 ColumnRibbon("01")
