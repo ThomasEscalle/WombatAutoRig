@@ -3,6 +3,10 @@ from wombatAutoRig.src.core import Bookmark
 from wombatAutoRig.src.core import Offset
 from wombatAutoRig.src.core import Controllers
 
+
+#Offset t sur tangent CTRL
+#Connection CTRL point surface (moment de verite sur la surface pb ou ps pb)
+
 def MatrixConstraint(Master, Slave, mode=1, t=True, r=True, s=False):
     #creation des nodes
     MultMatX = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_{Slave}")
@@ -189,6 +193,10 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.connectAttr(CTRLIK[0] + ".translateX", "add_tx_Chest_Chest.input2")
     cmds.connectAttr(CTRLIK[0] + ".translateY", "add_ty_Chest_Chest.input2")
     cmds.connectAttr(CTRLIK[0] + ".translateZ", "add_tz_Chest_Chest.input2")
+
+    cmds.connectAttr("add_tz_Chest_Chest.output", LocAxisMidSpine + ".translateZ")
+    cmds.connectAttr("add_ty_Chest_Chest.output", LocAxisMidSpine + ".translateY")
+    cmds.connectAttr("add_tx_Chest_Chest.output", LocAxisMidSpine + ".translateX")
 
 
     #region CTRL Option
@@ -477,6 +485,12 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.connectAttr(MDL_Z_02 + ".output", CtrlTanRoot + "_Offset.translateZ")
 
 
+    #ScaleY LocAxisPelvis
+    DivByLength = cmds.shadingNode("multiplyDivide", au=True, name="Div_y_InitLength")
+    cmds.setAttr(DivByLength + ".operation", 2)
 
+    cmds.connectAttr(DistB + ".distance", DivByLength + ".input1X")
+    cmds.connectAttr(LocAxisMidSpine + "_Move" + ".translateY", DivByLength + ".input2X")
+    cmds.connectAttr(DivByLength + ".outputX", LocAxisMidPelvis + ".scaleY")
 
 ColumnRibbon("01")
