@@ -248,8 +248,8 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.setAttr(CtrlOption + ".sy", keyable=False, channelBox=False)
     cmds.setAttr(CtrlOption + ".sz", keyable=False, channelBox=False)
 
-    cmds.addAttr(CtrlOption, ln="STRETCH", at="double", min=0, max=1, dv=0, k=True)
-    cmds.addAttr(CtrlOption, ln="SQUASH", at="double", min=0, max=1, dv=0, k=True)
+    cmds.addAttr(CtrlOption, ln="STRETCH", at="double", min=0, max=1, dv=1, k=True)
+    cmds.addAttr(CtrlOption, ln="SQUASH", at="double", min=0, max=1, dv=1, k=True)
     cmds.addAttr(CtrlOption, ln="_________",sn = "_________", at="enum", en="_________", keyable=True)
     cmds.addAttr(CtrlOption, ln=f"IkVisibility", at="bool", dv=False, k=True)
     cmds.addAttr(CtrlOption, ln=f"FkVisibility", at="bool", dv=False, k=True)
@@ -293,8 +293,10 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
             cmds.group(empty=True, name=f"Offset_RibbonSpine_0{i}")
         
         if i == JntNbr-1:
+            cmds.group(empty=True, name=f"TwistScale_RibbonSpine_0{i}")
             cmds.group(empty=True, name="Offset_Bind_Chest")
         if i == 0 :
+            cmds.group(empty=True, name=f"TwistScale_RibbonSpine_0{i}")
             cmds.group(empty=True, name="Offset_Bind_Root")
         
         #Hierarchy
@@ -313,13 +315,14 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
 
         #Creation nodes
         MultNoStretch = cmds.shadingNode("multDoubleLinear", au=True, name=f"mult_Param_0{i}_NoStretch_Defaut")
-        cmds.setAttr(MultNoStretch + ".input1", i*height/(JntNbr-1))
+        cmds.setAttr(MultNoStretch + ".input1", i/(JntNbr-1))
         DivLength = cmds.shadingNode("multiplyDivide", au=True, name=f"Div_Param_Point_0{i}_by_arcLength")
         cmds.setAttr(DivLength + ".operation", 2)
         Cond_NoStretch = cmds.shadingNode("condition", au=True, name=f"cond_StretchFactor_negativeValues_0{i}")
         cmds.setAttr(Cond_NoStretch + ".operation", 4)
         blendColors = cmds.shadingNode("blendColors", au=True, name=f"Blend_StretchFactor_0{i}")
         pointOnCurveInfo = cmds.shadingNode("pointOnCurveInfo", au=True, name=f"pointCrvInf_First_Joint_0{i}")
+        cmds.setAttr(pointOnCurveInfo + ".turnOnPercentage", 1)
 
         #Connection Nodes
         cmds.connectAttr(LocAxisMidSpine + "_Move.translateY", MultNoStretch + ".input2")
@@ -353,6 +356,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
         #Creation nodes
         PointSurfaceInfo = cmds.shadingNode("pointOnSurfaceInfo", au=True, name=f"pointSurfInfo_Point_0{i}")
         cmds.setAttr(PointSurfaceInfo + ".parameterU", 0.5)
+        cmds.setAttr(PointSurfaceInfo + ".turnOnPercentage", 1)
         VectorProduct = cmds.shadingNode("vectorProduct", au=True, name=f"vP_mTx_Rotation_Point_0{i}")
         cmds.setAttr(VectorProduct + ".operation", 2)
         FourByFour = cmds.shadingNode("fourByFourMatrix", au=True, name=f"mtx_Rotation_Point_0{i}")
@@ -574,24 +578,31 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     #Creation Nodes
     Negative = cmds.shadingNode("multDoubleLinear", au=True, name="Negative_Arc_Length_Ribbon")
     MultOffsetInitLength = cmds.shadingNode("multDoubleLinear", au=True, name="mult_Squash_Value")
+    MultCondOffsetInitLength = cmds.shadingNode("multDoubleLinear", au=True, name="mult_By_0_If")
     DifferenceBtw = cmds.shadingNode("addDoubleLinear", au=True, name="Diff_InitLength_ArcLength")
     Reverse = cmds.shadingNode("reverse", au=True, name="reverseSquashValue")
+    CondOffsetInitLength = cmds.shadingNode("condition", au=True, name="cond_if_Squash_maxValue")
     cMOffsetInitLength = cmds.shadingNode("composeMatrix", au=True, name="cM_Offset_InitLength")
     MultMatXOffsetInitLength = cmds.shadingNode("multMatrix", au=True, name="mult_MTX_Chest_info_Length_Squash")
     DecMatXOffsetInitLength = cmds.shadingNode("decomposeMatrix", au=True, name="dM_Chest_info_Length_Squash")
 
     #setAttr
     cmds.setAttr(Negative + ".input2", -1)
+    cmds.setAttr(CondOffsetInitLength + ".operation", 3)
 
     #connection
     cmds.connectAttr(CurveInfoIso + ".arcLength", Negative + ".input1")
 
     cmds.connectAttr(LocAxisMidSpine + "_Move.translateY", DifferenceBtw + ".input1")
+    cmds.connectAttr(LocAxisMidSpine + "_Move.translateY", CondOffsetInitLength + ".secondTerm")
+    cmds.connectAttr(CurveInfoIso + ".arcLength", CondOffsetInitLength + ".firstTerm")
     cmds.connectAttr(Negative + ".output", DifferenceBtw + ".input2")
 
     cmds.connectAttr(CtrlOption + ".SQUASH", Reverse + ".inputX")
 
-    cmds.connectAttr(DifferenceBtw + ".output", MultOffsetInitLength + ".input1")
+    cmds.connectAttr(DifferenceBtw + ".output", MultCondOffsetInitLength + ".input1")
+
+    cmds.connectAttr(MultCondOffsetInitLength + ".output", MultOffsetInitLength + ".input1")
     cmds.connectAttr(Reverse + ".outputX", MultOffsetInitLength + ".input2")
 
     cmds.connectAttr(MultOffsetInitLength + ".output", cMOffsetInitLength + ".inputTranslateY")
@@ -609,5 +620,20 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.setAttr(ComOffset + ".inputTranslateY", height)
     cmds.connectAttr(ComOffset + ".outputMatrix", InitLenght + "_Offset.offsetParentMatrix")
     cmds.disconnectAttr(ComOffset + ".outputMatrix", InitLenght + "_Offset.offsetParentMatrix")
+
+    #region Scale + Twist
+
+    for i in range(JntNbr - 1):
+        #Creation des nodes Twist
+        MultRoot = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Twist_Root_Point_0{i}")
+        MultMid = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Twist_Mid_Point_0{i}")
+        MultChest = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Twist_Chest_Point_0{i}")
+
+        AddChest = cmds.shadingNode("addDoubleLinear", au=True, name=f"add_Twist_Mid_Point_0{i}")
+        AddChest = cmds.shadingNode("addDoubleLinear", au=True, name=f"add_Twist_Chest_Point_0{i}")
+
+        #Creation des nodes Scale
+        AddVol = cmds.shadingNode("addDoubleLinear", au=True, name=f"add_Vol_Offset_Point_0{i}")
+        RemapValueScale = cmds.shadingNode("remapValue", au=True, name=f"rV_Scale_XY_Point_0{i}")
 
 ColumnRibbon("01")
