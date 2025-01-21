@@ -118,9 +118,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     MovablePivot = cmds.spaceLocator(n="Loc_MovableRoatetPivot_Chest_Ik")[0]
 
     InitLenghtOffset = cmds.group(InitLenght, name="Loc_Info_Init_Lenght_Offset")
-    cmds.setAttr(InitLenghtOffset + ".translateY", height)
     SquashChestOffset = cmds.group(SquashChest, name="Loc_Info_Squash_Chest_Offset")
-    cmds.setAttr(SquashChestOffset + ".translateY", height)
 
     cmds.parent(InitLenghtOffset, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Locs")
     cmds.parent(SquashChestOffset, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Locs")
@@ -128,14 +126,12 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     #CTRL IK Chest
     ComOffset = cmds.shadingNode("composeMatrix", au=True, name="Offset")
     CTRLIK = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Chest")
-    cmds.setAttr(MovablePivot + ".translateY", 7*height/8)
-    cmds.parent(MovablePivot, CTRLIK[0])
     cmds.parent(CTRLIK[0], f"Ribbon_Spine_{name}")
     Offset.offset(CTRLIK[0], nbr=1)
-    cmds.connectAttr(MovablePivot + ".translate", CTRLIK[0] + ".rotatePivot")
-    cmds.setAttr(ComOffset + ".inputTranslateY", height)
-    cmds.connectAttr(ComOffset + ".outputMatrix", CTRLIK[0] + ".offsetParentMatrix")
-    cmds.disconnectAttr(ComOffset + ".outputMatrix", CTRLIK[0] + ".offsetParentMatrix")
+    
+
+    #Constraining Loc Squash By CTRL IK
+    MatrixConstraint(CTRLIK[0], SquashChestOffset, s=True)
 
     #Curve Squash Offset
     cmds.curve(p=[(0,0,0), (0,height,0)], degree=1, name="Crv_Squash_Offset")
@@ -175,6 +171,11 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.parent(CtrlFKMid[0] + "_Offset", CtrlUpperBody)
     cmds.parent(CtrlFKChest + "_Offset", CtrlFKMid)
     cmds.parent(CTRLIK[0] + "_Offset", CtrlFKChest)
+    cmds.setAttr(CTRLIK[0] + "_Offset.translateY", 0)
+    cmds.parent(MovablePivot, CTRLIK[0])
+    cmds.setAttr(MovablePivot + ".translateY", -height/8)
+    cmds.connectAttr(MovablePivot + ".translate", CTRLIK[0] + ".rotatePivot")
+
 
     #region Loc Axis mid Spine Info
     LocAxisMidSpine = cmds.spaceLocator(n="Loc_Axis_Mid_Spine_Info")[0]
@@ -458,7 +459,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     CtrlTanChest = cmds.curve(name="CTRL_Tangent_Chest", p=[(1,0,0),(1.05,0.18,0),(1.25,0.25,0),(1.45,0.18,0),(1.5,0,0),(1.45,-0.18,0),(1.25,-0.25,0),(1.05,-0.18,0),(1,0,0)])
     cmds.parent(CtrlTanChest, CTRLIK[0])
     Offset.offset(CtrlTanChest, nbr=1)
-    cmds.setAttr(ComOffset + ".inputTranslateY", 7*height/8)
+    cmds.setAttr(ComOffset + ".inputTranslateY", -height/8)
     cmds.connectAttr(ComOffset + ".outputMatrix", CtrlTanChest + "_Offset.offsetParentMatrix")
     cmds.disconnectAttr(ComOffset + ".outputMatrix", CtrlTanChest + "_Offset.offsetParentMatrix")
 
@@ -567,4 +568,46 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     Bookmark.addNodeToBookmark("Ribbon_input", cM_R, row=7.875, column=-1, state=0)
 
     Bookmark.addNodeToBookmark("Ribbon_input", ShapeRibbon[0], row=4.5, column=2, state=0)
+
+
+    #Constraint Offset Info Init Length
+    #Creation Nodes
+    Negative = cmds.shadingNode("multDoubleLinear", au=True, name="Negative_Arc_Length_Ribbon")
+    MultOffsetInitLength = cmds.shadingNode("multDoubleLinear", au=True, name="mult_Squash_Value")
+    DifferenceBtw = cmds.shadingNode("addDoubleLinear", au=True, name="Diff_InitLength_ArcLength")
+    Reverse = cmds.shadingNode("reverse", au=True, name="reverseSquashValue")
+    cMOffsetInitLength = cmds.shadingNode("composeMatrix", au=True, name="cM_Offset_InitLength")
+    MultMatXOffsetInitLength = cmds.shadingNode("multMatrix", au=True, name="mult_MTX_Chest_info_Length_Squash")
+    DecMatXOffsetInitLength = cmds.shadingNode("decomposeMatrix", au=True, name="dM_Chest_info_Length_Squash")
+
+    #setAttr
+    cmds.setAttr(Negative + ".input2", -1)
+
+    #connection
+    cmds.connectAttr(CurveInfoIso + ".arcLength", Negative + ".input1")
+
+    cmds.connectAttr(LocAxisMidSpine + "_Move.translateY", DifferenceBtw + ".input1")
+    cmds.connectAttr(Negative + ".output", DifferenceBtw + ".input2")
+
+    cmds.connectAttr(CtrlOption + ".SQUASH", Reverse + ".inputX")
+
+    cmds.connectAttr(DifferenceBtw + ".output", MultOffsetInitLength + ".input1")
+    cmds.connectAttr(Reverse + ".outputX", MultOffsetInitLength + ".input2")
+
+    cmds.connectAttr(MultOffsetInitLength + ".output", cMOffsetInitLength + ".inputTranslateY")
+
+    cmds.connectAttr(cMOffsetInitLength + ".outputMatrix", MultMatXOffsetInitLength + ".matrixIn[0]")
+    cmds.connectAttr(CTRLIK[0] + ".worldMatrix[0]", MultMatXOffsetInitLength + ".matrixIn[1]")
+    cmds.connectAttr(InitLenght + "_Offset.parentInverseMatrix[0]", MultMatXOffsetInitLength + ".matrixIn[2]")
+
+    cmds.connectAttr(MultMatXOffsetInitLength + ".matrixSum", DecMatXOffsetInitLength + ".inputMatrix")
+
+    cmds.connectAttr(DecMatXOffsetInitLength + ".outputTranslate", InitLenght + "_Offset.t")
+    cmds.connectAttr(DecMatXOffsetInitLength + ".outputRotate", InitLenght + "_Offset.r")
+    cmds.connectAttr(DecMatXOffsetInitLength + ".outputScale", InitLenght + "_Offset.s")
+
+    cmds.setAttr(ComOffset + ".inputTranslateY", height)
+    cmds.connectAttr(ComOffset + ".outputMatrix", InitLenght + "_Offset.offsetParentMatrix")
+    cmds.disconnectAttr(ComOffset + ".outputMatrix", InitLenght + "_Offset.offsetParentMatrix")
+
 ColumnRibbon("01")
