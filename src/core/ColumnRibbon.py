@@ -218,6 +218,20 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         cmds.parent(CtrlFKMid[0] + "_Offset", CtrlFKMidBottom[0])
         cmds.parent(CtrlFKMidTop[0] + "_Offset", CtrlFKMid[0])
         cmds.parent(CtrlFKChest + "_Offset", CtrlFKMidTop[0])
+
+        #Creation Nodes pour remplacer "_Offset.t"
+        AddTyBotMid = cmds.shadingNode("addDoubleLinear", au=True, name = "Add_ty_BottomMid")
+        AddTyMidTop = cmds.shadingNode("addDoubleLinear", au=True, name = "Add_ty_MidTop")
+        AddTyTopEnd = cmds.shadingNode("addDoubleLinear", au=True, name = "Add_ty_TopEnd")
+
+        cmds.connectAttr(CtrlFKMidBottom[0] + "_Offset.translateY", AddTyBotMid + ".input1")
+        cmds.connectAttr(CtrlFKMid[0] + "_Offset.translateY", AddTyBotMid + ".input2")
+
+        cmds.connectAttr(CtrlFKMidTop[0] + "_Offset.translateY", AddTyMidTop + ".input1")
+        cmds.connectAttr(AddTyBotMid + ".output", AddTyMidTop + ".input2")
+
+        cmds.connectAttr(CtrlFKChest + "_Offset.translateY", AddTyTopEnd + ".input1")
+        cmds.connectAttr(AddTyMidTop + ".output", AddTyTopEnd + ".input2")
     
     if CTRLFK == 5:
         cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_01")
@@ -274,7 +288,10 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     cmds.connectAttr(CtrlFKMid[0] + "_Offset.translateZ", "add_tz_Mid_Chest.input1")
     cmds.connectAttr(CtrlFKChest + "_Offset.translateZ", "add_tz_Mid_Chest.input2")
 
-    cmds.connectAttr("add_ty_Mid_Chest.output", "mult_scaleY_Mid_UpperBody.input1")
+    if CTRLFK == 1:
+        cmds.connectAttr("add_ty_Mid_Chest.output", "mult_scaleY_Mid_UpperBody.input1")
+    if CTRLFK == 3:
+        cmds.connectAttr(AddTyTopEnd + ".output", "mult_scaleY_Mid_UpperBody.input1")
     cmds.connectAttr(CtrlUpperBody + ".scaleY", "mult_scaleY_Mid_UpperBody.input2")
 
     cmds.connectAttr("add_tx_Mid_Chest.output", LocAxisMidSpine + "_Move.translateX")
@@ -510,18 +527,19 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     if CTRLFK == 3:
         CtrlIKMidTop = cmds.circle(nr=[0,1,0], radius=height/3.25, name="CTRL_IK_Mid_Top")
         cmds.setAttr(CtrlIKMidTop[0] + ".translateY", 3*height/4)
-        cmds.parent(CtrlIkMid[0], CtrlUpperBody)
+        cmds.parent(CtrlIKMidTop[0], CtrlUpperBody)
         Offset.offset(CtrlIKMidTop[0], nbr=1)
-        Color.setColor(CtrlIKMidTop[0], "blue")
+        Color.setColor("CTRL_IK_Mid_Top", "blue")
         cmds.group(CtrlIKMidTop[0], name="cstr_Ik_Mid_Top")
         cmds.group(CtrlIKMidTop[0], name="Offset_Rotation_Ik_Mid_Top")
 
-        CtrlIKMidBottom = cmds.circle(nr=[0,1,0], radius=height/3.25, name="CTRL_IK_Mid_Top")
+        CtrlIKMidBottom = cmds.circle(nr=[0,1,0], radius=height/3.25, name="CTRL_IK_Mid_Bottom")
         cmds.setAttr(CtrlIKMidBottom[0] + ".translateY", height/4)
+        cmds.parent(CtrlIKMidBottom[0], CtrlUpperBody)
         Offset.offset(CtrlIKMidBottom[0], nbr=1)
-        Color.setColor(CtrlIKMidBottom[0], "blue")
-        cmds.group(CtrlIKMidTop[0], name="cstr_Ik_Mid_Bottom")
-        cmds.group(CtrlIKMidTop[0], name="Offset_Rotation_Ik_Mid_Bottom")
+        Color.setColor("CTRL_IK_Mid_Bottom", "blue")
+        cmds.group(CtrlIKMidBottom[0], name="cstr_Ik_Mid_Bottom")
+        cmds.group(CtrlIKMidBottom[0], name="Offset_Rotation_Ik_Mid_Bottom")
     
     if CTRLFK == 5:
         CtrlIKMid1 = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Mid_1")
@@ -574,7 +592,10 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
 
 
     #connection
-    cmds.connectAttr(CtrlFKMid[0] + "_Offset" + ".translateY", ComMatX + ".inputTranslateY")
+    if CTRLFK == 1 :
+        cmds.connectAttr(CtrlFKMid[0] + "_Offset" + ".translateY", ComMatX + ".inputTranslateY")
+    if CTRLFK == 3:
+        cmds.connectAttr(AddTyBotMid + ".output", ComMatX + ".inputTranslateY")
     cmds.connectAttr(ComMatX + ".outputMatrix", MultMatX + ".matrixIn[0]")
     cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatX + ".matrixIn[1]")
     cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX + ".matrixIn[2]")
@@ -588,20 +609,93 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     cmds.connectAttr(CtrlFKMid[0] + ".rotateY", "Offset_Rotation_Ik_Mid.rotateY")
 
     if CTRLFK == 3:
-        MultMatXTop
-        DecMatXTop
-        ComMatXTop
+        cmds.connectAttr(AddTyMidTop + ".output", ComMatXTop + ".inputTranslateY")
+        cmds.connectAttr(ComMatXTop + ".outputMatrix", MultMatXTop + ".matrixIn[0]")
+        cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatXTop + ".matrixIn[1]")
+        cmds.connectAttr("cstr_Ik_Mid_Top.parentInverseMatrix[0]", MultMatXTop + ".matrixIn[2]")
 
-        MultMatXBottom
-        DecMatXBottom
-        ComMatXBottom
+        cmds.connectAttr(MultMatXTop + ".matrixSum", DecMatXTop + ".inputMatrix")
+
+        cmds.connectAttr(DecMatXTop + ".outputTranslate", "cstr_Ik_Mid_Top.t")
+        cmds.connectAttr(DecMatXTop + ".outputRotate", "cstr_Ik_Mid_Top.r")
+
+        cmds.connectAttr(CtrlFKMidTop[0] + ".t", "Offset_Rotation_Ik_Mid_Top.t")
+        cmds.connectAttr(CtrlFKMidTop[0] + ".rotateY", "Offset_Rotation_Ik_Mid_Top.rotateY")
+
+
+        cmds.connectAttr(CtrlFKMidBottom[0] + "_Offset" + ".translateY", ComMatXBottom + ".inputTranslateY")
+        cmds.connectAttr(ComMatXBottom + ".outputMatrix", MultMatXBottom + ".matrixIn[0]")
+        cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatXBottom + ".matrixIn[1]")
+        cmds.connectAttr("cstr_Ik_Mid_Bottom.parentInverseMatrix[0]", MultMatXBottom + ".matrixIn[2]")
+
+        cmds.connectAttr(MultMatXBottom + ".matrixSum", DecMatXBottom + ".inputMatrix")
+
+        cmds.connectAttr(DecMatXBottom + ".outputTranslate", "cstr_Ik_Mid_Bottom.t")
+        cmds.connectAttr(DecMatXBottom + ".outputRotate", "cstr_Ik_Mid_Bottom.r")
+
+        cmds.connectAttr(CtrlFKMidBottom[0] + ".t", "Offset_Rotation_Ik_Mid_Bottom.t")
+        cmds.connectAttr(CtrlFKMidBottom[0] + ".rotateY", "Offset_Rotation_Ik_Mid_Bottom.rotateY")
+
+    if CTRLFK == 5:
+        cmds.connectAttr(CtrlIKMid1[0] + "_Offset" + ".translateY", ComMatX1 + ".inputTranslateY")
+        cmds.connectAttr(ComMatX1 + ".outputMatrix", MultMatX1 + ".matrixIn[0]")
+        cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatX1 + ".matrixIn[1]")
+        cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX1 + ".matrixIn[2]")
+
+        cmds.connectAttr(MultMatX1 + ".matrixSum", DecMatX1 + ".inputMatrix")
+
+        cmds.connectAttr(DecMatX1 + ".outputTranslate", "cstr_Ik_Mid.t")
+        cmds.connectAttr(DecMatX1 + ".outputRotate", "cstr_Ik_Mid.r")
+
+        cmds.connectAttr(CtrlIKMid1[0] + ".t", "Offset_Rotation_Ik_Mid.t")
+        cmds.connectAttr(CtrlIKMid1[0] + ".rotateY", "Offset_Rotation_Ik_Mid.rotateY")
+
+
+        cmds.connectAttr(CtrlIKMid2[0] + "_Offset" + ".translateY", ComMatX2 + ".inputTranslateY")
+        cmds.connectAttr(ComMatX2 + ".outputMatrix", MultMatX2 + ".matrixIn[0]")
+        cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatX2 + ".matrixIn[1]")
+        cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX2 + ".matrixIn[2]")
+
+        cmds.connectAttr(MultMatX2 + ".matrixSum", DecMatX2 + ".inputMatrix")
+
+        cmds.connectAttr(DecMatX2 + ".outputTranslate", "cstr_Ik_Mid.t")
+        cmds.connectAttr(DecMatX2 + ".outputRotate", "cstr_Ik_Mid.r")
+
+        cmds.connectAttr(CtrlIKMid2[0] + ".t", "Offset_Rotation_Ik_Mid.t")
+        cmds.connectAttr(CtrlIKMid2[0] + ".rotateY", "Offset_Rotation_Ik_Mid.rotateY")
+
+        cmds.connectAttr(CtrlIKMid3[0] + "_Offset" + ".translateY", ComMatX3 + ".inputTranslateY")
+        cmds.connectAttr(ComMatX3 + ".outputMatrix", MultMatX3 + ".matrixIn[0]")
+        cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatX3 + ".matrixIn[1]")
+        cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX3 + ".matrixIn[2]")
+
+        cmds.connectAttr(MultMatX3 + ".matrixSum", DecMatX3 + ".inputMatrix")
+
+        cmds.connectAttr(DecMatX3 + ".outputTranslate", "cstr_Ik_Mid.t")
+        cmds.connectAttr(DecMatX3 + ".outputRotate", "cstr_Ik_Mid.r")
+
+        cmds.connectAttr(CtrlIKMid3[0] + ".t", "Offset_Rotation_Ik_Mid.t")
+        cmds.connectAttr(CtrlIKMid3[0] + ".rotateY", "Offset_Rotation_Ik_Mid.rotateY")
+
+        cmds.connectAttr(CtrlIKMid4[0] + "_Offset" + ".translateY", ComMatX4 + ".inputTranslateY")
+        cmds.connectAttr(ComMatX4 + ".outputMatrix", MultMatX4 + ".matrixIn[0]")
+        cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatX4 + ".matrixIn[1]")
+        cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX4 + ".matrixIn[2]")
+
+        cmds.connectAttr(MultMatX4 + ".matrixSum", DecMatX4 + ".inputMatrix")
+
+        cmds.connectAttr(DecMatX4 + ".outputTranslate", "cstr_Ik_Mid.t")
+        cmds.connectAttr(DecMatX4 + ".outputRotate", "cstr_Ik_Mid.r")
+
+        cmds.connectAttr(CtrlIKMid4[0] + ".t", "Offset_Rotation_Ik_Mid.t")
+        cmds.connectAttr(CtrlIKMid4[0] + ".rotateY", "Offset_Rotation_Ik_Mid.rotateY")
 
     #region CTRL Tangent
     CtrlTanChest = cmds.curve(name="CTRL_Tangent_Chest", p=[(1,0,0),(1.05,0.18,0),(1.25,0.25,0),(1.45,0.18,0),(1.5,0,0),(1.45,-0.18,0),(1.25,-0.25,0),(1.05,-0.18,0),(1,0,0)])
     cmds.parent(CtrlTanChest, CTRLIK[0])
     Color.setColor(CtrlTanChest, "blue")
     Offset.offset(CtrlTanChest, nbr=1)
-    cmds.setAttr(ComOffset + ".inputTranslateY", -height/8)
+    cmds.setAttr(ComOffset + ".inputTranslateY", -height/16)
     cmds.connectAttr(ComOffset + ".outputMatrix", CtrlTanChest + "_Offset.offsetParentMatrix")
     cmds.disconnectAttr(ComOffset + ".outputMatrix", CtrlTanChest + "_Offset.offsetParentMatrix")
 
@@ -689,17 +783,55 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     cM_R = cmds.shadingNode("composeMatrix", au=True, name="cM_Side_Offset_R")
     cmds.setAttr(cM_R + ".inputTranslateX", 0.5)
 
-    MatrixInputRibbon(CTRL=CTRLIKRoot[0], side=cM_R, point=0, surface=ShapeRibbon[0])
-    MatrixInputRibbon(CTRL=CtrlTanRoot, side=cM_R, point=1, surface=ShapeRibbon[0])
-    MatrixInputRibbon(CTRL=CtrlIkMid[0], side=cM_R, point=2, surface=ShapeRibbon[0])
-    MatrixInputRibbon(CTRL=CtrlTanChest, side=cM_R, point=3, surface=ShapeRibbon[0])
-    MatrixInputRibbon(CTRL=CTRLIK[0], side=cM_R, point=4, surface=ShapeRibbon[0])
-    MatrixInputRibbon(CTRL=CTRLIKRoot[0], side=cM_L, point=5, surface=ShapeRibbon[0])
-    MatrixInputRibbon(CTRL=CtrlTanRoot, side=cM_L, point=6, surface=ShapeRibbon[0])
-    MatrixInputRibbon(CTRL=CtrlIkMid[0], side=cM_L, point=7, surface=ShapeRibbon[0])
-    MatrixInputRibbon(CTRL=CtrlTanChest, side=cM_L, point=8, surface=ShapeRibbon[0])
-    MatrixInputRibbon(CTRL=CTRLIK[0], side=cM_L, point=9, surface=ShapeRibbon[0])
+    if CTRLFK==1:
+        MatrixInputRibbon(CTRL=CTRLIKRoot[0], side=cM_R, point=0, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlTanRoot, side=cM_R, point=1, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIkMid[0], side=cM_R, point=2, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlTanChest, side=cM_R, point=3, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CTRLIK[0], side=cM_R, point=4, surface=ShapeRibbon[0])
+        
+        MatrixInputRibbon(CTRL=CTRLIKRoot[0], side=cM_L, point=5, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlTanRoot, side=cM_L, point=6, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIkMid[0], side=cM_L, point=7, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlTanChest, side=cM_L, point=8, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CTRLIK[0], side=cM_L, point=9, surface=ShapeRibbon[0])
+    if CTRLFK==3:
+        MatrixInputRibbon(CTRL=CTRLIKRoot[0], side=cM_R, point=0, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlTanRoot, side=cM_R, point=1, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIKMidBottom[0], side=cM_R, point=2, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIkMid[0], side=cM_R, point=3, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIKMidTop[0], side=cM_R, point=4, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlTanChest, side=cM_R, point=5, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CTRLIK[0], side=cM_R, point=6, surface=ShapeRibbon[0])
 
+        MatrixInputRibbon(CTRL=CTRLIKRoot[0], side=cM_L, point=7, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlTanRoot, side=cM_L, point=8, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIKMidBottom[0], side=cM_L, point=9, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIkMid[0], side=cM_L, point=10, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIKMidTop[0], side=cM_L, point=11, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlTanChest, side=cM_L, point=12, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CTRLIK[0], side=cM_L, point=13, surface=ShapeRibbon[0])
+
+    if CTRLFK==5:
+        MatrixInputRibbon(CTRL=CTRLIKRoot[0], side=cM_R, point=0, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlTanRoot, side=cM_R, point=1, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIKMid1[0], side=cM_R, point=2, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIKMid2[0], side=cM_R, point=3, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIkMid[0], side=cM_R, point=4, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIKMid3[0], side=cM_R, point=5, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIKMid4[0], side=cM_R, point=6, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlTanChest, side=cM_R, point=7, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CTRLIK[0], side=cM_R, point=8, surface=ShapeRibbon[0])
+
+        MatrixInputRibbon(CTRL=CTRLIKRoot[0], side=cM_L, point=9, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlTanRoot, side=cM_L, point=10, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIKMid1[0], side=cM_L, point=11, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIKMid2[0], side=cM_L, point=12, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIkMid[0], side=cM_L, point=13, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIKMid3[0], side=cM_L, point=14, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlIKMid4[0], side=cM_L, point=15, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CtrlTanChest, side=cM_L, point=16, surface=ShapeRibbon[0])
+        MatrixInputRibbon(CTRL=CTRLIK[0], side=cM_L, point=17, surface=ShapeRibbon[0])
     #Bookmark
     Bookmark.addNodeToBookmark("Ribbon_input", CTRLIKRoot[0], row=0, column=-2, state=0)
     Bookmark.addNodeToBookmark("Ribbon_input", CtrlTanRoot, row=2.25, column=-2, state=0)
@@ -877,4 +1009,4 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
             cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_Bind_Chest.s")
     
 
-ColumnRibbon("01")
+ColumnRibbon(name="01", height=2, JntNbr=7, CTRLFK=3)
