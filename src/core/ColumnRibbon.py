@@ -129,6 +129,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     CTRLIK = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Chest")
     cmds.parent(CTRLIK[0], f"Ribbon_Spine_{name}")
     Offset.offset(CTRLIK[0], nbr=1)
+    Color.setColor(CTRLIK[0], "blue")
     
 
     #Constraining Loc Squash By CTRL IK
@@ -159,13 +160,16 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     CtrlUpperBody = cmds.curve(p=[(1,0,1),(-1,0,1),(-1,0,-1),(1,0,-1),(1,0,1)], d=1, name = "CTRL_UpperBody")                        #Controllers.createController("3D_Shapes/boat", "CTRL_UpperBody")
     Offset.offset(CtrlUpperBody, nbr=1)
     cmds.addAttr(CtrlUpperBody, ln="TangentFactorDwn", at="double", min=0.005, max=0.75, dv=0, k=True)
+    Color.setColor(CtrlUpperBody, "yellow")
     CtrlFKMid = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_FK_Mid")
     cmds.setAttr(CtrlFKMid[0] + ".translateY", height/2)
     Offset.offset("CTRL_FK_Mid", nbr=1)
+    Color.setColor(CtrlFKMid[0], "yellow")
     CtrlFKChest = cmds.curve(p=[(1,0,1),(-1,0,1),(-1,0,-1),(1,0,-1),(1,0,1)], d=1, name = "CTRL_FK_Chest")                          #Controllers.createController("3D_Shapes/corner", "CTRL_FK_Chest")
     cmds.setAttr("CTRL_FK_Chest.translateY", 2)
     cmds.addAttr(CtrlFKChest, ln="TangentFactorUp", at="double", min=0.005, max=0.75, dv=0, k=True)
     Offset.offset(CtrlFKChest, nbr=1)
+    Color.setColor(CtrlFKChest, "yellow")
 
     #Hierarchy
     cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_01")
@@ -239,6 +243,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
 
     #region CTRL Option
     CtrlOption = Controllers.createController("2D_Shapes/star", "CTRL_Option")
+    Color.setColor(CtrlOption, "orange")
     cmds.setAttr(CtrlOption + ".tx", keyable=False, channelBox=False)
     cmds.setAttr(CtrlOption + ".ty", keyable=False, channelBox=False)
     cmds.setAttr(CtrlOption + ".tz", keyable=False, channelBox=False)
@@ -282,14 +287,18 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
         #Creation des joints
         if i == 0:
             cmds.joint(n="Bind_Root")
+            Color.setColor("Bind_Root", "white")
         elif i == JntNbr-1 :
             cmds.joint(n="Bind_Chest")
+            Color.setColor("Bind_Chest", "white")
         else :
             cmds.joint(n=f"Bind_RibbonSpine_0{i}")
+            Color.setColor(f"Bind_RibbonSpine_0{i}", "white")
 
         #creation CTRLS
         if i !=0 and i !=JntNbr-1:
             cmds.circle(radius=height/4, name=f"CTRL_RibbonSpine_0{i}", nr=[0,1,0])
+            Color.setColor(f"CTRL_RibbonSpine_0{i}", "purple")
             cmds.group(empty=True, name=f"TwistScale_RibbonSpine_0{i}")
             cmds.group(empty=True, name=f"Offset_RibbonSpine_0{i}")
         
@@ -425,12 +434,14 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     CTRLIKRoot = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Root")
     cmds.parent(CTRLIKRoot[0], CtrlUpperBody)
     Offset.offset(CTRLIKRoot[0], nbr=1)
+    Color.setColor(CTRLIKRoot[0], "blue")
 
-    CtrlIkMid =  cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Mid")
+    CtrlIkMid =  cmds.circle(nr=[0,1,0], radius=height/3.25, name="CTRL_IK_Mid")
     cmds.addAttr(CtrlIkMid[0], ln="RotationFactor", at="double", min=-1, max=1, dv=0, k=True)
     cmds.setAttr(CtrlIkMid[0] + ".translateY", height/2)
     cmds.parent(CtrlIkMid[0], CtrlUpperBody)
     Offset.offset(CtrlIkMid[0], nbr=1)
+    Color.setColor(CtrlIkMid[0], "blue")
     cmds.group(CtrlIkMid[0], name="cstr_Ik_Mid")
     cmds.group(CtrlIkMid[0], name="Offset_Rotation_Ik_Mid")
 
@@ -463,6 +474,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     #CTRL Tangent
     CtrlTanChest = cmds.curve(name="CTRL_Tangent_Chest", p=[(1,0,0),(1.05,0.18,0),(1.25,0.25,0),(1.45,0.18,0),(1.5,0,0),(1.45,-0.18,0),(1.25,-0.25,0),(1.05,-0.18,0),(1,0,0)])
     cmds.parent(CtrlTanChest, CTRLIK[0])
+    Color.setColor(CtrlTanChest, "blue")
     Offset.offset(CtrlTanChest, nbr=1)
     cmds.setAttr(ComOffset + ".inputTranslateY", -height/8)
     cmds.connectAttr(ComOffset + ".outputMatrix", CtrlTanChest + "_Offset.offsetParentMatrix")
@@ -470,6 +482,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
 
     CtrlTanRoot = cmds.curve(name="CTRL_Tangent_Root", p=[(1,0,0),(1.05,0.18,0),(1.25,0.25,0),(1.45,0.18,0),(1.5,0,0),(1.45,-0.18,0),(1.25,-0.25,0),(1.05,-0.18,0),(1,0,0)])
     cmds.parent(CtrlTanRoot, CTRLIKRoot[0])
+    Color.setColor(CtrlTanRoot, "blue")
     Offset.offset(CtrlTanRoot, nbr=1)
     cmds.group(CtrlTanRoot, name="Offset_Rotation_Tangent_Root")
     cmds.setAttr(ComOffset + ".inputTranslateY", height/8)
