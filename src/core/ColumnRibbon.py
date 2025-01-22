@@ -258,13 +258,13 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.addAttr(CtrlOption, ln="TwistMid", at="double", dv=0, k=True)
     cmds.addAttr(CtrlOption, ln="TwistRoot", at="double", dv=0, k=True)
     cmds.addAttr(CtrlOption, ln="__________",sn = "__________", at="enum", en="__________", keyable=True)
-    cmds.addAttr(CtrlOption, ln=f"VolumeActivation", at="bool", dv=False, k=True)
-    cmds.addAttr(CtrlOption, ln="VolumeFactor", at="double", min=0, max=10, dv=0, k=True)
+    cmds.addAttr(CtrlOption, ln=f"VolumeActivation", at="bool", dv=True, k=True)
+    cmds.addAttr(CtrlOption, ln="VolumeFactor", at="double", min=0, max=10, dv=1, k=True)
     cmds.addAttr(CtrlOption, ln="VolumeOffset", at="double", min=-1, max=1, dv=0, k=True)
-    cmds.addAttr(CtrlOption, ln="VolumeIntensity", at="double", min=0, max=1, dv=0, k=True)
+    cmds.addAttr(CtrlOption, ln="VolumeIntensity", at="double", min=0, max=1, dv=1, k=True)
     cmds.addAttr(CtrlOption, ln="___________",sn = "___________", at="enum", en="___________", keyable=True)
-    cmds.addAttr(CtrlOption, ln=f"StretchVolume", at="bool", dv=False, k=True)
-    cmds.addAttr(CtrlOption, ln=f"SquashVolume", at="bool", dv=False, k=True)
+    cmds.addAttr(CtrlOption, ln=f"StretchVolume", at="bool", dv=True, k=True)
+    cmds.addAttr(CtrlOption, ln=f"SquashVolume", at="bool", dv=True, k=True)
 
     Offset.offset(CtrlOption, nbr=1)
     cmds.parent(CtrlOption + "_Offset", CtrlFKMid)
@@ -293,10 +293,8 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
             cmds.group(empty=True, name=f"Offset_RibbonSpine_0{i}")
         
         if i == JntNbr-1:
-            cmds.group(empty=True, name=f"TwistScale_RibbonSpine_0{i}")
             cmds.group(empty=True, name="Offset_Bind_Chest")
         if i == 0 :
-            cmds.group(empty=True, name=f"TwistScale_RibbonSpine_0{i}")
             cmds.group(empty=True, name="Offset_Bind_Root")
         
         #Hierarchy
@@ -308,9 +306,11 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
         
         if i == JntNbr-1:
             cmds.parent("Bind_Chest", "Offset_Bind_Chest")
+            cmds.group("Bind_Chest", name=f"TwistScale_RibbonSpine_0{i}")
             cmds.parent("Offset_Bind_Chest", f"Ribbon_Spine_{name}|Global_Move_01|Joints_01")
         if i == 0 :
             cmds.parent("Bind_Root", "Offset_Bind_Root")
+            cmds.group("Bind_Root", name=f"TwistScale_RibbonSpine_0{i}")
             cmds.parent("Offset_Bind_Root", f"Ribbon_Spine_{name}|Global_Move_01|Joints_01")
 
         #Creation nodes
@@ -622,18 +622,111 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.disconnectAttr(ComOffset + ".outputMatrix", InitLenght + "_Offset.offsetParentMatrix")
 
     #region Scale + Twist
+    #Creation Nodes No for loop
+    DivVol = cmds.shadingNode("multiplyDivide", au=True, name=f"Div_Vol_XZ_ArcLength_InitLength")
+    cmds.setAttr(DivVol + ".operation", 2)
+    CondVol = cmds.shadingNode("condition", au=True, name=f"cond_Volume")
+    cmds.setAttr(CondVol + ".secondTerm", 1)
+    DivVolFin = cmds.shadingNode("multiplyDivide", au=True, name=f"Div_Vol_XZ_Final")
+    cmds.setAttr(DivVolFin + ".input1X", 1)
+    cmds.setAttr(DivVolFin + ".operation", 2)
+    CondVolCheck = cmds.shadingNode("condition", au=True, name=f"cond_Volume_Check")
+    cmds.setAttr(CondVolCheck + ".secondTerm", 1)
+    cmds.setAttr(CondVolCheck + ".operation", 4)
+    CondVolSquash = cmds.shadingNode("condition", au=True, name=f"cond_Volume_Squash")
+    cmds.setAttr(CondVolSquash + ".secondTerm", 1)
+    MultVolFactor = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Factor_Volume")
+    MultVolOffset = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Offset_Volume")
+    cmds.setAttr(MultVolOffset + ".input2", 0.5)
+    ReverseIntensity = cmds.shadingNode("reverse", au=True, name="Rev_IntensityVolume")
 
-    for i in range(JntNbr - 1):
+    #Connection
+    cmds.connectAttr(CurveInfoIso + ".arcLength", DivVol + ".input1X")
+    cmds.connectAttr(LocAxisMidSpine + "_Move.translateY", DivVol + ".input2X")
+
+    cmds.connectAttr(CtrlOption + ".VolumeActivation", CondVol + ".firstTerm")
+    cmds.connectAttr(DivVol + ".outputX", CondVol + ".colorIfTrueR")
+
+    cmds.connectAttr(CondVol + ".outColorR", DivVolFin + ".input2X")
+
+    cmds.connectAttr(CtrlOption + ".StretchVolume", CondVolCheck + ".colorIfTrueR")
+    cmds.connectAttr(CtrlOption + ".SquashVolume", CondVolCheck + ".colorIfFalseR")
+    cmds.connectAttr(DivVolFin + ".outputX", CondVolCheck + ".firstTerm")
+
+    cmds.connectAttr(DivVolFin + ".outputX", CondVolSquash + ".colorIfTrueR")
+    cmds.connectAttr(CondVolCheck + ".outColorR", CondVolSquash + ".firstTerm")
+
+    cmds.connectAttr(CondVolSquash + ".outColorR", MultVolFactor + ".input1")
+    cmds.connectAttr(CtrlOption + ".VolumeFactor", MultVolFactor + ".input2")
+
+    cmds.connectAttr(CtrlOption + ".VolumeOffset", MultVolOffset + ".input1")
+
+    cmds.connectAttr(CtrlOption + ".VolumeIntensity", ReverseIntensity + ".inputX")
+
+    for i in range(JntNbr):
         #Creation des nodes Twist
-        MultRoot = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Twist_Root_Point_0{i}")
-        MultMid = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Twist_Mid_Point_0{i}")
         MultChest = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Twist_Chest_Point_0{i}")
+        cmds.setAttr(MultChest + ".input1", i/(JntNbr-1))
+        MultRoot = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Twist_Root_Point_0{i}")
+        cmds.setAttr(MultRoot + ".input1", 1-(i/(JntNbr-1)))
+        MultMid = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Twist_Mid_Point_0{i}")
+        if i<(JntNbr-1)/2 : 
+            input1 = 2*(i/(JntNbr-1))
+        elif i == (JntNbr-1)/2:
+            input1 = 1
+        else :
+            input1 = 2*(1-(i/(JntNbr-1)))
+        cmds.setAttr(MultMid + ".input1", input1)
 
-        AddChest = cmds.shadingNode("addDoubleLinear", au=True, name=f"add_Twist_Mid_Point_0{i}")
+
+
+        AddMid = cmds.shadingNode("addDoubleLinear", au=True, name=f"add_Twist_Mid_Point_0{i}")
         AddChest = cmds.shadingNode("addDoubleLinear", au=True, name=f"add_Twist_Chest_Point_0{i}")
 
         #Creation des nodes Scale
         AddVol = cmds.shadingNode("addDoubleLinear", au=True, name=f"add_Vol_Offset_Point_0{i}")
         RemapValueScale = cmds.shadingNode("remapValue", au=True, name=f"rV_Scale_XY_Point_0{i}")
+        cmds.setAttr(RemapValueScale + ".outputMin", 1)
+        cmds.setAttr(RemapValueScale + ".value[0].value_Interp", 3)
+        cmds.setAttr(RemapValueScale + ".value[1].value_Interp", 3)
+        cmds.setAttr(RemapValueScale + ".value[2].value_Interp", 3)
+        cmds.setAttr(RemapValueScale + ".value[3].value_Interp", 3)
+        cmds.setAttr(RemapValueScale + ".value[4].value_Interp", 3)
+
+        cmds.setAttr(RemapValueScale + ".value[0].value_Position", 0)
+        cmds.setAttr(RemapValueScale + ".value[1].value_Position", 0.25)
+        cmds.setAttr(RemapValueScale + ".value[2].value_Position", 0.5)
+        cmds.setAttr(RemapValueScale + ".value[3].value_Position", 0.75)
+        cmds.setAttr(RemapValueScale + ".value[4].value_Position", 1)
+
+        cmds.setAttr(RemapValueScale + ".value[0].value_FloatValue", 0)
+        cmds.setAttr(RemapValueScale + ".value[1].value_FloatValue", 0.5)
+        cmds.setAttr(RemapValueScale + ".value[2].value_FloatValue", 1)
+        cmds.setAttr(RemapValueScale + ".value[3].value_FloatValue", 0.5)
+        cmds.setAttr(RemapValueScale + ".value[4].value_FloatValue", 0)
+
+        #connection Twist
+        cmds.connectAttr(CtrlOption + ".TwistChest", MultChest + ".input2")
+        cmds.connectAttr(CtrlOption + ".TwistMid", MultMid + ".input2")
+        cmds.connectAttr(CtrlOption + ".TwistRoot", MultRoot + ".input2")
+
+        cmds.connectAttr(MultRoot + ".output", AddMid + ".input1")
+        cmds.connectAttr(MultMid + ".output", AddMid + ".input2")
+
+        cmds.connectAttr(AddMid + ".output", AddChest + ".input1")
+        cmds.connectAttr(MultChest + ".output", AddChest + ".input2")
+
+        cmds.connectAttr(AddChest + ".output", f"TwistScale_RibbonSpine_0{i}.rotateY")
+
+        #Connection Scale
+        cmds.connectAttr(MultChest + ".input1", AddVol + ".input1")
+        cmds.connectAttr(CtrlOption + ".VolumeOffset", AddVol + ".input2")
+
+        cmds.connectAttr(AddVol + ".output", RemapValueScale + ".inputValue")
+        cmds.connectAttr(MultVolFactor + ".output", RemapValueScale + ".outputMax")
+        cmds.connectAttr(ReverseIntensity + ".outputX", RemapValueScale + ".inputMin")
+
+        cmds.connectAttr(RemapValueScale + ".outValue", f"TwistScale_RibbonSpine_0{i}.scaleX")
+        cmds.connectAttr(RemapValueScale + ".outValue", f"TwistScale_RibbonSpine_0{i}.scaleZ")
 
 ColumnRibbon("01")
