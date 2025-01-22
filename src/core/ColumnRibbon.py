@@ -172,18 +172,65 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     Offset.offset("CTRL_FK_Mid", nbr=1)
     Color.setColor(CtrlFKMid[0], "yellow")
     CtrlFKChest = cmds.curve(p=[(1,0,1),(-1,0,1),(-1,0,-1),(1,0,-1),(1,0,1)], d=1, name = "CTRL_FK_Chest")                          #Controllers.createController("3D_Shapes/corner", "CTRL_FK_Chest")
-    cmds.setAttr("CTRL_FK_Chest.translateY", 2)
+    cmds.setAttr("CTRL_FK_Chest.translateY", height)
     cmds.addAttr(CtrlFKChest, ln="TangentFactorUp", at="double", min=0.005, max=0.75, dv=0, k=True)
     Offset.offset(CtrlFKChest, nbr=1)
     Color.setColor(CtrlFKChest, "yellow")
+
+    #Severals FK CTRLs
+    if CTRLFK == 3:
+        CtrlFKMidTop = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_FK_Mid_Top")
+        cmds.setAttr(CtrlFKMidTop[0] + ".translateY", 3*height/4)
+        Offset.offset(CtrlFKMidTop[0], nbr=1)
+        Color.setColor(CtrlFKMidTop[0], "yellow")
+        CtrlFKMidBottom = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_FK_Mid_Bottom")
+        cmds.setAttr(CtrlFKMidBottom[0] + ".translateY", height/4)
+        Offset.offset(CtrlFKMidBottom[0], nbr=1)
+        Color.setColor(CtrlFKMidBottom[0], "yellow")
     
+    if CTRLFK == 5:
+        CtrlFKMid1 = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_FK_Mid_1")
+        cmds.setAttr(CtrlFKMid1[0] + ".translateY", height/6)
+        Offset.offset(CtrlFKMid1[0], nbr=1)
+        Color.setColor(CtrlFKMid1[0], "yellow")
+        CtrlFKMid2 = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_FK_Mid_2")
+        cmds.setAttr(CtrlFKMid2[0] + ".translateY", 2*height/6)
+        Offset.offset(CtrlFKMid2[0], nbr=1)
+        Color.setColor(CtrlFKMid2[0], "yellow")
+        CtrlFKMid3 = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_FK_Mid_3")
+        cmds.setAttr(CtrlFKMid3[0] + ".translateY", 4*height/6)
+        Offset.offset(CtrlFKMid3[0], nbr=1)
+        Color.setColor(CtrlFKMid3[0], "yellow")
+        CtrlFKMid4 = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_FK_Mid_4")
+        cmds.setAttr(CtrlFKMid4[0] + ".translateY", 5*height/6)
+        Offset.offset(CtrlFKMid4[0], nbr=1)
+        Color.setColor(CtrlFKMid4[0], "yellow")
 
     #Hierarchy
-    cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_01")
-    cmds.parent(CtrlFKMid[0] + "_Offset", CtrlUpperBody)
-    cmds.parent(CtrlFKChest + "_Offset", CtrlFKMid)
-    cmds.parent(CTRLIK[0] + "_Offset", CtrlFKChest)
+    if CTRLFK == 1:
+        cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_01")
+        cmds.parent(CtrlFKMid[0] + "_Offset", CtrlUpperBody)
+        cmds.parent(CtrlFKChest + "_Offset", CtrlFKMid)
+    
+    if CTRLFK == 3:
+        cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_01")
+        cmds.parent(CtrlFKMidBottom[0] + "_Offset", CtrlUpperBody)
+        cmds.parent(CtrlFKMid[0] + "_Offset", CtrlFKMidBottom[0])
+        cmds.parent(CtrlFKMidTop[0] + "_Offset", CtrlFKMid[0])
+        cmds.parent(CtrlFKChest + "_Offset", CtrlFKMidTop[0])
+    
+    if CTRLFK == 5:
+        cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_01")
+        cmds.parent(CtrlFKMid1[0] + "_Offset", CtrlUpperBody)
+        cmds.parent(CtrlFKMid2[0] + "_Offset", CtrlFKMid1[0])
+        cmds.parent(CtrlFKMid[0] + "_Offset", CtrlFKMid2[0])
+        cmds.parent(CtrlFKMid3[0] + "_Offset", CtrlFKMid[0])
+        cmds.parent(CtrlFKMid4[0] + "_Offset", CtrlFKMid3[0])
+        cmds.parent(CtrlFKChest + "_Offset", CtrlFKMid4[0])
+
+
     cmds.setAttr(CTRLIK[0] + "_Offset.translateY", 0)
+    cmds.parent(CTRLIK[0] + "_Offset", CtrlFKChest)
     cmds.parent(MovablePivot, CTRLIK[0])
     cmds.setAttr(MovablePivot + ".translateY", -height/8)
     cmds.connectAttr(MovablePivot + ".translate", CTRLIK[0] + ".rotatePivot")
@@ -280,7 +327,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     cmds.addAttr(CtrlOption, ln=f"SquashVolume", at="bool", dv=True, k=True)
 
     Offset.offset(CtrlOption, nbr=1)
-    cmds.parent(CtrlOption + "_Offset", CtrlFKMid)
+    cmds.parent(CtrlOption + "_Offset", CtrlUpperBody)
 
 
     #region Translate point with NoStretch posibility
@@ -443,6 +490,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     Offset.offset(CTRLIKRoot[0], nbr=1)
     Color.setColor(CTRLIKRoot[0], "blue")
 
+    #region CTRL IK Mid
     CtrlIkMid =  cmds.circle(nr=[0,1,0], radius=height/3.25, name="CTRL_IK_Mid")
     cmds.addAttr(CtrlIkMid[0], ln="RotationFactor", at="double", min=-1, max=1, dv=0, k=True)
     cmds.setAttr(CtrlIkMid[0] + ".translateY", height/2)
@@ -478,7 +526,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     cmds.connectAttr(CtrlFKMid[0] + ".t", "Offset_Rotation_Ik_Mid.t")
     cmds.connectAttr(CtrlFKMid[0] + ".rotateY", "Offset_Rotation_Ik_Mid.rotateY")
 
-    #CTRL Tangent
+    #region CTRL Tangent
     CtrlTanChest = cmds.curve(name="CTRL_Tangent_Chest", p=[(1,0,0),(1.05,0.18,0),(1.25,0.25,0),(1.45,0.18,0),(1.5,0,0),(1.45,-0.18,0),(1.25,-0.25,0),(1.05,-0.18,0),(1,0,0)])
     cmds.parent(CtrlTanChest, CTRLIK[0])
     Color.setColor(CtrlTanChest, "blue")
@@ -496,7 +544,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     cmds.connectAttr(ComOffset + ".outputMatrix", CtrlTanRoot + "_Offset.offsetParentMatrix")
     cmds.disconnectAttr(ComOffset + ".outputMatrix", CtrlTanRoot + "_Offset.offsetParentMatrix")
 
-    #Offset Input
+    #region Offset Input
     LocInfoPelvis = cmds.spaceLocator(n="Loc_Info_Pelvis")[0]
     cmds.parent(LocInfoPelvis, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Locs")
     Offset.offset(LocInfoPelvis, nbr=1)
