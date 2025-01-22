@@ -52,10 +52,16 @@ def MatrixInputRibbon(CTRL, side, point, surface):
     Bookmark.addNodeToBookmark("Ribbon_input", MultPiv, row=point-0.1, column=-0.5, state=0)
     Bookmark.addNodeToBookmark("Ribbon_input", ComPiv, row=point-0.1, column=-1, state=0)
 
-def ColumnRibbon(name="Default", height=2, JntNbr=7):
+def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     #Create a nurbs plane
-    RibbonLowDef = cmds.surface( dv=3, du=1, fu='open', fv='open', kv=(0, 0, 0, 0.5, 1, 1, 1), ku=(0, 1), pw=((-0.5, 0, 0,1), (-0.5, height/3,0,1), (-0.5, height/2,0,1), (-0.5, 2*height/3,0,1), (-0.5, height,0,1), (0.5, 0,0,1), (0.5, height/3, 0,1), (-0.5, height/2,0,1), (0.5, 2*height/3, 0,1), (0.5, height, 0,1)), name=f"ColumnRibbon_{name}_LowDef")
+    RibbonLowDef = cmds.surface( dv=3, du=1, fu='open', fv='open', kv=(0, 0, 0, 0.5, 1, 1, 1), ku=(0, 1), pw=((-height/4, 0, 0,1), (-height/4, height/3,0,1), (-height/4, height/2,0,1), (-height/4, 2*height/3,0,1), (-height/4, height,0,1), (height/4, 0,0,1), (height/4, height/3, 0,1), (-height/4, height/2,0,1), (height/4, 2*height/3, 0,1), (height/4, height, 0,1)), name=f"ColumnRibbon_{name}_LowDef")
     #cmds.nurbsPlane(axis=[0,0,1], w=1, lr=height, u=1, v=2, p=[0,1,0], name=f"ColumnRibbon_{name}_LowDef")
+    if CTRLFK == 3:
+        cmds.rebuildSurface(RibbonLowDef, dir=1, su=1, sv=2, du=1, dv=5)
+        cmds.delete(RibbonLowDef, constructionHistory = True)
+    if CTRLFK == 5:
+        cmds.rebuildSurface(RibbonLowDef, dir=1, su=1, sv=2, du=1, dv=7)
+        cmds.delete(RibbonLowDef, constructionHistory = True)
     LambertBlue = cmds.shadingNode("lambert", asShader=True, name="Lambert_Ribbon")
     cmds.setAttr(LambertBlue + ".color", 0, 0, 1)
     cmds.setAttr(LambertBlue + ".transparency", 0.3, 0.3, 0.3)
@@ -170,6 +176,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     cmds.addAttr(CtrlFKChest, ln="TangentFactorUp", at="double", min=0.005, max=0.75, dv=0, k=True)
     Offset.offset(CtrlFKChest, nbr=1)
     Color.setColor(CtrlFKChest, "yellow")
+    
 
     #Hierarchy
     cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_01")
