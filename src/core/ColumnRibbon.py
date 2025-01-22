@@ -742,5 +742,14 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
 
         cmds.connectAttr(RemapValueScale + ".outValue", f"TwistScale_RibbonSpine_0{i}.scaleX")
         cmds.connectAttr(RemapValueScale + ".outValue", f"TwistScale_RibbonSpine_0{i}.scaleZ")
+    
+        #scale issue
+        if i !=0 and i!= JntNbr-1:
+            cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_RibbonSpine_0{i}.s")
+        if i ==0:
+            cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_Bind_Root.s")
+        if i == JntNbr-1:
+            cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_Bind_Chest.s")
+    
 
 ColumnRibbon("01")
