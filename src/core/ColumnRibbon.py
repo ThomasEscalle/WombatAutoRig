@@ -2,6 +2,7 @@ import maya.cmds as cmds
 from wombatAutoRig.src.core import Bookmark
 from wombatAutoRig.src.core import Offset
 from wombatAutoRig.src.core import Controllers
+from wombatAutoRig.src.core import Color
 
 
 #Offset t sur tangent CTRL
@@ -437,7 +438,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7):
     LocAxisMidPelvis = cmds.spaceLocator(n="Loc_axis_Mid_Ik_Pelvis")[0]
     cmds.parent(LocAxisMidPelvis, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Locs")
     Offset.offset(LocAxisMidPelvis, nbr=1)
-    MatrixConstraint(CTRLIKRoot[0], LocAxisMidPelvis + "_Offset")
+    MatrixConstraint(CTRLIKRoot[0], LocAxisMidPelvis + "_Offset", s=True)
     cmds.aimConstraint(LocAxisMidSpine, LocAxisMidPelvis, aim=(0,1,0), wuo=CTRLIKRoot[0], wut=2, u=(1,0,0), wu=(1,0,0))
 
     #MatrixConstraint(CtrlFKMid[0] + "_Offset", "cstr_Ik_Mid") Creation nodes
