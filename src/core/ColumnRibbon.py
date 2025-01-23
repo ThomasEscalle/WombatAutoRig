@@ -72,25 +72,25 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
 
     #region Hierarchy
     GrpAll = cmds.group(empty=True, n=f"Ribbon_Spine_{name}")
-    cmds.group(empty=True, n="Global_Move_01")
-    cmds.group(empty=True, n="CTRLs_01")
-    cmds.group(empty=True, n="Joints_01")
-    cmds.group(empty=True, n="ExtraNodes_01")
+    cmds.group(empty=True, n="GlobalMove_Spine_01")
+    cmds.group(empty=True, n="CTRLs_Spine_01")
+    cmds.group(empty=True, n="Joints_Spine_01")
+    cmds.group(empty=True, n="ExtraNodes_Spine_01")
     cmds.group(empty=True, n="Grp_Locs")
     cmds.group(empty=True, n="Grp_Crvs")
     cmds.group(empty=True, n="Grp_Surfaces")
 
-    cmds.parent("Global_Move_01", "|ExtraNodes_01", GrpAll)
-    cmds.parent("|CTRLs_01", "|Joints_01", "Global_Move_01")
-    cmds.parent("|Grp_Locs", "|Grp_Crvs", "|Grp_Surfaces", f"Ribbon_Spine_{name}|ExtraNodes_01")
+    cmds.parent("GlobalMove_Spine_01", "|ExtraNodes_Spine_01", GrpAll)
+    cmds.parent("|CTRLs_Spine_01", "|Joints_Spine_01", "GlobalMove_Spine_01")
+    cmds.parent("|Grp_Locs", "|Grp_Crvs", "|Grp_Surfaces", f"Ribbon_Spine_{name}|ExtraNodes_Spine_01")
 
-    cmds.parent(RibbonLowDef, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Surfaces")
+    cmds.parent(RibbonLowDef, f"Ribbon_Spine_{name}|ExtraNodes_Spine_01|Grp_Surfaces")
 
     #region Node Editor part 01
 
     Bookmark.createBookmark("node_Ribbon_Spine")
     #ShapeRibbon
-    ShapeRibbon = cmds.listRelatives(f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Surfaces|ColumnRibbon_{name}_LowDef", shapes=True)
+    ShapeRibbon = cmds.listRelatives(f"Ribbon_Spine_{name}|ExtraNodes_Spine_01|Grp_Surfaces|ColumnRibbon_{name}_LowDef", shapes=True)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine", ShapeRibbon[0], state=2)
     #RebuildSurface
     rebuildSurface = cmds.shadingNode("rebuildSurface", au=True, name=f"rebuildSurface_Ribbon_{name}")
@@ -117,7 +117,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     Crv = cmds.curve(name=f"Crv_Ribbon_{name}_Isoparm", p=[(0,0,0), (0,height/3,0), (0,2*height/3,0), (0,height,0)], degree=3)
     CrvShape = cmds.listRelatives(Crv, s=True)
     Bookmark.addNodeToBookmark("node_Ribbon_Spine", CrvShape[0], row=0, column=3, state=1)
-    cmds.parent(Crv, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Crvs")
+    cmds.parent(Crv, f"Ribbon_Spine_{name}|ExtraNodes_Spine_01|Grp_Crvs")
 
     cmds.connectAttr(curveFromSurfaceIso + ".outputCurve", CrvShape[0] + ".create")
 
@@ -129,8 +129,8 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     InitLenghtOffset = cmds.group(InitLenght, name="Loc_Info_Init_Lenght_Offset")
     SquashChestOffset = cmds.group(SquashChest, name="Loc_Info_Squash_Chest_Offset")
 
-    cmds.parent(InitLenghtOffset, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Locs")
-    cmds.parent(SquashChestOffset, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Locs")
+    cmds.parent(InitLenghtOffset, f"Ribbon_Spine_{name}|ExtraNodes_Spine_01|Grp_Locs")
+    cmds.parent(SquashChestOffset, f"Ribbon_Spine_{name}|ExtraNodes_Spine_01|Grp_Locs")
 
     #CTRL IK Chest
     ComOffset = cmds.shadingNode("composeMatrix", au=True, name="Offset")
@@ -145,7 +145,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
 
     #Curve Squash Offset
     cmds.curve(p=[(0,0,0), (0,height,0)], degree=1, name="Crv_Squash_Offset")
-    cmds.parent("Crv_Squash_Offset", f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Crvs")
+    cmds.parent("Crv_Squash_Offset", f"Ribbon_Spine_{name}|ExtraNodes_Spine_01|Grp_Crvs")
     CurveSquashOffset = cmds.listRelatives("Crv_Squash_Offset", s=True)
     cmds.shadingNode("attachCurve", au=True, name="attachCurve_Ribbon")
     cmds.shadingNode("rebuildCurve", au=True, name="rebuildCurve_Ribbon")
@@ -210,12 +210,12 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
 
     #Hierarchy
     if CTRLFK == 1:
-        cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_01")
+        cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_Spine_01")
         cmds.parent(CtrlFKMid[0] + "_Offset", CtrlUpperBody)
         cmds.parent(CtrlFKChest + "_Offset", CtrlFKMid)
     
     if CTRLFK == 3:
-        cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_01")
+        cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_Spine_01")
         cmds.parent(CtrlFKMidBottom[0] + "_Offset", CtrlUpperBody)
         cmds.parent(CtrlFKMid[0] + "_Offset", CtrlFKMidBottom[0])
         cmds.parent(CtrlFKMidTop[0] + "_Offset", CtrlFKMid[0])
@@ -236,7 +236,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         cmds.connectAttr(AddTyMidTop + ".output", AddTyTopEnd + ".input2")
     
     if CTRLFK == 5:
-        cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_01")
+        cmds.parent(CtrlUpperBody + "_Offset", "CTRLs_Spine_01")
         cmds.parent(CtrlFKMid1[0] + "_Offset", CtrlUpperBody)
         cmds.parent(CtrlFKMid2[0] + "_Offset", CtrlFKMid1[0])
         cmds.parent(CtrlFKMid[0] + "_Offset", CtrlFKMid2[0])
@@ -382,8 +382,8 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     for i in range(JntNbr):
         #Creation des joints
         if i == 0:
-            cmds.joint(n="Bind_Root")
-            Color.setColor("Bind_Root", "white")
+            cmds.joint(n="Bind_Root_Spine")
+            Color.setColor("Bind_Root_Spine", "white")
         elif i == JntNbr-1 :
             cmds.joint(n="Bind_Chest")
             Color.setColor("Bind_Chest", "white")
@@ -401,23 +401,23 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         if i == JntNbr-1:
             cmds.group(empty=True, name="Offset_Bind_Chest")
         if i == 0 :
-            cmds.group(empty=True, name="Offset_Bind_Root")
+            cmds.group(empty=True, name="Offset_Bind_Root_Spine")
         
         #Hierarchy
         if i !=0 and i !=JntNbr-1:
             cmds.parent(f"Bind_RibbonSpine_0{i}", f"CTRL_RibbonSpine_0{i}")
             cmds.parent(f"CTRL_RibbonSpine_0{i}", f"TwistScale_RibbonSpine_0{i}")
             cmds.parent(f"TwistScale_RibbonSpine_0{i}", f"Offset_RibbonSpine_0{i}")
-            cmds.parent(f"Offset_RibbonSpine_0{i}", f"Ribbon_Spine_{name}|Global_Move_01|Joints_01")
+            cmds.parent(f"Offset_RibbonSpine_0{i}", f"Ribbon_Spine_{name}|GlobalMove_Spine_01|Joints_Spine_01")
         
         if i == JntNbr-1:
             cmds.parent("Bind_Chest", "Offset_Bind_Chest")
             cmds.group("Bind_Chest", name=f"TwistScale_RibbonSpine_0{i}")
-            cmds.parent("Offset_Bind_Chest", f"Ribbon_Spine_{name}|Global_Move_01|Joints_01")
+            cmds.parent("Offset_Bind_Chest", f"Ribbon_Spine_{name}|GlobalMove_Spine_01|Joints_Spine_01")
         if i == 0 :
-            cmds.parent("Bind_Root", "Offset_Bind_Root")
-            cmds.group("Bind_Root", name=f"TwistScale_RibbonSpine_0{i}")
-            cmds.parent("Offset_Bind_Root", f"Ribbon_Spine_{name}|Global_Move_01|Joints_01")
+            cmds.parent("Bind_Root_Spine", "Offset_Bind_Root_Spine")
+            cmds.group("Bind_Root_Spine", name=f"TwistScale_RibbonSpine_0{i}")
+            cmds.parent("Offset_Bind_Root_Spine", f"Ribbon_Spine_{name}|GlobalMove_Spine_01|Joints_Spine_01")
 
         #Creation nodes
         MultNoStretch = cmds.shadingNode("multDoubleLinear", au=True, name=f"mult_Param_0{i}_NoStretch_Defaut")
@@ -455,7 +455,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
             cmds.connectAttr(pointOnCurveInfo + ".position", "Offset_Bind_Chest.t")
 
         if i == 0 :
-            cmds.connectAttr(pointOnCurveInfo + ".position", "Offset_Bind_Root.t")
+            cmds.connectAttr(pointOnCurveInfo + ".position", "Offset_Bind_Root_Spine.t")
 
         #region Rotation
 
@@ -500,7 +500,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
             cmds.connectAttr(DecMatX + ".outputRotate", "Offset_Bind_Chest.r")
 
         if i == 0 :
-            cmds.connectAttr(DecMatX + ".outputRotate", "Offset_Bind_Root.r")
+            cmds.connectAttr(DecMatX + ".outputRotate", "Offset_Bind_Root_Spine.r")
 
 
         #region Bookmark
@@ -523,7 +523,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
             Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", "Offset_Bind_Chest", row=BookRowOffset-1, column=12, state=1)
 
         if i == 0 :
-            Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", f"Offset_Bind_Root", row=BookRowOffset-1, column=12, state=1)
+            Bookmark.addNodeToBookmark("node_Ribbon_Spine_LocAxisMidSpine", f"Offset_Bind_Root_Spine", row=BookRowOffset-1, column=12, state=1)
 
 
     #region CTRL IK
@@ -534,7 +534,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
 
     #Loc Axis Mid IK Pelvis
     LocAxisMidPelvis = cmds.spaceLocator(n="Loc_axis_Mid_Ik_Pelvis")[0]
-    cmds.parent(LocAxisMidPelvis, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Locs")
+    cmds.parent(LocAxisMidPelvis, f"Ribbon_Spine_{name}|ExtraNodes_Spine_01|Grp_Locs")
     Offset.offset(LocAxisMidPelvis, nbr=1)
     MatrixConstraint(CTRLIKRoot[0], LocAxisMidPelvis + "_Offset", s=True)
     cmds.aimConstraint(LocAxisMidSpine, LocAxisMidPelvis, aim=(0,1,0), wuo=CTRLIKRoot[0], wut=2, u=(1,0,0), wu=(1,0,0))
@@ -727,7 +727,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
 
     #region Offset Input
     LocInfoPelvis = cmds.spaceLocator(n="Loc_Info_Pelvis")[0]
-    cmds.parent(LocInfoPelvis, f"Ribbon_Spine_{name}|ExtraNodes_01|Grp_Locs")
+    cmds.parent(LocInfoPelvis, f"Ribbon_Spine_{name}|ExtraNodes_Spine_01|Grp_Locs")
     Offset.offset(LocInfoPelvis, nbr=1)
     MatrixConstraint(CTRLIKRoot[0], LocInfoPelvis + "_Offset", s=True)
     #Creation Nodes
@@ -1021,9 +1021,9 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         if i !=0 and i!= JntNbr-1:
             cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_RibbonSpine_0{i}.s")
         if i ==0:
-            cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_Bind_Root.s")
+            cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_Bind_Root_Spine.s")
         if i == JntNbr-1:
             cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_Bind_Chest.s")
     
 
-ColumnRibbon(name="01", height=2, JntNbr=14, CTRLFK=5)
+ColumnRibbon(name="01", height=2, JntNbr=7, CTRLFK=3)
