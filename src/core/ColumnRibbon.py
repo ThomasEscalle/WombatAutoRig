@@ -7,7 +7,7 @@ from wombatAutoRig.src.core import Color
 
 #intensity volume attribute a corriger
 
-#Contraint Ik Cstr par CTRL FK ==> pb global Scale ==> ajouter decompseMatX puis composeMatX sur loc Aim pour prendre son scale local et pas son scale world
+#Pb quand on bouge en translate et en rotate le CtrlUpperBody, on peut pas avoir et un Ik cool et un FK cool (switch ? meme si je pense que l'utilisation sera principalement FK et j'aurais aimé qu'on puisse juste bouger les FK comme des IKs et que ça marche)
 
 
 def MatrixConstraint(Master, Slave, mode=1, t=True, r=True, s=False):
