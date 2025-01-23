@@ -244,6 +244,27 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         cmds.parent(CtrlFKMid4[0] + "_Offset", CtrlFKMid3[0])
         cmds.parent(CtrlFKChest + "_Offset", CtrlFKMid4[0])
 
+        #Creation Nodes pour remplacer "_Offset.t"
+        AddTy1_2 = cmds.shadingNode("addDoubleLinear", au=True, name = "Add_ty_1_2")
+        AddTy2_mid = cmds.shadingNode("addDoubleLinear", au=True, name = "Add_ty_2_mid")
+        AddTyTmid_3 = cmds.shadingNode("addDoubleLinear", au=True, name = "Add_ty_mid_3")
+        AddTyT3_4 = cmds.shadingNode("addDoubleLinear", au=True, name = "Add_ty_3_4")
+        AddTyT4_end = cmds.shadingNode("addDoubleLinear", au=True, name = "Add_ty_4_end")
+
+        cmds.connectAttr(CtrlFKMid1[0] + "_Offset.translateY", AddTy1_2 + ".input1")
+        cmds.connectAttr(CtrlFKMid2[0] + "_Offset.translateY", AddTy1_2 + ".input2")
+
+        cmds.connectAttr(CtrlFKMid[0] + "_Offset.translateY", AddTy2_mid + ".input1")
+        cmds.connectAttr(AddTy1_2 + ".output", AddTy2_mid + ".input2")
+
+        cmds.connectAttr(CtrlFKMid3[0] + "_Offset.translateY", AddTyTmid_3 + ".input1")
+        cmds.connectAttr(AddTy2_mid + ".output", AddTyTmid_3 + ".input2")
+
+        cmds.connectAttr(CtrlFKMid4[0] + "_Offset.translateY", AddTyT3_4 + ".input1")
+        cmds.connectAttr(AddTyTmid_3 + ".output", AddTyT3_4 + ".input2")
+
+        cmds.connectAttr(CtrlFKChest + "_Offset.translateY", AddTyT4_end + ".input1")
+        cmds.connectAttr(AddTyT3_4 + ".output", AddTyT4_end + ".input2")
 
     cmds.parent(CTRLIK[0] + "_Offset", CtrlFKChest)
     cmds.setAttr(CTRLIK[0] + "_Offset.translateY", 0)
@@ -294,6 +315,8 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         cmds.connectAttr("add_ty_Mid_Chest.output", "mult_scaleY_Mid_UpperBody.input1")
     if CTRLFK == 3:
         cmds.connectAttr(AddTyTopEnd + ".output", "mult_scaleY_Mid_UpperBody.input1")
+    if CTRLFK == 5:
+        cmds.connectAttr(AddTyT4_end + ".output", "mult_scaleY_Mid_UpperBody.input1")
     cmds.connectAttr(CtrlUpperBody + ".scaleY", "mult_scaleY_Mid_UpperBody.input2")
 
     cmds.connectAttr("add_tx_Mid_Chest.output", LocAxisMidSpine + "_Move.translateX")
@@ -544,22 +567,33 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         #cmds.group(CtrlIKMidBottom[0], name="Offset_Rotation_Ik_Mid_Bottom")
     
     if CTRLFK == 5:
-        CtrlIKMid1 = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Mid_1")
+        CtrlIKMid1 = cmds.circle(nr=[0,1,0], radius=height/3.25, name="CTRL_IK_Mid_1")
         cmds.setAttr(CtrlIKMid1[0] + ".translateY", height/6)
+        cmds.parent(CtrlIKMid1[0], CtrlUpperBody)
         Offset.offset(CtrlIKMid1[0], nbr=1)
         Color.setColor(CtrlIKMid1[0], "blue")
-        CtrlIKMid2 = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Mid_2")
+        cmds.group(CtrlIKMid1[0], name="cstr_Ik_Mid1")
+
+        CtrlIKMid2 = cmds.circle(nr=[0,1,0], radius=height/3.25, name="CTRL_IK_Mid_2")
         cmds.setAttr(CtrlIKMid2[0] + ".translateY", 2*height/6)
+        cmds.parent(CtrlIKMid2[0], CtrlUpperBody)
         Offset.offset(CtrlIKMid2[0], nbr=1)
         Color.setColor(CtrlIKMid2[0], "blue")
-        CtrlIKMid3 = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Mid_3")
+        cmds.group(CtrlIKMid2[0], name="cstr_Ik_Mid2")
+
+        CtrlIKMid3 = cmds.circle(nr=[0,1,0], radius=height/3.25, name="CTRL_IK_Mid_3")
         cmds.setAttr(CtrlIKMid3[0] + ".translateY", 4*height/6)
+        cmds.parent(CtrlIKMid3[0], CtrlUpperBody)
         Offset.offset(CtrlIKMid3[0], nbr=1)
         Color.setColor(CtrlIKMid3[0], "blue")
-        CtrlIKMid4 = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Mid_4")
+        cmds.group(CtrlIKMid3[0], name="cstr_Ik_Mid3")
+
+        CtrlIKMid4 = cmds.circle(nr=[0,1,0], radius=height/3.25, name="CTRL_IK_Mid_4")
         cmds.setAttr(CtrlIKMid4[0] + ".translateY", 5*height/6)
+        cmds.parent(CtrlIKMid4[0], CtrlUpperBody)
         Offset.offset(CtrlIKMid4[0], nbr=1)
         Color.setColor(CtrlIKMid4[0], "blue")
+        cmds.group(CtrlIKMid4[0], name="cstr_Ik_Mid4")
 
     #MatrixConstraint(CtrlFKMid[0] + "_Offset", "cstr_Ik_Mid") Creation nodes
     MultMatX = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid")
@@ -580,19 +614,19 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     if CTRLFK == 5:
         MultMatX1 = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid_1")
         DecMatX1 = cmds.shadingNode("decomposeMatrix", au=True, name=f"DecMatX_cstr_Ik_Mid_1")
-        ComMatX1 = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_1")
+        #ComMatX1 = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_1")
 
         MultMatX2 = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid_2")
         DecMatX2 = cmds.shadingNode("decomposeMatrix", au=True, name=f"DecMatX_cstr_Ik_Mid_2")
-        ComMatX2 = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_2")
+        #ComMatX2 = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_2")
     
         MultMatX3 = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid_3")
         DecMatX3 = cmds.shadingNode("decomposeMatrix", au=True, name=f"DecMatX_cstr_Ik_Mid_3")
-        ComMatX3 = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_3")
+        #ComMatX3 = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_3")
 
         MultMatX4 = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid_4")
         DecMatX4 = cmds.shadingNode("decomposeMatrix", au=True, name=f"DecMatX_cstr_Ik_Mid_4")
-        ComMatX4 = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_4")
+        #ComMatX4 = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_4")
 
 
     #connection
@@ -637,58 +671,41 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
 
 
     if CTRLFK == 5:
-        cmds.connectAttr(CtrlIKMid1[0] + "_Offset" + ".translateY", ComMatX1 + ".inputTranslateY")
-        cmds.connectAttr(ComMatX1 + ".outputMatrix", MultMatX1 + ".matrixIn[0]")
+        cmds.connectAttr(CtrlFKMid1[0] + ".worldMatrix[0]", MultMatX1 + ".matrixIn[0]")
         cmds.connectAttr(ComMatXLocAim + ".outputMatrix", MultMatX1 + ".matrixIn[1]")
-        cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX1 + ".matrixIn[2]")
+        cmds.connectAttr("cstr_Ik_Mid1.parentInverseMatrix[0]", MultMatX1 + ".matrixIn[2]")
 
         cmds.connectAttr(MultMatX1 + ".matrixSum", DecMatX1 + ".inputMatrix")
 
-        cmds.connectAttr(DecMatX1 + ".outputTranslate", "cstr_Ik_Mid.t")
-        cmds.connectAttr(DecMatX1 + ".outputRotate", "cstr_Ik_Mid.r")
+        cmds.connectAttr(DecMatX1 + ".outputTranslate", "cstr_Ik_Mid1.t")
+        cmds.connectAttr(DecMatX1 + ".outputRotate", "cstr_Ik_Mid1.r")
 
-        cmds.connectAttr(CtrlIKMid1[0] + ".t", "Offset_Rotation_Ik_Mid.t")
-        cmds.connectAttr(CtrlIKMid1[0] + ".rotateY", "Offset_Rotation_Ik_Mid.rotateY")
-
-
-        cmds.connectAttr(CtrlIKMid2[0] + "_Offset" + ".translateY", ComMatX2 + ".inputTranslateY")
-        cmds.connectAttr(ComMatX2 + ".outputMatrix", MultMatX2 + ".matrixIn[0]")
-        cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatX2 + ".matrixIn[1]")
-        cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX2 + ".matrixIn[2]")
+        cmds.connectAttr(CtrlFKMid2[0] + ".worldMatrix[0]", MultMatX2 + ".matrixIn[0]")
+        cmds.connectAttr(ComMatXLocAim + ".outputMatrix", MultMatX2 + ".matrixIn[1]")
+        cmds.connectAttr("cstr_Ik_Mid2.parentInverseMatrix[0]", MultMatX2 + ".matrixIn[2]")
 
         cmds.connectAttr(MultMatX2 + ".matrixSum", DecMatX2 + ".inputMatrix")
 
-        cmds.connectAttr(DecMatX2 + ".outputTranslate", "cstr_Ik_Mid.t")
-        cmds.connectAttr(DecMatX2 + ".outputRotate", "cstr_Ik_Mid.r")
+        cmds.connectAttr(DecMatX2 + ".outputTranslate", "cstr_Ik_Mid2.t")
+        cmds.connectAttr(DecMatX2 + ".outputRotate", "cstr_Ik_Mid2.r")
 
-        cmds.connectAttr(CtrlIKMid2[0] + ".t", "Offset_Rotation_Ik_Mid.t")
-        cmds.connectAttr(CtrlIKMid2[0] + ".rotateY", "Offset_Rotation_Ik_Mid.rotateY")
-
-        cmds.connectAttr(CtrlIKMid3[0] + "_Offset" + ".translateY", ComMatX3 + ".inputTranslateY")
-        cmds.connectAttr(ComMatX3 + ".outputMatrix", MultMatX3 + ".matrixIn[0]")
-        cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatX3 + ".matrixIn[1]")
-        cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX3 + ".matrixIn[2]")
+        cmds.connectAttr(CtrlFKMid3[0] + ".worldMatrix[0]", MultMatX3 + ".matrixIn[0]")
+        cmds.connectAttr(ComMatXLocAim + ".outputMatrix", MultMatX3 + ".matrixIn[1]")
+        cmds.connectAttr("cstr_Ik_Mid3.parentInverseMatrix[0]", MultMatX3 + ".matrixIn[2]")
 
         cmds.connectAttr(MultMatX3 + ".matrixSum", DecMatX3 + ".inputMatrix")
 
-        cmds.connectAttr(DecMatX3 + ".outputTranslate", "cstr_Ik_Mid.t")
-        cmds.connectAttr(DecMatX3 + ".outputRotate", "cstr_Ik_Mid.r")
+        cmds.connectAttr(DecMatX3 + ".outputTranslate", "cstr_Ik_Mid3.t")
+        cmds.connectAttr(DecMatX3 + ".outputRotate", "cstr_Ik_Mid3.r")
 
-        cmds.connectAttr(CtrlIKMid3[0] + ".t", "Offset_Rotation_Ik_Mid.t")
-        cmds.connectAttr(CtrlIKMid3[0] + ".rotateY", "Offset_Rotation_Ik_Mid.rotateY")
-
-        cmds.connectAttr(CtrlIKMid4[0] + "_Offset" + ".translateY", ComMatX4 + ".inputTranslateY")
-        cmds.connectAttr(ComMatX4 + ".outputMatrix", MultMatX4 + ".matrixIn[0]")
-        cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatX4 + ".matrixIn[1]")
-        cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX4 + ".matrixIn[2]")
+        cmds.connectAttr(CtrlFKMid4[0] + ".worldMatrix[0]", MultMatX4 + ".matrixIn[0]")
+        cmds.connectAttr(ComMatXLocAim + ".outputMatrix", MultMatX4 + ".matrixIn[1]")
+        cmds.connectAttr("cstr_Ik_Mid4.parentInverseMatrix[0]", MultMatX4 + ".matrixIn[2]")
 
         cmds.connectAttr(MultMatX4 + ".matrixSum", DecMatX4 + ".inputMatrix")
 
-        cmds.connectAttr(DecMatX4 + ".outputTranslate", "cstr_Ik_Mid.t")
-        cmds.connectAttr(DecMatX4 + ".outputRotate", "cstr_Ik_Mid.r")
-
-        cmds.connectAttr(CtrlIKMid4[0] + ".t", "Offset_Rotation_Ik_Mid.t")
-        cmds.connectAttr(CtrlIKMid4[0] + ".rotateY", "Offset_Rotation_Ik_Mid.rotateY")
+        cmds.connectAttr(DecMatX4 + ".outputTranslate", "cstr_Ik_Mid4.t")
+        cmds.connectAttr(DecMatX4 + ".outputRotate", "cstr_Ik_Mid4.r")
 
     #region CTRL Tangent
     CtrlTanChest = cmds.curve(name="CTRL_Tangent_Chest", p=[(1,0,0),(1.05,0.18,0),(1.25,0.25,0),(1.45,0.18,0),(1.5,0,0),(1.45,-0.18,0),(1.25,-0.25,0),(1.05,-0.18,0),(1,0,0)])
@@ -1009,4 +1026,4 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
             cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_Bind_Chest.s")
     
 
-ColumnRibbon(name="01", height=2, JntNbr=7, CTRLFK=3)
+ColumnRibbon(name="01", height=2, JntNbr=14, CTRLFK=5)
