@@ -791,36 +791,7 @@ def createArm(settings, side = "L"):
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"CTRL_Wrist_{side}.visibility")
     cmds.connectAttr(f"Settings_Arm_{side}.Vis_Pin", f"CTRL_Pin_Elbow_{side}.visibility")
 
-    #Bookmark
-    Bookmark.createBookmark("IkFk_Arm")
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"Settings_Arm_{side}", column=BookmarkColumnOffset, row=0, state=2)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"Locator_Hip_{side}", column=BookmarkColumnOffset, row=1, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"Locator_Ankle_{side}", column=BookmarkColumnOffset, row=1.2, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"Distance_Arm_{side}", column=BookmarkColumnOffset+1, row=1.1, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", "GlobalMove_01", column=BookmarkColumnOffset+1, row=1.3, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"MD_Distance_Arm_{side}_GlobalRelativeScale", column=BookmarkColumnOffset+2, row=1.1, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"MD_Distance_Arm_{side}_Divide", column=BookmarkColumnOffset+3, row=1.1, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"MD_Distance_Arm_{side}_Power", column=BookmarkColumnOffset+4, row=1.1, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"CTRL_Foot_{side}", column=BookmarkColumnOffset+2, row=0, state=1)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"Cond_Distance_Arm_{side}", column=BookmarkColumnOffset+3, row=0, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"Cond_Boolean_Arm_{side}", column=BookmarkColumnOffset+4, row=0, state=0)
-
-    Bookmark.addNodeToBookmark("IkFk_Arm", "Reverse_Arm_{}".format(side), column=BookmarkColumnOffset+1, row=-0.2, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"IK_Arm_{side}", column=BookmarkColumnOffset+1, row=-0.3, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"IK_Ball_{side}", column=BookmarkColumnOffset+1, row=-0.4, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"IK_Toe_{side}", column=BookmarkColumnOffset+1, row=-0.5, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"Bind_Foot_{side}", column=BookmarkColumnOffset+1, row=-0.6, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"PV_Arm_{side}", column=BookmarkColumnOffset+1, row=-0.7, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"CTRL_Pin_Knee_{side}", column=BookmarkColumnOffset+1, row=-0.8, state=0)
-
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"FK_Arm_{side}", column=BookmarkColumnOffset+5, row=-0.2, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"FK_Knee_{side}", column=BookmarkColumnOffset+5, row=-0.4, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"FK_Ankle_{side}", column=BookmarkColumnOffset+5, row=-0.6, state=0)
-
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"DrvJnt_Arm_{side}", column=BookmarkColumnOffset+6, row=-0.2, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"DrvJnt_Knee_{side}", column=BookmarkColumnOffset+6, row=-0.4, state=0)
-    Bookmark.addNodeToBookmark("IkFk_Arm", f"DrvJnt_Ankle_{side}", column=BookmarkColumnOffset+6, row=-0.6, state=0)
-
+    
     #region CTRL FK
 
     NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Shoulder_{side}", f"FK_Arm_{side}", name=f"CTRL_FK_Arm_{side}", nbr=3)
@@ -922,6 +893,35 @@ def createArm(settings, side = "L"):
     cmds.connectAttr(f"Cond_Constraint_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.r")
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_Constraint_DrvJnt_{side}.secondTerm")
 
+    #Bookmark
+    Bookmark.createBookmark("IkFk_Arm")
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"Settings_Arm_{side}", column=BookmarkColumnOffset, row=0, state=2)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"Locator_Hip_{side}", column=BookmarkColumnOffset, row=1, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"Locator_Ankle_{side}", column=BookmarkColumnOffset, row=1.2, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"Distance_Arm_{side}", column=BookmarkColumnOffset+1, row=1.1, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", "GlobalMove_01", column=BookmarkColumnOffset+1, row=1.3, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"MD_Distance_Arm_{side}_GlobalRelativeScale", column=BookmarkColumnOffset+2, row=1.1, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"MD_Distance_Arm_{side}_Divide", column=BookmarkColumnOffset+3, row=1.1, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"MD_Distance_Arm_{side}_Power", column=BookmarkColumnOffset+4, row=1.1, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"CTRL_Foot_{side}", column=BookmarkColumnOffset+2, row=0, state=1)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"Cond_Distance_Arm_{side}", column=BookmarkColumnOffset+3, row=0, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"Cond_Boolean_Arm_{side}", column=BookmarkColumnOffset+4, row=0, state=0)
+
+    Bookmark.addNodeToBookmark("IkFk_Arm", "Reverse_Arm_{}".format(side), column=BookmarkColumnOffset+1, row=-0.2, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"IK_Arm_{side}", column=BookmarkColumnOffset+1, row=-0.3, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"IK_Ball_{side}", column=BookmarkColumnOffset+1, row=-0.4, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"IK_Toe_{side}", column=BookmarkColumnOffset+1, row=-0.5, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"Bind_Foot_{side}", column=BookmarkColumnOffset+1, row=-0.6, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"PV_Arm_{side}", column=BookmarkColumnOffset+1, row=-0.7, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"CTRL_Pin_Knee_{side}", column=BookmarkColumnOffset+1, row=-0.8, state=0)
+
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"FK_Arm_{side}", column=BookmarkColumnOffset+5, row=-0.2, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"FK_Knee_{side}", column=BookmarkColumnOffset+5, row=-0.4, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"FK_Ankle_{side}", column=BookmarkColumnOffset+5, row=-0.6, state=0)
+
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"DrvJnt_Arm_{side}", column=BookmarkColumnOffset+6, row=-0.2, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"DrvJnt_Knee_{side}", column=BookmarkColumnOffset+6, row=-0.4, state=0)
+    Bookmark.addNodeToBookmark("IkFk_Arm", f"DrvJnt_Ankle_{side}", column=BookmarkColumnOffset+6, row=-0.6, state=0)
 
     #region Twist Ex 
     TwistArm = TwistExtractor.create_twist_extractor(f"Arm_{side}")
