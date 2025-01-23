@@ -5,8 +5,10 @@ from wombatAutoRig.src.core import Controllers
 from wombatAutoRig.src.core import Color
 
 
-#Offset t sur tangent CTRL
-#Connection CTRL point surface (moment de verite sur la surface pb ou ps pb)
+#intensity volume attribute a corriger
+
+#Contraint Ik Cstr par CTRL FK ==> pb global Scale ==> ajouter decompseMatX puis composeMatX sur loc Aim pour prendre son scale local et pas son scale world
+
 
 def MatrixConstraint(Master, Slave, mode=1, t=True, r=True, s=False):
     #creation des nodes
@@ -522,7 +524,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     Offset.offset(CtrlIkMid[0], nbr=1)
     Color.setColor(CtrlIkMid[0], "blue")
     cmds.group(CtrlIkMid[0], name="cstr_Ik_Mid")
-    cmds.group(CtrlIkMid[0], name="Offset_Rotation_Ik_Mid")
+    #cmds.group(CtrlIkMid[0], name="Offset_Rotation_Ik_Mid")
 
     if CTRLFK == 3:
         CtrlIKMidTop = cmds.circle(nr=[0,1,0], radius=height/3.25, name="CTRL_IK_Mid_Top")
@@ -531,7 +533,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         Offset.offset(CtrlIKMidTop[0], nbr=1)
         Color.setColor("CTRL_IK_Mid_Top", "blue")
         cmds.group(CtrlIKMidTop[0], name="cstr_Ik_Mid_Top")
-        cmds.group(CtrlIKMidTop[0], name="Offset_Rotation_Ik_Mid_Top")
+        #cmds.group(CtrlIKMidTop[0], name="Offset_Rotation_Ik_Mid_Top")
 
         CtrlIKMidBottom = cmds.circle(nr=[0,1,0], radius=height/3.25, name="CTRL_IK_Mid_Bottom")
         cmds.setAttr(CtrlIKMidBottom[0] + ".translateY", height/4)
@@ -539,7 +541,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         Offset.offset(CtrlIKMidBottom[0], nbr=1)
         Color.setColor("CTRL_IK_Mid_Bottom", "blue")
         cmds.group(CtrlIKMidBottom[0], name="cstr_Ik_Mid_Bottom")
-        cmds.group(CtrlIKMidBottom[0], name="Offset_Rotation_Ik_Mid_Bottom")
+        #cmds.group(CtrlIKMidBottom[0], name="Offset_Rotation_Ik_Mid_Bottom")
     
     if CTRLFK == 5:
         CtrlIKMid1 = cmds.circle(nr=[0,1,0], radius=height/2.5, name="CTRL_IK_Mid_1")
@@ -562,16 +564,18 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     #MatrixConstraint(CtrlFKMid[0] + "_Offset", "cstr_Ik_Mid") Creation nodes
     MultMatX = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid")
     DecMatX = cmds.shadingNode("decomposeMatrix", au=True, name=f"DecMatX_cstr_Ik_Mid")
-    ComMatX = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset")
+    #ComMatX = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset")
+    ComMatXLocAim = cmds.shadingNode("composeMatrix", au=True, name="ComMatX_LocAim")
+    DecMatXLocAim = cmds.shadingNode("decomposeMatrix", au=True, name="DecMatX_LocAim")
 
     if CTRLFK == 3:
         MultMatXTop = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid_Top")
         DecMatXTop = cmds.shadingNode("decomposeMatrix", au=True, name=f"DecMatX_cstr_Ik_Mid_Top")
-        ComMatXTop = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_Top")
+        #ComMatXTop = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_Top")
 
         MultMatXBottom = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid_Bottom")
         DecMatXBottom = cmds.shadingNode("decomposeMatrix", au=True, name=f"DecMatX_cstr_Ik_Mid_Bottom")
-        ComMatXBottom = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_Bottom")
+        #ComMatXBottom = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_Bottom")
     
     if CTRLFK == 5:
         MultMatX1 = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid_1")
@@ -592,12 +596,14 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
 
 
     #connection
-    if CTRLFK == 1 :
-        cmds.connectAttr(CtrlFKMid[0] + "_Offset" + ".translateY", ComMatX + ".inputTranslateY")
-    if CTRLFK == 3:
-        cmds.connectAttr(AddTyBotMid + ".output", ComMatX + ".inputTranslateY")
-    cmds.connectAttr(ComMatX + ".outputMatrix", MultMatX + ".matrixIn[0]")
-    cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatX + ".matrixIn[1]")
+    cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", DecMatXLocAim + ".inputMatrix")
+    cmds.connectAttr(DecMatXLocAim + ".outputTranslate", ComMatXLocAim + ".inputTranslate")
+    cmds.connectAttr(DecMatXLocAim + ".outputRotate", ComMatXLocAim + ".inputRotate")
+    cmds.connectAttr(LocAxisMidPelvis + ".scale", ComMatXLocAim + ".inputScale")
+
+
+    cmds.connectAttr(CtrlFKMid[0] + ".worldMatrix[0]", MultMatX + ".matrixIn[0]")
+    cmds.connectAttr(ComMatXLocAim + ".outputMatrix", MultMatX + ".matrixIn[1]")
     cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX + ".matrixIn[2]")
 
     cmds.connectAttr(MultMatX + ".matrixSum", DecMatX + ".inputMatrix")
@@ -605,12 +611,11 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     cmds.connectAttr(DecMatX + ".outputTranslate", "cstr_Ik_Mid.t")
     cmds.connectAttr(DecMatX + ".outputRotate", "cstr_Ik_Mid.r")
 
-    cmds.connectAttr(CtrlFKMid[0] + ".t", "Offset_Rotation_Ik_Mid.t")
-    cmds.connectAttr(CtrlFKMid[0] + ".rotateY", "Offset_Rotation_Ik_Mid.rotateY")
+    cmds.connectAttr(CtrlUpperBody + ".scale", CtrlIkMid[0] + ".scale")
+
 
     if CTRLFK == 3:
-        cmds.connectAttr(AddTyMidTop + ".output", ComMatXTop + ".inputTranslateY")
-        cmds.connectAttr(ComMatXTop + ".outputMatrix", MultMatXTop + ".matrixIn[0]")
+        cmds.connectAttr(CtrlFKMidTop[0] + ".worldMatrix[0]", MultMatXTop + ".matrixIn[0]")
         cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatXTop + ".matrixIn[1]")
         cmds.connectAttr("cstr_Ik_Mid_Top.parentInverseMatrix[0]", MultMatXTop + ".matrixIn[2]")
 
@@ -619,13 +624,11 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         cmds.connectAttr(DecMatXTop + ".outputTranslate", "cstr_Ik_Mid_Top.t")
         cmds.connectAttr(DecMatXTop + ".outputRotate", "cstr_Ik_Mid_Top.r")
 
-        cmds.connectAttr(CtrlFKMidTop[0] + ".t", "Offset_Rotation_Ik_Mid_Top.t")
-        cmds.connectAttr(CtrlFKMidTop[0] + ".rotateY", "Offset_Rotation_Ik_Mid_Top.rotateY")
+        cmds.connectAttr(CtrlUpperBody + ".scale", CtrlIKMidTop[0] + ".scale")
 
 
-        cmds.connectAttr(CtrlFKMidBottom[0] + "_Offset" + ".translateY", ComMatXBottom + ".inputTranslateY")
-        cmds.connectAttr(ComMatXBottom + ".outputMatrix", MultMatXBottom + ".matrixIn[0]")
-        cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatXBottom + ".matrixIn[1]")
+        cmds.connectAttr(CtrlFKMidBottom[0] + ".worldMatrix[0]", MultMatXBottom + ".matrixIn[0]")
+        cmds.connectAttr(ComMatXLocAim + ".outputMatrix", MultMatXBottom + ".matrixIn[1]")
         cmds.connectAttr("cstr_Ik_Mid_Bottom.parentInverseMatrix[0]", MultMatXBottom + ".matrixIn[2]")
 
         cmds.connectAttr(MultMatXBottom + ".matrixSum", DecMatXBottom + ".inputMatrix")
@@ -633,13 +636,13 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         cmds.connectAttr(DecMatXBottom + ".outputTranslate", "cstr_Ik_Mid_Bottom.t")
         cmds.connectAttr(DecMatXBottom + ".outputRotate", "cstr_Ik_Mid_Bottom.r")
 
-        cmds.connectAttr(CtrlFKMidBottom[0] + ".t", "Offset_Rotation_Ik_Mid_Bottom.t")
-        cmds.connectAttr(CtrlFKMidBottom[0] + ".rotateY", "Offset_Rotation_Ik_Mid_Bottom.rotateY")
+        cmds.connectAttr(CtrlUpperBody + ".scale", CtrlIKMidBottom[0] + ".scale")
+
 
     if CTRLFK == 5:
         cmds.connectAttr(CtrlIKMid1[0] + "_Offset" + ".translateY", ComMatX1 + ".inputTranslateY")
         cmds.connectAttr(ComMatX1 + ".outputMatrix", MultMatX1 + ".matrixIn[0]")
-        cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatX1 + ".matrixIn[1]")
+        cmds.connectAttr(ComMatXLocAim + ".outputMatrix", MultMatX1 + ".matrixIn[1]")
         cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX1 + ".matrixIn[2]")
 
         cmds.connectAttr(MultMatX1 + ".matrixSum", DecMatX1 + ".inputMatrix")
