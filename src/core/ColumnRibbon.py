@@ -611,12 +611,11 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     cmds.connectAttr(DecMatX + ".outputTranslate", "cstr_Ik_Mid.t")
     cmds.connectAttr(DecMatX + ".outputRotate", "cstr_Ik_Mid.r")
 
-    cmds.connectAttr(CtrlUpperBody + ".scale", CtrlIkMid[0] + ".scale")
 
 
     if CTRLFK == 3:
         cmds.connectAttr(CtrlFKMidTop[0] + ".worldMatrix[0]", MultMatXTop + ".matrixIn[0]")
-        cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", MultMatXTop + ".matrixIn[1]")
+        cmds.connectAttr(ComMatXLocAim + ".outputMatrix", MultMatXTop + ".matrixIn[1]")
         cmds.connectAttr("cstr_Ik_Mid_Top.parentInverseMatrix[0]", MultMatXTop + ".matrixIn[2]")
 
         cmds.connectAttr(MultMatXTop + ".matrixSum", DecMatXTop + ".inputMatrix")
@@ -624,7 +623,6 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         cmds.connectAttr(DecMatXTop + ".outputTranslate", "cstr_Ik_Mid_Top.t")
         cmds.connectAttr(DecMatXTop + ".outputRotate", "cstr_Ik_Mid_Top.r")
 
-        cmds.connectAttr(CtrlUpperBody + ".scale", CtrlIKMidTop[0] + ".scale")
 
 
         cmds.connectAttr(CtrlFKMidBottom[0] + ".worldMatrix[0]", MultMatXBottom + ".matrixIn[0]")
@@ -636,7 +634,6 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
         cmds.connectAttr(DecMatXBottom + ".outputTranslate", "cstr_Ik_Mid_Bottom.t")
         cmds.connectAttr(DecMatXBottom + ".outputRotate", "cstr_Ik_Mid_Bottom.r")
 
-        cmds.connectAttr(CtrlUpperBody + ".scale", CtrlIKMidBottom[0] + ".scale")
 
 
     if CTRLFK == 5:
