@@ -8,6 +8,9 @@ from wombatAutoRig.src.core import Color
 #intensity volume attribute a corriger
 
 #Pb quand on bouge en translate et en rotate le CtrlUpperBody, on peut pas avoir et un Ik cool et un FK cool (switch ? meme si je pense que l'utilisation sera principalement FK et j'aurais aimé qu'on puisse juste bouger les FK comme des IKs et que ça marche)
+#==> debrancher input translate du loc parce que pas besoin. dernier pb les rotates qui se double. 
+#idee : faire la difference des rotates world du loc et du CtrlUpperBody . into connect new matrix in a loc qui sera parent de nbr(CTRLFK) loc qui auront comme offset la valeur de height/2 /4 *3/4 into recompose sa matrix sans l'offset de height. brancher cette matrix dans le mult matrix qui contraint l'ik. odre de matrix ==> FK/InvParent/Loc
+
 
 
 def MatrixConstraint(Master, Slave, mode=1, t=True, r=True, s=False):
@@ -601,6 +604,10 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     #ComMatX = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset")
     ComMatXLocAim = cmds.shadingNode("composeMatrix", au=True, name="ComMatX_LocAim")
     DecMatXLocAim = cmds.shadingNode("decomposeMatrix", au=True, name="DecMatX_LocAim")
+    DecMatXLocAimCtrlUpper = cmds.shadingNode("decomposeMatrix", au=True, name="DecMatX_LocAim_CtrlUpper")
+    PMAlocCtrlUpper = cmds.shadingNode("plusMinusAverage", au=True, name = "Pma_Loc_CtrlUpper_rotate")
+    cmds.setAttr(PMAlocCtrlUpper + ".operation", 2)
+    LocatorRelay = cmds.sapceLocator(name="LocatorRelay")[0]
 
     if CTRLFK == 3:
         MultMatXTop = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid_Top")
@@ -631,10 +638,13 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
 
     #connection
     cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", DecMatXLocAim + ".inputMatrix")
-    cmds.connectAttr(DecMatXLocAim + ".outputTranslate", ComMatXLocAim + ".inputTranslate")
-    cmds.connectAttr(DecMatXLocAim + ".outputRotate", ComMatXLocAim + ".inputRotate")
+    cmds.connectAttr(DecMatXLocAim + ".outputRotate", PMAlocCtrlUpper + ".input3D[0]")
+    cmds.connectAttr(CtrlUpperBody + ".worldMatrix[0]", DecMatXLocAimCtrlUpper + ".inputMatrix")
+    cmds.connectAttr(DecMatXLocAimCtrlUpper + ".outputRotate", PMAlocCtrlUpper + ".input3D[1]")
+    cmds.connectAttr(PMAlocCtrlUpper + ".output3D", ComMatXLocAim + ".inputRotate")
     cmds.connectAttr(LocAxisMidPelvis + ".scale", ComMatXLocAim + ".inputScale")
 
+    cmds.connectAttr(LocatorRelay + ".offsetParentMatrix")
 
     cmds.connectAttr(CtrlFKMid[0] + ".worldMatrix[0]", MultMatX + ".matrixIn[0]")
     cmds.connectAttr(ComMatXLocAim + ".outputMatrix", MultMatX + ".matrixIn[1]")
