@@ -972,6 +972,12 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     MultVolOffset = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Offset_Volume")
     cmds.setAttr(MultVolOffset + ".input2", 0.5)
     ReverseIntensity = cmds.shadingNode("reverse", au=True, name="Rev_IntensityVolume")
+    MultHalfIntednsity = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Half_Intensity")
+    cmds.setAttr(MultHalfIntednsity + ".input2", 0.5)
+    MultOpposed_Intensity = cmds.shadingNode("multDoubleLinear", au=True, name=f"Mult_Opposed_Intensity")
+    cmds.setAttr(MultOpposed_Intensity + ".input2", -1)
+    AddOffsetIntensity = cmds.shadingNode("addDoubleLinear", au=True, name=f"Add_Offset_Intensity")
+    cmds.setAttr(AddOffsetIntensity + ".input2", 1)
 
     #Connection
     cmds.connectAttr(CurveInfoIso + ".arcLength", DivVol + ".input1X")
@@ -995,6 +1001,9 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     cmds.connectAttr(CtrlOption + ".VolumeOffset", MultVolOffset + ".input1")
 
     cmds.connectAttr(CtrlOption + ".VolumeIntensity", ReverseIntensity + ".inputX")
+    cmds.connectAttr(ReverseIntensity + ".outputX", MultHalfIntednsity + ".input1")
+    cmds.connectAttr(MultHalfIntednsity + ".output", MultOpposed_Intensity + ".input1")
+    cmds.connectAttr(MultOpposed_Intensity + ".output", AddOffsetIntensity + ".input1")
 
     for i in range(JntNbr):
         #Creation des nodes Twist
@@ -1057,7 +1066,12 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
 
         cmds.connectAttr(AddVol + ".output", RemapValueScale + ".inputValue")
         cmds.connectAttr(MultVolFactor + ".output", RemapValueScale + ".outputMax")
-        cmds.connectAttr(ReverseIntensity + ".outputX", RemapValueScale + ".inputMin")
+
+        if i <= (JntNbr-1)/2:
+            cmds.connectAttr(MultHalfIntednsity + ".output", RemapValueScale + ".inputMin")
+        else :
+            cmds.connectAttr(AddOffsetIntensity + ".output", RemapValueScale + ".inputMax")
+
 
         cmds.connectAttr(RemapValueScale + ".outValue", f"TwistScale_RibbonSpine_0{i}.scaleX")
         cmds.connectAttr(RemapValueScale + ".outValue", f"TwistScale_RibbonSpine_0{i}.scaleZ")
