@@ -602,21 +602,29 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
     MultMatX = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid")
     DecMatX = cmds.shadingNode("decomposeMatrix", au=True, name=f"DecMatX_cstr_Ik_Mid")
     #ComMatX = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset")
-    ComMatXLocAim = cmds.shadingNode("composeMatrix", au=True, name="ComMatX_LocAim")
-    DecMatXLocAim = cmds.shadingNode("decomposeMatrix", au=True, name="DecMatX_LocAim")
-    DecMatXLocAimCtrlUpper = cmds.shadingNode("decomposeMatrix", au=True, name="DecMatX_LocAim_CtrlUpper")
-    PMAlocCtrlUpper = cmds.shadingNode("plusMinusAverage", au=True, name = "Pma_Loc_CtrlUpper_rotate")
-    cmds.setAttr(PMAlocCtrlUpper + ".operation", 2)
+    ComMatXFKMid = cmds.shadingNode("composeMatrix", au=True, name="ComMatX_FKMid")
+    DecMatXFKMid = cmds.shadingNode("decomposeMatrix", au=True, name="DecMatX_FKMid")
+    PMAlocFKMid = cmds.shadingNode("plusMinusAverage", au=True, name = "Pma_Loc_FKMid")
     LocatorRelay = cmds.sapceLocator(name="LocatorRelay")[0]
+    LocatorRelayMid = cmds.sapceLocator(name="LocatorRelay_Mid")[0]
 
     if CTRLFK == 3:
         MultMatXTop = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid_Top")
         DecMatXTop = cmds.shadingNode("decomposeMatrix", au=True, name=f"DecMatX_cstr_Ik_Mid_Top")
         #ComMatXTop = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_Top")
+        ComMatXFKMidTop = cmds.shadingNode("composeMatrix", au=True, name="ComMatX_FKMid_Top")
+        DecMatXFKMidTop = cmds.shadingNode("decomposeMatrix", au=True, name="DecMatX_FKMid_Top")
+        PMAlocFKMidTop = cmds.shadingNode("plusMinusAverage", au=True, name = "Pma_Loc_FKMidTop")
+        LocatorRelayTop = cmds.sapceLocator(name="LocatorRelay_Top")[0]
 
         MultMatXBottom = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid_Bottom")
         DecMatXBottom = cmds.shadingNode("decomposeMatrix", au=True, name=f"DecMatX_cstr_Ik_Mid_Bottom")
         #ComMatXBottom = cmds.shadingNode("composeMatrix", au=True, name=f"ComMatX_FK_Mid_Offset_Bottom")
+        ComMatXFKMidBottom = cmds.shadingNode("composeMatrix", au=True, name="ComMatX_FKMid_Bottom")
+        DecMatXFKMidBottom = cmds.shadingNode("decomposeMatrix", au=True, name="DecMatX_FKMid_Bottom")
+        PMAlocFKMidBottom = cmds.shadingNode("plusMinusAverage", au=True, name = "Pma_Loc_FKMidBottom")
+        LocatorRelayBottom = cmds.sapceLocator(name="LocatorRelay_Bottom")[0]
+    
     
     if CTRLFK == 5:
         MultMatX1 = cmds.shadingNode("multMatrix", au=True, name=f"MultMatX_cstr_Ik_Mid_1")
@@ -637,18 +645,24 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
 
 
     #connection
-    cmds.connectAttr(LocAxisMidPelvis + ".worldMatrix[0]", DecMatXLocAim + ".inputMatrix")
-    cmds.connectAttr(DecMatXLocAim + ".outputRotate", PMAlocCtrlUpper + ".input3D[0]")
-    cmds.connectAttr(CtrlUpperBody + ".worldMatrix[0]", DecMatXLocAimCtrlUpper + ".inputMatrix")
-    cmds.connectAttr(DecMatXLocAimCtrlUpper + ".outputRotate", PMAlocCtrlUpper + ".input3D[1]")
-    cmds.connectAttr(PMAlocCtrlUpper + ".output3D", ComMatXLocAim + ".inputRotate")
-    cmds.connectAttr(LocAxisMidPelvis + ".scale", ComMatXLocAim + ".inputScale")
+    cmds.connectAttr(LocAxisMidPelvis + ".rotate", LocatorRelay + ".rotate")
+    cmds.connectAttr(LocAxisMidPelvis + ".translate", LocatorRelay + ".translate")
 
-    cmds.connectAttr(LocatorRelay + ".offsetParentMatrix")
+    cmds.parent(LocatorRelayMid, LocatorRelay)
+    cmds.setAttr(LocatorRelayMid + ".translateY", height/2)
+    cmds.parent(LocatorRelay, "Grp_Locs")
 
     cmds.connectAttr(CtrlFKMid[0] + ".worldMatrix[0]", MultMatX + ".matrixIn[0]")
-    cmds.connectAttr(ComMatXLocAim + ".outputMatrix", MultMatX + ".matrixIn[1]")
-    cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX + ".matrixIn[2]")
+    cmds.connectAttr("cstr_Ik_Mid.parentInverseMatrix[0]", MultMatX + ".matrixIn[1]")
+
+    cmds.connectAttr(LocatorRelayMid + ".worldMatrix[0]", ComMatXFKMid + ".inputMatrix")
+    cmds.connectAttr(ComMatXFKMid + ".outputTranslate", PMAlocFKMid + ".input3D[0]")
+    cmds.setAttr(PMAlocFKMid + ".input3D[1]", 0, -height/2, 0)
+    cmds.connectAttr(PMAlocFKMid + ".output3D", DecMatXFKMid + ".inputTranslate")
+    cmds.connectAttr(ComMatXFKMid + ".outputRotate", DecMatXFKMid + ".inputRotate")
+    cmds.connectAttr(ComMatXFKMid + ".outputScale", DecMatXFKMid + ".inputScale")
+
+    cmds.connectAttr(DecMatXFKMid + ".outputMatrix", MultMatX + ".matrixIn[2]")
 
     cmds.connectAttr(MultMatX + ".matrixSum", DecMatX + ".inputMatrix")
 
@@ -658,20 +672,34 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
 
 
     if CTRLFK == 3:
+        cmds.connectAttr(LocatorRelayTop + ".worldMatrix[0]", ComMatXFKMidTop + ".inputMatrix")
+        cmds.connectAttr(ComMatXFKMidTop + ".outputTranslate", PMAlocFKMidTop + ".input3D[0]")
+        cmds.setAttr(PMAlocFKMidTop + ".input3D[1]", 0, -3*height/4, 0)
+        cmds.connectAttr(PMAlocFKMidTop + ".output3D", DecMatXFKMidTop + ".inputTranslate")
+        cmds.connectAttr(ComMatXFKMidTop + ".outputRotate", DecMatXFKMidTop + ".inputRotate")
+        cmds.connectAttr(ComMatXFKMidTop + ".outputScale", DecMatXFKMidTop + ".inputScale")
+
         cmds.connectAttr(CtrlFKMidTop[0] + ".worldMatrix[0]", MultMatXTop + ".matrixIn[0]")
-        cmds.connectAttr(ComMatXLocAim + ".outputMatrix", MultMatXTop + ".matrixIn[1]")
-        cmds.connectAttr("cstr_Ik_Mid_Top.parentInverseMatrix[0]", MultMatXTop + ".matrixIn[2]")
+        cmds.connectAttr("cstr_Ik_Mid_Top.parentInverseMatrix[0]", MultMatXTop + ".matrixIn[1]")
+
+        cmds.connectAttr(DecMatXFKMidTop + ".outputMatrix", MultMatXTop + ".matrixIn[2]")
 
         cmds.connectAttr(MultMatXTop + ".matrixSum", DecMatXTop + ".inputMatrix")
 
         cmds.connectAttr(DecMatXTop + ".outputTranslate", "cstr_Ik_Mid_Top.t")
         cmds.connectAttr(DecMatXTop + ".outputRotate", "cstr_Ik_Mid_Top.r")
 
-
+        cmds.connectAttr(LocatorRelayBottom + ".worldMatrix[0]", ComMatXFKMidBottom + ".inputMatrix")
+        cmds.connectAttr(ComMatXFKMidBottom + ".outputTranslate", PMAlocFKMidBottom + ".input3D[0]")
+        cmds.setAttr(PMAlocFKMidBottom + ".input3D[1]", 0, -height/4, 0)
+        cmds.connectAttr(PMAlocFKMidBottom + ".output3D", DecMatXFKMidBottom + ".inputTranslate")
+        cmds.connectAttr(ComMatXFKMidBottom + ".outputRotate", DecMatXFKMidBottom + ".inputRotate")
+        cmds.connectAttr(ComMatXFKMidBottom + ".outputScale", DecMatXFKMidBottom + ".inputScale")
 
         cmds.connectAttr(CtrlFKMidBottom[0] + ".worldMatrix[0]", MultMatXBottom + ".matrixIn[0]")
-        cmds.connectAttr(ComMatXLocAim + ".outputMatrix", MultMatXBottom + ".matrixIn[1]")
-        cmds.connectAttr("cstr_Ik_Mid_Bottom.parentInverseMatrix[0]", MultMatXBottom + ".matrixIn[2]")
+        cmds.connectAttr("cstr_Ik_Mid_Bottom.parentInverseMatrix[0]", MultMatXBottom + ".matrixIn[1]")
+
+        cmds.connectAttr(DecMatXFKMidBottom + ".outputMatrix", MultMatXBottom + ".matrixIn[2]")
 
         cmds.connectAttr(MultMatXBottom + ".matrixSum", DecMatXBottom + ".inputMatrix")
 
