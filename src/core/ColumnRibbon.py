@@ -5,12 +5,6 @@ from wombatAutoRig.src.core import Controllers
 from wombatAutoRig.src.core import Color
 
 
-#intensity volume attribute a corriger
-
-#Pb quand on bouge en translate et en rotate le CtrlUpperBody, on peut pas avoir et un Ik cool et un FK cool (switch ? meme si je pense que l'utilisation sera principalement FK et j'aurais aimé qu'on puisse juste bouger les FK comme des IKs et que ça marche)
-#==> debrancher input translate du loc parce que pas besoin. dernier pb les rotates qui se double. 
-#idee : faire la difference des rotates world du loc et du CtrlUpperBody . into connect new matrix in a loc qui sera parent de nbr(CTRLFK) loc qui auront comme offset la valeur de height/2 /4 *3/4 into recompose sa matrix sans l'offset de height. brancher cette matrix dans le mult matrix qui contraint l'ik. odre de matrix ==> FK/InvParent/Loc
-
 
 
 def MatrixConstraint(Master, Slave, mode=1, t=True, r=True, s=False):
