@@ -179,9 +179,9 @@ importlib.reload(DlgCartoonEye)
 from wombatAutoRig.src.ui.forms import ui_DlgCartoonEye
 importlib.reload(ui_DlgCartoonEye)
 
-#wombatAutoRig.run()  # Appeler la fonction run() après rechargement
+wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
 #CartoonEye.test()
 
-dialog = DlgCartoonEye.DlgCartoonEye()
-dialog.run()  # Appeler la fonction run() après rechargement
+#dialog = DlgCartoonEye.DlgCartoonEye()
+#dialog.run()  # Appeler la fonction run() après rechargement

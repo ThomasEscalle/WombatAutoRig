@@ -9,6 +9,7 @@ from wombatAutoRig.src.core import NonRollMatrix
 from wombatAutoRig.src.core import TwistExtractor
 from wombatAutoRig.src.core import NewCTRL
 from wombatAutoRig.src.core import Bookmark
+from wombatAutoRig.src.core import ColumnRibbon
 
 
 #(Reprendre les twist parce que j'ai fait betise jsp a voir/ probleme surtout au niveau des pieds a cause de l'angle qui est different)
@@ -581,8 +582,13 @@ def createFinger(settings, side ="L", finger= "Thumb"):
     
 def createSpine(settings):
     #TO DO
-    #savoir quelle hauteur doit faire la spine
-    #Savoir combien de CTRLFK 
+    #savoir quelle hauteur doit faire la spine ===> un joitn de placement pour le chest
+    Heigth = cmds.getAttr("PlacementJnt_Chest.translateY")
+    #Savoir combien de CTRLFK                  ===> une option dans l'UI pour ecrire un attribut dans le dico settings
+    NbrFK = settings["FKSpine"]
+
+    ColumnRibbon.ColumnRibbon(name="{}".format(settings["name"]), height=Heigth, CTRLFK=NbrFK, BindSet="Bind_JNTs")
+
     #Placer la spine grace a son offset CTRL (match all transform of bind root)
     #COntraindre la spine au CTRL Global (all)
     #Contraindre clavicle par BindChest

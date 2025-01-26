@@ -21,6 +21,9 @@ def placeJointsLegs(settings):
     # Creating the root joint
     createJoint("PlacementJnt_Root", (0, 97.699, 0), (0,0,0), settings, ro="xzy")
 
+    createJoint("PlacementJnt_Chest", (0, 140, 0), (0,0,0), settings, ro="xzy")
+    cmds.parent("PlacementJnt_Chest", "PlacementJnt_Root")
+
     # Creating Joints for the legs left
     createJoint("PlacementJnt_Hip_L", (7.636, 88.219, 0), (0,-1.767,-90), settings)
     createJoint("PlacementJnt_Knee_L", (7.636, 47.195, 1.265), (0,2.092,-90), settings)
