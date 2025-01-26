@@ -31,11 +31,16 @@ def compute(settings):
 
     #Joint Root
     cmds.duplicate("PlacementJnt_Root", n="Bind_Root", po = True)
+    cmds.duplicate("PlacementJnt_Root", n="Bind_Hip", po = True)
 
+
+    cmds.parent(f"Bind_Hip", world=True)
+    cmds.sets(f"Bind_Hip", add="Bind_JNTs")
     cmds.parent(f"Bind_Root", world=True)
     cmds.sets(f"Bind_Root", add="Bind_JNTs")
     Offset.offset("Bind_Root", nbr=3)
     cmds.parent("Bind_Root_Offset", "{}|GlobalMove_01|Joints_01".format(settings["name"]))
+    cmds.parent("Bind_Hip", "Bind_Root")
 
     #CTRL Settings
     cmds.duplicate("PlacementCtrl_Settings", n="CTRL_Settings")
@@ -130,7 +135,7 @@ def createLeg(settings, side = "L"):
     
     #Reparenting the joints
     
-    cmds.parent(f"Bind_Hip_{side}", f"Bind_Root")
+    cmds.parent(f"Bind_Hip_{side}", f"Bind_Hip")
     cmds.parent(f"DrvJnt_Knee_{side}", f"DrvJnt_Leg_{side}")
     cmds.parent(f"DrvJnt_Ankle_{side}", f"DrvJnt_Knee_{side}")
     cmds.parent(f"FK_Knee_{side}", f"FK_Leg_{side}")
@@ -465,6 +470,14 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"Twist_Leg_{side}_00.TwistEx", f"CTRL_End_Ribbon_Leg_{side}.rotateX")
     cmds.connectAttr(f"Twist_Knee_{side}_00.TwistEx", f"CTRL_Start_Ribbon_Knee_{side}.rotateX")
 
+    #CTRL Hip
+    if side == "L":
+        CTRLhip = NewCTRL.NewCTRL("PlacementCtrl_Hip", "Bind_Hip", "CTRL_Hip", 2)
+        cmds.parent(CTRLhip, "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+
+        cmds.connectAttr("CTRL_Hip.t", "Bind_Hip.t")
+        cmds.connectAttr("CTRL_Hip.r", "Bind_Hip.r")
+
 def createHand(settings, side = "L"):
     #region Creating the joints
     cmds.duplicate(f"PlacementJnt_Wrist_{side}", n=f"Bind_Hand_{side}", po=True)
@@ -566,7 +579,18 @@ def createFinger(settings, side ="L", finger= "Thumb"):
         MatrixConstrain.MatrixConstrain(Finger03, f"Bind_{finger}_03_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
 
     
-
+def createSpine(settings):
+    #TO DO
+    #savoir quelle hauteur doit faire la spine
+    #Savoir combien de CTRLFK 
+    #Placer la spine grace a son offset CTRL (match all transform of bind root)
+    #COntraindre la spine au CTRL Global (all)
+    #Contraindre clavicle par BindChest
+    #Contraindre BindRoot par BindRootSpine
+    #Shape CTRL a changer grace à NewCTRL.Bend
+    #Ctrl Hip a contraindre
+    #Ctrl Clavicle a contraindre
+    pass
 
 def createArm(settings, side = "L"):
     #region Creating the joints 
@@ -964,3 +988,10 @@ def createArm(settings, side = "L"):
         cmds.connectAttr(f"Twist_Wrist_{side}_00.TwistEx", f"CTRL_End_Ribbon_Elbow_{side}.rotateX")
         Bookmark.addNodeToBookmark("NonRoll", f"CTRL_Start_Ribbon_Arm_{side}", 6, OffsetBook, state = 1)
         Bookmark.addNodeToBookmark("NonRoll", f"CTRL_End_Ribbon_Elbow_{side}", 5, OffsetBook+2, state = 1)
+    
+    #Clavicle CTRLs
+    CTRLclavicle = NewCTRL.NewCTRL(f"PlacementCtrl_Clavicle_{side}", f"Bind_Clavicle_{side}", f"CTRL_Clavicle_{side}", 2)
+    cmds.parent(CTRLclavicle, "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+
+    cmds.connectAttr(f"CTRL_Clavicle_{side}.t", f"Bind_Clavicle_{side}.t")
+    cmds.connectAttr(f"CTRL_Clavicle_{side}.r", f"Bind_Clavicle_{side}.r")

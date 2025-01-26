@@ -51,7 +51,7 @@ def MatrixInputRibbon(CTRL, side, point, surface):
     Bookmark.addNodeToBookmark("Ribbon_input", MultPiv, row=point-0.1, column=-0.5, state=0)
     Bookmark.addNodeToBookmark("Ribbon_input", ComPiv, row=point-0.1, column=-1, state=0)
 
-def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
+def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1, BindSet = None):
     #Create a nurbs plane
     RibbonLowDef = cmds.surface( dv=3, du=1, fu='open', fv='open', kv=(0, 0, 0, 0.5, 1, 1, 1), ku=(0, 1), pw=((-height/4, 0, 0,1), (-height/4, height/3,0,1), (-height/4, height/2,0,1), (-height/4, 2*height/3,0,1), (-height/4, height,0,1), (height/4, 0,0,1), (height/4, height/3, 0,1), (-height/4, height/2,0,1), (height/4, 2*height/3, 0,1), (height/4, height, 0,1)), name=f"ColumnRibbon_{name}_LowDef")
     #cmds.nurbsPlane(axis=[0,0,1], w=1, lr=height, u=1, v=2, p=[0,1,0], name=f"ColumnRibbon_{name}_LowDef")
@@ -1077,6 +1077,13 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1):
             cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_Bind_Root_Spine.s")
         if i == JntNbr-1:
             cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_Bind_Chest.s")
-    
-
-ColumnRibbon(name="01", height=2, JntNbr=7, CTRLFK=3)
+        
+    if BindSet != None:
+    # Apply the set to all the 'Bind' joints
+        if i == JntNbr-1 :
+            cmds.sets("Bind_Chest", add=BindSet)
+        elif i == 0:
+            pass
+        else :
+            for i in range(JntNbr):
+                cmds.sets(f"Bind_RibbonSpine_0{i}", add=BindSet)
