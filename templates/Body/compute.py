@@ -478,7 +478,7 @@ def createLeg(settings, side = "L"):
 
         cmds.connectAttr("CTRL_Hip.t", "Bind_Hip.t")
         cmds.connectAttr("CTRL_Hip.r", "Bind_Hip.r")
-
+#ajouter preserve au doigts
 def createHand(settings, side = "L"):
     #region Creating the joints
     cmds.duplicate(f"PlacementJnt_Wrist_{side}", n=f"Bind_Hand_{side}", po=True)
