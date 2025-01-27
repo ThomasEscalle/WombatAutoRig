@@ -286,6 +286,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1, BindSet = None):
     cmds.shadingNode("addDoubleLinear", au=True, name="add_tx_Chest_Chest")
     cmds.shadingNode("addDoubleLinear", au=True, name="add_ty_Chest_Chest")
     cmds.shadingNode("addDoubleLinear", au=True, name="add_tz_Chest_Chest")
+    DecMatXUpperBody = cmds.shadingNode("decomposeMatrix", au=True, name="DecMatX_CtrlUpperBody_Scale")
 
 
     Bookmark.createBookmark("node_Ribbon_Spine_LocAxisMidSpine")
@@ -314,13 +315,15 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1, BindSet = None):
         cmds.connectAttr(AddTyTopEnd + ".output", "mult_scaleY_Mid_UpperBody.input1")
     if CTRLFK == 5:
         cmds.connectAttr(AddTyT4_end + ".output", "mult_scaleY_Mid_UpperBody.input1")
-    cmds.connectAttr(CtrlUpperBody + ".scaleY", "mult_scaleY_Mid_UpperBody.input2")
+
+    cmds.connectAttr(CtrlUpperBody + ".worldMatrix[0]", DecMatXUpperBody + ".inputMatrix")
+    cmds.connectAttr(DecMatXUpperBody + ".outputScaleY", "mult_scaleY_Mid_UpperBody.input2")
 
     cmds.connectAttr("add_tx_Mid_Chest.output", LocAxisMidSpine + "_Move.translateX")
     cmds.connectAttr("mult_scaleY_Mid_UpperBody.output", LocAxisMidSpine + "_Move.translateY")
     cmds.connectAttr("add_tz_Mid_Chest.output", LocAxisMidSpine + "_Move.translateZ")
 
-    cmds.connectAttr(CtrlUpperBody + ".scale", LocAxisMidSpine + "_Move.scale")
+    cmds.connectAttr(DecMatXUpperBody + ".outputScale", LocAxisMidSpine + "_Move.scale")
 
     cmds.connectAttr(CtrlFKChest + ".translateX", "add_tx_Chest_Chest.input1")
     cmds.connectAttr(CtrlFKChest + ".translateY", "add_ty_Chest_Chest.input1")
@@ -798,8 +801,8 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1, BindSet = None):
     
     cmds.connectAttr(ArcLengthChest + ".output", Div_Scale_Root + ".input1X")
     cmds.connectAttr(ArcLengthChest + ".output", Div_Scale_Chest + ".input1X")
-    cmds.connectAttr(CtrlUpperBody + ".scaleY", Div_Scale_Root + ".input2X")
-    cmds.connectAttr(CtrlUpperBody + ".scaleY", Div_Scale_Chest + ".input2X")
+    cmds.connectAttr(DecMatXUpperBody + ".outputScaleY", Div_Scale_Root + ".input2X")
+    cmds.connectAttr(DecMatXUpperBody + ".outputScaleY", Div_Scale_Chest + ".input2X")
 
     cmds.connectAttr(Div_Scale_Root + ".outputX", CtrlTanRoot + "_Offset.translateY")
     cmds.connectAttr(Div_Scale_Chest + ".outputX", CtrlTanChest + "_Offset.translateY")
@@ -1072,11 +1075,11 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1, BindSet = None):
     
         #scale issue
         if i !=0 and i!= JntNbr-1:
-            cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_RibbonSpine_0{i}.s")
+            cmds.connectAttr(DecMatXUpperBody + ".outputScale", f"Offset_RibbonSpine_0{i}.s")
         if i ==0:
-            cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_Bind_Root_Spine.s")
+            cmds.connectAttr(DecMatXUpperBody + ".outputScale", f"Offset_Bind_Root_Spine.s")
         if i == JntNbr-1:
-            cmds.connectAttr(CtrlUpperBody + ".scale", f"Offset_Bind_Chest.s")
+            cmds.connectAttr(DecMatXUpperBody + ".outputScale", f"Offset_Bind_Chest.s")
         
     if BindSet != None:
     # Apply the set to all the 'Bind' joints
