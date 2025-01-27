@@ -1083,13 +1083,13 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1, BindSet = None):
         
     if BindSet != None:
     # Apply the set to all the 'Bind' joints
-        if i == JntNbr-1 :
-            cmds.sets("Bind_Chest", add=BindSet)
-        elif i == 0:
-            pass
-        else :
-            for i in range(JntNbr):
-                cmds.sets(f"Bind_RibbonSpine_0{i+1}", add=BindSet)
+        for i in range(JntNbr):
+            if i == JntNbr-1 :
+                cmds.sets("Bind_Chest", add=BindSet)
+            elif i != 0 and i != JntNbr-1:
+                cmds.sets(f"Bind_RibbonSpine_0{i}", add=BindSet)
+            else :
+                pass
 
     return CtrlUpperBody + "_Offset"
 
