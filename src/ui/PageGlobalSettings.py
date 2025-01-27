@@ -54,6 +54,15 @@ class PageGlobalSettings(PageBase):
             # if the input is a QCheckBox
             if isinstance(input, QCheckBox):
                 settings[input.whatsThis()] = input.isChecked()
+
+            # if the input is a QSpinBox
+            if isinstance(input, QSpinBox):
+                settings[input.whatsThis()] = input.value()
+            
+            # if the input is a QDoubleSpinBox
+            if isinstance(input, QDoubleSpinBox):
+                settings[input.whatsThis()] = input.value()
+
         print(settings)
         return settings
 
@@ -94,6 +103,36 @@ class PageGlobalSettings(PageBase):
         frame.setFrameShadow(QFrame.Sunken)
         self.ui.formLayout.addRow("", frame)
         pass
+
+    # Add an integer input to the page (QSpinBox)
+    def addIntegerInput(self, name , identifier, min = 0, max = 100):
+        spinBox = QSpinBox()
+        spinBox.setWhatsThis(identifier)
+        spinBox.setMinimum(min)
+        spinBox.setMaximum(max)
+        self.ui.formLayout.addRow(name, spinBox)
+        self.inputs.append(spinBox)
+
+    # Add a float input to the page (QDoubleSpinBox)
+    def addFloatInput(self, name , identifier, min = 0, max = 100):
+        spinBox = QDoubleSpinBox()
+        spinBox.setWhatsThis(identifier)
+        spinBox.setMinimum(min)
+        spinBox.setMaximum(max)
+        self.ui.formLayout.addRow(name, spinBox)
+        self.inputs.append(spinBox)
+
+    # Add a combobox to the page
+    # Items is a list of strings
+    def addComboBox(self, name, identifier, items, defaultIndex = 0):
+        comboBox = QComboBox()
+        comboBox.setWhatsThis(identifier)
+        for item in items:
+            comboBox.addItem(item)
+        if defaultIndex < len(items):
+            comboBox.setCurrentIndex(defaultIndex)
+        self.ui.formLayout.addRow(name, comboBox)
+        self.inputs.append(comboBox)
 
     # Add a spacer to the page
     def addSpacer(self):
