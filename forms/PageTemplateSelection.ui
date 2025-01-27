@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1067</width>
-    <height>1036</height>
+    <width>578</width>
+    <height>179</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -64,6 +64,13 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="icon">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </item>
    <item>
     <spacer name="verticalSpacer_2">

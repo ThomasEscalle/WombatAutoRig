@@ -17,7 +17,7 @@ class Ui_PageGeometrySelection(object):
     def setupUi(self, PageGeometrySelection):
         if not PageGeometrySelection.objectName():
             PageGeometrySelection.setObjectName(u"PageGeometrySelection")
-        PageGeometrySelection.resize(485, 603)
+        PageGeometrySelection.resize(369, 250)
         self.verticalLayout = QVBoxLayout(PageGeometrySelection)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(PageGeometrySelection)

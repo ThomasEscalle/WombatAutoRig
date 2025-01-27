@@ -17,7 +17,7 @@ class Ui_PageValidation(object):
     def setupUi(self, PageValidation):
         if not PageValidation.objectName():
             PageValidation.setObjectName(u"PageValidation")
-        PageValidation.resize(591, 254)
+        PageValidation.resize(518, 296)
         self.verticalLayout = QVBoxLayout(PageValidation)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(PageValidation)
@@ -34,7 +34,7 @@ class Ui_PageValidation(object):
 
         self.verticalLayout.addWidget(self.label_2)
 
-        self.verticalSpacer = QSpacerItem(20, 392, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
@@ -63,7 +63,7 @@ class Ui_PageValidation(object):
 
         self.verticalLayout.addWidget(self.btnSaveState)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 392, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer_2)
 

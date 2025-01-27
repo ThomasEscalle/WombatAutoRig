@@ -17,7 +17,7 @@ class Ui_PageTemplateSelection(object):
     def setupUi(self, PageTemplateSelection):
         if not PageTemplateSelection.objectName():
             PageTemplateSelection.setObjectName(u"PageTemplateSelection")
-        PageTemplateSelection.resize(1067, 1036)
+        PageTemplateSelection.resize(578, 179)
         self.verticalLayout = QVBoxLayout(PageTemplateSelection)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label_2 = QLabel(PageTemplateSelection)
@@ -60,6 +60,11 @@ class Ui_PageTemplateSelection(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
+        self.icon = QLabel(PageTemplateSelection)
+        self.icon.setObjectName(u"icon")
+
+        self.verticalLayout.addWidget(self.icon)
+
         self.verticalSpacer_2 = QSpacerItem(20, 301, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer_2)
@@ -76,5 +81,6 @@ class Ui_PageTemplateSelection(object):
         self.label_3.setText("")
         self.label.setText(QCoreApplication.translate("PageTemplateSelection", u"Select a template :", None))
         self.btnRefresh.setText(QCoreApplication.translate("PageTemplateSelection", u"Refresh", None))
+        self.icon.setText("")
     # retranslateUi
 
