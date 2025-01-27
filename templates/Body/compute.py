@@ -76,7 +76,7 @@ def compute(settings):
 
     createSpine(settings)
 
-
+#Attacher bras a clavicle ===> Joint PLacement
 
 
 def createLeg(settings, side = "L"):
@@ -591,7 +591,9 @@ def createSpine(settings):
     #Savoir combien de CTRLFK                  ===> une option dans l'UI pour ecrire un attribut dans le dico settings
     NbrFK = int(settings["nbrCtrlFkSpine"])
 
-    OffsetCtrlRoot = ColumnRibbon.ColumnRibbon(name="{}".format(settings["name"]), height=Heigth, CTRLFK=NbrFK, BindSet="Bind_JNTs")
+    NbrJoints = int(settings["nbrJointsSpine"])
+
+    OffsetCtrlRoot = ColumnRibbon.ColumnRibbon(name="{}".format(settings["name"]), height=Heigth, CTRLFK=NbrFK, JntNbr =NbrJoints ,BindSet="Bind_JNTs")
 
     #Placer la spine grace a son offset CTRL (match all transform of bind root)
 
