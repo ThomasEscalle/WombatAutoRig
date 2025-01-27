@@ -17,7 +17,7 @@ class Ui_PageGlobalSettings(object):
     def setupUi(self, PageGlobalSettings):
         if not PageGlobalSettings.objectName():
             PageGlobalSettings.setObjectName(u"PageGlobalSettings")
-        PageGlobalSettings.resize(581, 574)
+        PageGlobalSettings.resize(389, 202)
         self.verticalLayout = QVBoxLayout(PageGlobalSettings)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(PageGlobalSettings)
@@ -40,7 +40,7 @@ class Ui_PageGlobalSettings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 555, 474))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 363, 102))
         self.formLayout = QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName(u"formLayout")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)

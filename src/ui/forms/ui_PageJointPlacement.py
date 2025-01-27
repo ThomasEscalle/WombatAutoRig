@@ -17,7 +17,7 @@ class Ui_PageJointPlacement(object):
     def setupUi(self, PageJointPlacement):
         if not PageJointPlacement.objectName():
             PageJointPlacement.setObjectName(u"PageJointPlacement")
-        PageJointPlacement.resize(723, 640)
+        PageJointPlacement.resize(645, 188)
         self.verticalLayout = QVBoxLayout(PageJointPlacement)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(PageJointPlacement)

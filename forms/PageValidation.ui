@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>591</width>
-    <height>254</height>
+    <width>518</width>
+    <height>296</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,12 +37,12 @@
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
+      <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>392</height>
+       <height>40</height>
       </size>
      </property>
     </spacer>
@@ -82,12 +82,12 @@
    <item>
     <spacer name="verticalSpacer_2">
      <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
+      <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>392</height>
+       <height>40</height>
       </size>
      </property>
     </spacer>

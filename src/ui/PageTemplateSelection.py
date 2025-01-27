@@ -2,6 +2,8 @@ from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+# QPixMap is used to load the icons
+from PySide2.QtGui import QPixmap
 
 from wombatAutoRig.src.ui.forms import ui_PageTemplateSelection
 from wombatAutoRig.src.ui.PageBase import PageBase
@@ -18,6 +20,11 @@ class PageTemplateSelection(PageBase):
         self.ui = ui_PageTemplateSelection.Ui_PageTemplateSelection()
         self.ui.setupUi(self)
 
+        # Set the icon of the page
+        pixmapIcon = QPixmap("C:/Users/Thomas/OneDrive/Documents/maya/2024/scripts/wombatAutoRig/rc/logo.png")
+        pixmapIcon = pixmapIcon.scaled(256, 256, QtCore.Qt.KeepAspectRatio)
+        self.ui.icon.setPixmap(pixmapIcon)
+        self.ui.icon.setAlignment(QtCore.Qt.AlignCenter)
 
         # Connect the signals
         self.ui.btnRefresh.clicked.connect(self.refresh)

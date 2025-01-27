@@ -17,7 +17,7 @@ class Ui_PageControllerPlacement(object):
     def setupUi(self, PageControllerPlacement):
         if not PageControllerPlacement.objectName():
             PageControllerPlacement.setObjectName(u"PageControllerPlacement")
-        PageControllerPlacement.resize(817, 799)
+        PageControllerPlacement.resize(667, 267)
         self.verticalLayout = QVBoxLayout(PageControllerPlacement)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(PageControllerPlacement)
