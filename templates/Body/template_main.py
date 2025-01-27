@@ -61,8 +61,8 @@ class Template(TemplateBase.TemplateBase):
         self.pages[0].addSpacer()
         # Ask for the number of Fk controllers in the spine (combobox that can be 1, 3 or 5)
         self.pages[0].addLabel("Spine Settings")
-        self.pages[0].addComboBox("Nbr FK Spine CTRLS", "nbrCtrlFkSpine", ["1", "3", "5"], 1)
-        self.pages[0].addIntegerInput("Nbr Spine Joints", "nbrJointsSpine", defaultValue=7, min = 3, max = 50)
+        self.pages[0].addComboBox("Number of spine CTRLS", "nbrCtrlFkSpine", ["1", "3", "5"], 1)
+        self.pages[0].addIntegerInput("Number of spine Joints", "nbrJointsSpine", defaultValue=7, min = 3, max = 50)
 
         self.pages[4].setPageTitle("Bind Skin")
         self.pages[4].addCheckbox("Bind Skin", "bindSkin")

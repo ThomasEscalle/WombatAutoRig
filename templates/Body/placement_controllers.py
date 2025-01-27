@@ -60,9 +60,9 @@ def transformRelative(controller, position = [0,0,0], rotation = [0,0,0], scale 
     goodScale = AutorigHelper.resizeCtrl(bbox = settings["bbox"] , size = scale)
 
 
-    cmds.setAttr(controller + ".translate", goodPos[0], goodPos[1], goodPos[2] , settings)
-    cmds.setAttr(controller + ".rotate", rotation[0], rotation[1], rotation[2] , settings)
-    cmds.setAttr(controller + ".scale", goodScale[0], goodScale[1], goodScale[2] , settings)
+    cmds.setAttr(controller + ".translate", goodPos[0], goodPos[1], goodPos[2] ,settings)
+    cmds.setAttr(controller + ".rotate", rotation[0], rotation[1], rotation[2] ,settings)
+    cmds.setAttr(controller + ".scale", goodScale[0], goodScale[1], goodScale[2] ,  settings)
 
 def setShapeSize(controller, size):
     shapes = cmds.listRelatives(controller, shapes=True)
@@ -252,6 +252,7 @@ def placeFingersControllers(settings):
 # - PlacementCtrl_Settings_Arm_L
 # - PlacementCtrl_Settings_Arm_R
 # - PlacementCtrl_Settings_Spine
+#region Global Controllers
 def placeGlobalControllers(settings) :
     # PlacementCtrl_Global
     PlacementCtrl_Global = Controllers.createController("2D_Shapes/star", "PlacementCtrl_Global")
@@ -262,7 +263,7 @@ def placeGlobalControllers(settings) :
 
     # PlacementCtrl_Root
     PlacementCtrl_Root = cmds.circle(name="PlacementCtrl_Root", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Root", [0, 87, -1.7], [0, 0, 0], [20, 20, 16] , settings)
+    transformRelative("PlacementCtrl_Root", [0, 93, -1.7], [0, 0, 0], [20, 20, 16] , settings)
     setShapeSize("PlacementCtrl_Root", 2)
     Color.setColor("PlacementCtrl_Root", "yellow")
     cmds.parent("PlacementCtrl_Root", "AutoRig_Data|ControllersPlacement|Global_Controllers")
@@ -316,8 +317,8 @@ def placeGlobalControllers(settings) :
 # Place the spine controllers
 # - PlacementCtrl_Hip
 # - PlacementCtrl_Shoulder
-# - PlacementCtrl_Neck_01
-# - PlacementCtrl_Spine_01
+
+# region Spine Controllers
 def placeSpineControllers(settings) :
 
     # PlacementCtrl_Hip
@@ -327,24 +328,68 @@ def placeSpineControllers(settings) :
     cmds.parent("PlacementCtrl_Hip", "AutoRig_Data|ControllersPlacement|Global_Controllers")
 
     # PlacementCtrl_Shoulder
-    PlacementCtrl_Shoulder = Controllers.createController("3D_Shapes/tube", "PlacementCtrl_Shoulder")
-    transformRelative("PlacementCtrl_Shoulder", [0, 118, 0.5], [-4, 0, 0], [2.5, 1.2, 2.5] , settings)
+    PlacementCtrl_Shoulder = cmds.circle(name="PlacementCtrl_Shoulder", normal=[0, 1, 0], radius=1)
+    transformRelative("PlacementCtrl_Shoulder", [0, 139, -1.8], [0, 0, 0], [13.6, 13.6, 9.6] , settings)
+    cmds.move(0, -3.633511, 0, "PlacementCtrl_Shoulder.cv[5]", "PlacementCtrl_Shoulder.cv[1]", r=True, os=True, wd=True)
     setShapeSize("PlacementCtrl_Shoulder", 2)
     Color.setColor("PlacementCtrl_Shoulder", "yellow")
-    cmds.parent("PlacementCtrl_Shoulder", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    cmds.parent("PlacementCtrl_Shoulder", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
-    # PlacementCtrl_Neck_01
-    PlacementCtrl_Neck_01 = cmds.circle(name="PlacementCtrl_Neck_01", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Neck_01", [0, 140, -3.4], [0, 0, 0], [7.7, 7.7, 7.7] , settings)
-    setShapeSize("PlacementCtrl_Neck_01", 2)
-    Color.setColor("PlacementCtrl_Neck_01", "yellow")
-    cmds.parent("PlacementCtrl_Neck_01", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    # PlacementCtrl_ShoulderIk
+    PlacementCtrl_ShoulderIk = cmds.circle(name="PlacementCtrl_ShoulderIk", normal=[0, 1, 0], radius=1)
+    transformRelative("PlacementCtrl_ShoulderIk", [0, 139, -4.1], [0, 0, 0], [10.5, 10.5, 7] , settings)
+    cmds.move(0, -3.633511, 0, "PlacementCtrl_ShoulderIk.cv[5]", "PlacementCtrl_ShoulderIk.cv[1]", r=True, os=True, wd=True)
+    Color.setColor("PlacementCtrl_ShoulderIk", "blue")
+    cmds.parent("PlacementCtrl_ShoulderIk", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
-    # PlacementCtrl_Spine_01
-    PlacementCtrl_Spine_01 = cmds.circle(name="PlacementCtrl_Spine_01", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Spine_01", [0, 107, 2], [0, 0, 0], [14.7, 14.7, 12.7] , settings)
-    Color.setColor("PlacementCtrl_Spine_01", "chocolate")
-    cmds.parent("PlacementCtrl_Spine_01", "AutoRig_Data|ControllersPlacement|Global_Controllers")
+    # PlacementCtrl_IkRoot
+    PlacementCtrl_IkRoot = cmds.circle(name="PlacementCtrl_IkRoot", normal=[0, 1, 0], radius=1)
+    transformRelative("PlacementCtrl_IkRoot", [0, 93, -1.7], [0, 0, 0], [18.156, 18.156, 14.525] , settings)
+    Color.setColor("PlacementCtrl_IkRoot", "blue")
+    cmds.parent("PlacementCtrl_IkRoot", "AutoRig_Data|ControllersPlacement|IK_Controllers")
+
+
+
+    # Ik, Fk controllers
+    nbrSpineControllersStr = settings["nbrCtrlFkSpine"]
+    nbrSpineControllers = int(nbrSpineControllersStr)
+    worldPosRoot = cmds.xform("PlacementJnt_Root", q=True, ws=True, t=True)
+    worldPosChest = cmds.xform("PlacementJnt_Chest", q=True, ws=True, t=True)
+
+    # Create the controllers
+    # - PlacementCtrl_Spine_Fk_#
+    # - PlacementCtrl_Spine_Ik_#
+    #  Where # is the index of the controller
+    for i in range(nbrSpineControllers):
+        # Place the controller in the middle of the spine
+        pos = [worldPosRoot[0] + (worldPosChest[0] - worldPosRoot[0]) * (i + 1) / (nbrSpineControllers + 1), worldPosRoot[1] + (worldPosChest[1] - worldPosRoot[1]) * (i + 1) / (nbrSpineControllers + 1), worldPosRoot[2] + (worldPosChest[2] - worldPosRoot[2]) * (i + 1) / (nbrSpineControllers + 1)]
+        print("pos", pos)
+
+        cmds.circle(name="PlacementCtrl_Spine_Fk_" + str(i + 1), normal=[0, 1, 0], radius=1)
+        transformRelative("PlacementCtrl_Spine_Fk_" + str(i + 1), pos, [0, 0, 0], [14.8, 14.8, 14.8] , settings)
+        Color.setColor("PlacementCtrl_Spine_Fk_" + str(i + 1), "yellow")
+        cmds.parent("PlacementCtrl_Spine_Fk_" + str(i + 1), "AutoRig_Data|ControllersPlacement|FK_Controllers")
+
+        cmds.circle(name="PlacementCtrl_Spine_Ik_" + str(i + 1), normal=[0, 1, 0], radius=1)
+        transformRelative("PlacementCtrl_Spine_Ik_" + str(i + 1), pos, [0, 0, 0], [16, 16, 16] , settings)
+        Color.setColor("PlacementCtrl_Spine_Ik_" + str(i + 1), "blue")
+        cmds.parent("PlacementCtrl_Spine_Ik_" + str(i + 1), "AutoRig_Data|ControllersPlacement|IK_Controllers")
+
+    # PlacementCtrl_Spine_Ribbon_#
+    #  Where # is the index of the controller
+    nbrSpineJntsStr = settings["nbrJointsSpine"]
+    nbrSpineJnts = int(nbrSpineJntsStr) - 2
+    for i in range(nbrSpineJnts):
+        pos = [worldPosRoot[0] + (worldPosChest[0] - worldPosRoot[0]) * (i + 1) / (nbrSpineJnts + 1), worldPosRoot[1] + (worldPosChest[1] - worldPosRoot[1]) * (i + 1) / (nbrSpineJnts + 1), worldPosRoot[2] + (worldPosChest[2] - worldPosRoot[2]) * (i + 1) / (nbrSpineJnts + 1)]
+
+        cmds.circle(name="PlacementCtrl_Spine_Ribbon_" + str(i + 1), normal=[0, 1, 0], radius=1)
+        transformRelative("PlacementCtrl_Spine_Ribbon_" + str(i + 1), pos, [0, 0, 0], [13, 13, 13] , settings)
+        Color.setColor("PlacementCtrl_Spine_Ribbon_" + str(i + 1), "purple")
+        cmds.parent("PlacementCtrl_Spine_Ribbon_" + str(i + 1), "AutoRig_Data|ControllersPlacement|Other_Controllers")
+
+
+
+
 
 
 
@@ -367,6 +412,7 @@ def placeSpineControllers(settings) :
 # - PlacementCtrl_Ribbon_Knee_R
 # - PlacementCtrl_Pin_Knee_R
 # - PlacementCtrl_Pin_Knee_L
+# region Legs Controllers
 def placeLegsControllers(settings) :
     ###############################
     ###  CONTROLLERS RIGHT LEG  ###
@@ -517,6 +563,7 @@ def placeLegsControllers(settings) :
 # - PlacementCtrl_Ribbon_Elbow_L
 # - PlacementCtrl_Pin_Elbow_R
 # - PlacementCtrl_Pin_Elbow_L
+# region Arms Controllers
 def placeArmsControllers(settings):
     ###############################
     ###  CONTROLLERS RIGHT ARM  ###
