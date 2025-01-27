@@ -109,18 +109,20 @@ class PageGlobalSettings(PageBase):
         pass
 
     # Add an integer input to the page (QSpinBox)
-    def addIntegerInput(self, name , identifier, min = 0, max = 100):
+    def addIntegerInput(self, name , identifier, min = 0, max = 100 , defaultValue = 0):
         spinBox = QSpinBox()
         spinBox.setWhatsThis(identifier)
+        spinBox.setValue(defaultValue)
         spinBox.setMinimum(min)
         spinBox.setMaximum(max)
         self.ui.formLayout.addRow(name, spinBox)
         self.inputs.append(spinBox)
 
     # Add a float input to the page (QDoubleSpinBox)
-    def addFloatInput(self, name , identifier, min = 0, max = 100):
+    def addFloatInput(self, name , identifier, min = 0, max = 100 , defaultValue = 0):
         spinBox = QDoubleSpinBox()
         spinBox.setWhatsThis(identifier)
+        spinBox.setValue(defaultValue)
         spinBox.setMinimum(min)
         spinBox.setMaximum(max)
         self.ui.formLayout.addRow(name, spinBox)
