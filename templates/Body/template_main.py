@@ -58,6 +58,9 @@ class Template(TemplateBase.TemplateBase):
         self.pages[0].setPageTitle("Global Settings")
         self.pages[0].addTextInput("Name", "name")
         self.pages[0].addTextInput("Identifier", "identifier")
+        self.pages[0].addSpacer()
+        # Ask for the number of Fk controllers in the spine (combobox that can be 1, 3 or 5)
+        self.pages[0].addComboBox("Number of FK controllers in the spine", "nbrCtrlFkSpine", ["1", "3", "5"], 1)
 
         self.pages[4].setPageTitle("Bind Skin")
         self.pages[4].addCheckbox("Bind Skin", "bindSkin")
