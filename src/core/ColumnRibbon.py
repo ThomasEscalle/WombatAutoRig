@@ -1087,3 +1087,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1, BindSet = None):
         else :
             for i in range(JntNbr):
                 cmds.sets(f"Bind_RibbonSpine_0{i}", add=BindSet)
+
+    return CtrlUpperBody + "_Offset"
+
+

@@ -74,6 +74,8 @@ def compute(settings):
     createArm(settings, "L")
     createArm(settings, "R")
 
+    createSpine(settings)
+
 
 
 
@@ -478,7 +480,9 @@ def createLeg(settings, side = "L"):
 
         cmds.connectAttr("CTRL_Hip.t", "Bind_Hip.t")
         cmds.connectAttr("CTRL_Hip.r", "Bind_Hip.r")
+
 #ajouter preserve au doigts
+
 def createHand(settings, side = "L"):
     #region Creating the joints
     cmds.duplicate(f"PlacementJnt_Wrist_{side}", n=f"Bind_Hand_{side}", po=True)
@@ -585,18 +589,45 @@ def createSpine(settings):
     #savoir quelle hauteur doit faire la spine ===> un joitn de placement pour le chest
     Heigth = cmds.getAttr("PlacementJnt_Chest.translateY")
     #Savoir combien de CTRLFK                  ===> une option dans l'UI pour ecrire un attribut dans le dico settings
-    NbrFK = settings["FKSpine"]
+    NbrFK = int(settings["nbrCtrlFkSpine"])
 
-    ColumnRibbon.ColumnRibbon(name="{}".format(settings["name"]), height=Heigth, CTRLFK=NbrFK, BindSet="Bind_JNTs")
+    OffsetCtrlRoot = ColumnRibbon.ColumnRibbon(name="{}".format(settings["name"]), height=Heigth, CTRLFK=NbrFK, BindSet="Bind_JNTs")
 
     #Placer la spine grace a son offset CTRL (match all transform of bind root)
+
+    cmds.matchTransform(OffsetCtrlRoot, "Bind_Root", pos=True, rot=True)
+
     #COntraindre la spine au CTRL Global (all)
+
+    MatrixConstrain.MatrixConstrain(["CTRL_{}_Global".format(settings["name"])], OffsetCtrlRoot)
+
     #Contraindre clavicle par BindChest
-    #Contraindre BindRoot par BindRootSpine
-    #Shape CTRL a changer grace à NewCTRL.Bend
-    #Ctrl Hip a contraindre
+
+    MatrixConstrain.MatrixConstrain(["Bind_Chest"], "Bind_Clavicle_L_Hook", sX=False, sY=False, sZ=False)
+    MatrixConstrain.MatrixConstrain(["Bind_Chest"], "Bind_Clavicle_R_Hook", sX=False, sY=False, sZ=False)
+
     #Ctrl Clavicle a contraindre
-    pass
+
+    MatrixConstrain.MatrixConstrain(["Bind_Chest"], "CTRL_Clavicle_L_Move", sX=False, sY=False, sZ=False)
+    MatrixConstrain.MatrixConstrain(["Bind_Chest"], "CTRL_Clavicle_R_Move", sX=False, sY=False, sZ=False)
+
+    #Contraindre BindRoot par BindRootSpine
+
+    MatrixConstrain.MatrixConstrain(["Bind_Root_Spine"], "Bind_Root_Hook", sX=False, sY=False, sZ=False)
+
+    #Ctrl Hip a contraindre
+
+    MatrixConstrain.MatrixConstrain(["Bind_Root_Spine"], "CTRL_Hip_Move", sX=False, sY=False, sZ=False)
+
+    #Hierarchiser Ribbon dans Extranodes
+
+    cmds.parent("Ribbon_Spine_{}".format(settings["name"]), "{}|Extra_Nodes_01|Extra_Nodes_To_Show_01".format(settings["name"]))
+
+    #Shape CTRL a changer grace à NewCTRL.Bend
+    
+    NewCTRL.Bend("PlacementCtrl_Root", "CTRL_UpperBody", "CTRL_Root")
+    NewCTRL.Bend("PlacementCtrl_Shoulder", "CTRL_FK_Chest", "CTRL_FK_Chest")
+    NewCTRL.Bend("PlacementCtrl_Settings_Spine", "CTRL_Option", "CTRL_Settings_Spine")
 
 def createArm(settings, side = "L"):
     #region Creating the joints 
