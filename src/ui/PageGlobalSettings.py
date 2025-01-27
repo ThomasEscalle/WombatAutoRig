@@ -63,6 +63,10 @@ class PageGlobalSettings(PageBase):
             if isinstance(input, QDoubleSpinBox):
                 settings[input.whatsThis()] = input.value()
 
+            # if the input is a QComboBox
+            if isinstance(input, QComboBox):
+                settings[input.whatsThis()] = input.currentText()
+
         print(settings)
         return settings
 
