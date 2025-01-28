@@ -631,6 +631,44 @@ def createSpine(settings):
     NewCTRL.Bend("PlacementCtrl_Shoulder", "CTRL_FK_Chest", "CTRL_FK_Chest")
     NewCTRL.Bend("PlacementCtrl_Settings_Spine", "CTRL_Option", "CTRL_Settings_Spine")
 
+    NewCTRL.Bend("PlacementCtrl_ShoulderIk", "CTRL_IK_Chest", "CTRL_Chest_Ik")
+    NewCTRL.Bend("PlacementCtrl_IkRoot", "CTRL_IK_Root", "CTRL_Root_IK")
+
+    if NbrFK == 1 :
+        NewCTRL.Bend("PlacementCtrl_Spine_Ik_1", "CTRL_IK_Mid", "CTRL_IK_Mid")
+        NewCTRL.Bend("PlacementCtrl_Spine_Fk_1", "CTRL_FK_Mid", "CTRL_FK_Mid")
+
+    if NbrFK == int(3) :
+        NewCTRL.Bend("PlacementCtrl_Spine_Ik_1", "CTRL_IK_Mid_Bottom", "CTRL_IK_Mid_Bottom")
+        NewCTRL.Bend("PlacementCtrl_Spine_Fk_1", "CTRL_FK_Mid_Bottom", "CTRL_FK_Mid_Bottom")
+
+        NewCTRL.Bend("PlacementCtrl_Spine_Ik_2", "CTRL_IK_Mid", "CTRL_IK_Mid")
+        NewCTRL.Bend("PlacementCtrl_Spine_Fk_2", "CTRL_FK_Mid", "CTRL_FK_Mid")
+
+        NewCTRL.Bend("PlacementCtrl_Spine_Ik_3", "CTRL_IK_Mid_Top", "CTRL_IK_Mid_Top")
+        NewCTRL.Bend("PlacementCtrl_Spine_Fk_3", "CTRL_FK_Mid_Top", "CTRL_FK_Mid_Top")
+
+    if NbrFK == 5 :
+        NewCTRL.Bend("PlacementCtrl_Spine_Ik_1", "CTRL_IK_Mid1", "CTRL_IK_Mid1")
+        NewCTRL.Bend("PlacementCtrl_Spine_Fk_1", "CTRL_FK_Mid1", "CTRL_FK_Mid1")
+
+        NewCTRL.Bend("PlacementCtrl_Spine_Ik_2", "CTRL_IK_Mid2", "CTRL_IK_Mid2")
+        NewCTRL.Bend("PlacementCtrl_Spine_Fk_2", "CTRL_FK_Mid2", "CTRL_FK_Mid2")
+
+        NewCTRL.Bend("PlacementCtrl_Spine_Ik_3", "CTRL_IK_Mid", "CTRL_IK_Mid")
+        NewCTRL.Bend("PlacementCtrl_Spine_Fk_3", "CTRL_FK_Mid", "CTRL_FK_Mid")
+
+        NewCTRL.Bend("PlacementCtrl_Spine_Ik_4", "CTRL_IK_Mid3", "CTRL_IK_Mid3")
+        NewCTRL.Bend("PlacementCtrl_Spine_Fk_4", "CTRL_FK_Mid3", "CTRL_FK_Mid3")
+
+        NewCTRL.Bend("PlacementCtrl_Spine_Ik_5", "CTRL_IK_Mid4", "CTRL_IK_Mid4")
+        NewCTRL.Bend("PlacementCtrl_Spine_Fk_5", "CTRL_FK_Mid4", "CTRL_FK_Mid4")
+    
+    for i in range(NbrJoints - 2):
+        NewCTRL.Bend(f"PlacementCtrl_Spine_Ribbon_{i+1}", f"CTRL_RibbonSpine_0{i+1}", f"CTRL_RibbonSpine_0{i+1}")
+
+
+
 def createArm(settings, side = "L"):
     #region Creating the joints 
         

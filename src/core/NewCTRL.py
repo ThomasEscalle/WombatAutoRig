@@ -22,9 +22,16 @@ def NewCTRL(CTRL, Joint, name, nbr=1)->str:
     return f"{name}_Offset"
 
 def Bend(CTRL, Bend, name)->str:
+
+    #Get the parent of the Bend
+    Parent = cmds.listRelatives(Bend, p=True)
     #mettre le CTRL dans le meme worldspace que le bend
-    cmds.parent(CTRL, Bend +"_Offset")
+    cmds.parent(CTRL, Parent)
     cmds.makeIdentity(CTRL, a=True, t=True, r=True, s=True)
+
+    #Supprimer la Shape originial du Bend
+    ShapeBend = cmds.listRelatives(Bend, s=True)
+    cmds.delete(ShapeBend, s=True)
 
     #parent la shape
     Shape = cmds.listRelatives(CTRL, s=True)
@@ -33,5 +40,7 @@ def Bend(CTRL, Bend, name)->str:
     #rename le Bend
 
     cmds.rename(Bend, name)
+
+    cmds.delete(CTRL)
 
     return name
