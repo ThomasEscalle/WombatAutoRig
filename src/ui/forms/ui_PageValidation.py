@@ -25,6 +25,7 @@ class Ui_PageValidation(object):
         font = QFont()
         font.setPointSize(12)
         font.setBold(True)
+        font.setWeight(75)
         self.label.setFont(font)
 
         self.verticalLayout.addWidget(self.label)
@@ -58,10 +59,10 @@ class Ui_PageValidation(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
-        self.btnSaveState = QPushButton(PageValidation)
-        self.btnSaveState.setObjectName(u"btnSaveState")
+        self.checkBox = QCheckBox(PageValidation)
+        self.checkBox.setObjectName(u"checkBox")
 
-        self.verticalLayout.addWidget(self.btnSaveState)
+        self.verticalLayout.addWidget(self.checkBox)
 
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -80,6 +81,6 @@ class Ui_PageValidation(object):
         self.label_3.setText(QCoreApplication.translate("PageValidation", u"Do you want to validate ?", None))
         self.btnYes.setText(QCoreApplication.translate("PageValidation", u"Yes", None))
         self.btnNo.setText(QCoreApplication.translate("PageValidation", u"No", None))
-        self.btnSaveState.setText(QCoreApplication.translate("PageValidation", u"Save State As", None))
+        self.checkBox.setText(QCoreApplication.translate("PageValidation", u"Keep Data", None))
     # retranslateUi
 

@@ -154,12 +154,14 @@ def placeJointsArm(side="L", settings={}):
     cmds.parent(metacarpus_ring, wrist)
     cmds.parent(metacarpus_Pinky, wrist)
 
+
     cmds.parent(wrist, elbow)
     cmds.parent(elbow, arm)
 
     cmds.parent(clavicle_end, clavicle)
 
-    cmds.parent(arm, "JointsPlacement")
+
+    cmds.parent(arm, clavicle_end)
     cmds.parent(clavicle, "JointsPlacement")
 
 

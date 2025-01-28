@@ -26,8 +26,10 @@ from wombatAutoRig.src.ui import PageControllerPlacement
 from wombatAutoRig.src.ui import PageValidation
 
 
+
 from wombatAutoRig.src.ui import DlgAddToShelf
 from wombatAutoRig.src.ui import DlgNewTemplate
+from wombatAutoRig.src.ui import DlgQuickLoad
 
 
 from wombatAutoRig.src.core import TemplateBase
@@ -88,6 +90,7 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         self.ui.actionPreferences.triggered.connect(self.preferences)
         self.ui.actionAdd_to_shelf.triggered.connect(self.addToShelf)
         self.ui.actionAuto_Fill.triggered.connect(self.autoFill)
+        self.ui.actionQuick_Load.triggered.connect(self.quickLoad)
         self.pageValidation.yesClicked.connect(self.nextPage)
         self.pageValidation.noClicked.connect(self.cancel)
         
@@ -232,6 +235,10 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
         dlg.exec()
 
     
+    def quickLoad(self):
+        dlg = DlgQuickLoad.DlgQuickLoad()
+        dlg.run()
+
     def autoFill(self):
         # Call the autoFill method of the current page
         self.ui.stackedWidget.currentWidget().autoFill()

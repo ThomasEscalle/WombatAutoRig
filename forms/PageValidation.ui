@@ -19,6 +19,7 @@
      <property name="font">
       <font>
        <pointsize>12</pointsize>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -73,9 +74,9 @@
     </layout>
    </item>
    <item>
-    <widget class="QPushButton" name="btnSaveState">
+    <widget class="QCheckBox" name="checkBox">
      <property name="text">
-      <string>Save State As</string>
+      <string>Keep Data</string>
      </property>
     </widget>
    </item>

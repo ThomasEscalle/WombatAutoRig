@@ -237,6 +237,12 @@ class Template(TemplateBase.TemplateBase):
 
 
         # Remove the autorig folder
-        AutorigHelper.removeDefaultAutorigFolder("autorig")
+        if(settings["keepHistory"] == False):
+            AutorigHelper.removeDefaultAutorigFolder("autorig")
+        else :
+            # Save the settings object into an attribute as json on the "AutoRig_Data" node (group)
+            AutorigHelper.saveSettings(settings)
+            pass
+
         AutorigHelper.disableLocalRotationAxis()
         return True

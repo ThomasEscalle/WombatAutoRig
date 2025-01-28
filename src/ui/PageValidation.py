@@ -20,12 +20,10 @@ class PageValidation(PageBase):
 
         self.ui.btnYes.clicked.connect(self.onYesClicked)
         self.ui.btnNo.clicked.connect(self.onNoClicked)
-        self.ui.btnSaveState.clicked.connect(self.onSaveStateClicked)
         
 
         self.ui.btnYes.setIcon(IconLoader.loadIcon("yes"))
         self.ui.btnNo.setIcon(IconLoader.loadIcon("close"))
-        self.ui.btnSaveState.setIcon(IconLoader.loadIcon("save"))
 
 
     # Signal to create the rig
@@ -66,12 +64,9 @@ class PageValidation(PageBase):
         self.yesClicked.emit()
 
     def addDataToSettings(self,settings):
-        print("Add the data to the settings")
+        settings["keepHistory"] = self.ui.checkBox.isChecked()
         return settings
         
-
-    def onSaveStateClicked(self):
-        print("Save the state")
     
     def autoFill(self):
         pass

@@ -8,7 +8,10 @@ from PySide2.QtGui import QPixmap
 from wombatAutoRig.src.ui.forms import ui_PageTemplateSelection
 from wombatAutoRig.src.ui.PageBase import PageBase
 
+
 from wombatAutoRig.src.ui import IconLoader
+from wombatAutoRig.src.core import FileHelper
+
 
 from wombatAutoRig.src.core import TemplateManager
 
@@ -21,10 +24,10 @@ class PageTemplateSelection(PageBase):
         self.ui.setupUi(self)
 
         # Set the icon of the page
-        pixmapIcon = QPixmap("C:/Users/Thomas/OneDrive/Documents/maya/2024/scripts/wombatAutoRig/rc/logo.png")
-        pixmapIcon = pixmapIcon.scaled(256, 256, QtCore.Qt.KeepAspectRatio)
-        self.ui.icon.setPixmap(pixmapIcon)
-        self.ui.icon.setAlignment(QtCore.Qt.AlignCenter)
+        # pixmapIcon = QPixmap(FileHelper.getRcPath() + "/logo.png")
+        # pixmapIcon = pixmapIcon.scaled(150, 150, QtCore.Qt.KeepAspectRatio)
+        # self.ui.icon.setPixmap(pixmapIcon)
+        # self.ui.icon.setAlignment(QtCore.Qt.AlignCenter)
 
         # Connect the signals
         self.ui.btnRefresh.clicked.connect(self.refresh)

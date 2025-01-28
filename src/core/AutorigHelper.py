@@ -83,6 +83,15 @@ def hideJointsPlacement(state = 1):
 def hideControllersPlacement(state = 1):
     cmds.setAttr("AutoRig_Data|ControllersPlacement.visibility", not state)
 
+# Save the settings object into a string attribute on a group named "AutoRig_Data"
+def saveSettings(settings) : 
+    # Remove the attribute if it already exists
+    if cmds.attributeQuery("settings", node="AutoRig_Data", exists=True):
+        cmds.deleteAttr("AutoRig_Data.settings")
+
+    # Save the settings object into an attribute as json on the "AutoRig_Data" node (group)
+    cmds.addAttr("AutoRig_Data", longName="settings", dataType="string")
+    cmds.setAttr("AutoRig_Data.settings", str(settings), type="string")
 
 
 def resizeJnts(bbox, size):
