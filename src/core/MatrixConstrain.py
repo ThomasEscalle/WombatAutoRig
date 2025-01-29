@@ -56,14 +56,19 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         if cmds.objectType(Slave) == "joint" :
             ComposeMatX = cmds.shadingNode("composeMatrix", asUtility=True, n='ComposeMatX_'+Slave)
             cmds.connectAttr(Slave + ".jointOrient", ComposeMatX + ".inputRotate")
-            MultMatX_Jnt_Parent = cmds.shadingNode("multMatrix", asUtility=True, n='MultMatX_Jnt_'+Slave)
+            MultMatX_Jnt_Parent = cmds.shadingNode("multMatrix", asUtility=True, n='MultMatX_Jnt_Parent_'+Slave)
             cmds.connectAttr(ComposeMatX + ".outputMatrix", MultMatX_Jnt_Parent + ".matrixIn[0]")
             cmds.connectAttr(Slave + ".parentMatrix[0]", MultMatX_Jnt_Parent + ".matrixIn[1]")
             InverseMatX = cmds.shadingNode("inverseMatrix", asUtility=True, n='InverseMatX'+Slave)
             cmds.connectAttr(MultMatX_Jnt_Parent + ".matrixSum", InverseMatX + ".inputMatrix")
+            MultMatX_Jnt = cmds.shadingNode("multMatrix", asUtility=True, n='MultMatX_Jnt_'+Slave)
+            cmds.connectAttr(Master[0] + ".worldMatrix[0]", MultMatX_Jnt + ".matrixIn[0]")
+            cmds.connectAttr(InverseMatX + ".outputMatrix", MultMatX_Jnt + ".matrixIn[1]")
+            DecMatX_Jnt = cmds.shadingNode("decomposeMatrix", asUtility=True, n='DecMatX_Jnt_'+Slave)
+            cmds.connectAttr(MultMatX_Jnt + ".matrixSum", DecMatX_Jnt + ".inputMatrix")
 
-            cmds.disconnectAttr(Slave + ".parentInverseMatrix[0]", MultMatX+'.matrixIn[2]')
-            cmds.connectAttr(InverseMatX + ".outputMatrix", MultMatX+'.matrixIn[2]')
+            #cmds.disconnectAttr(Slave + ".parentInverseMatrix[0]", MultMatX+'.matrixIn[2]')
+            #cmds.connectAttr(InverseMatX + ".outputMatrix", MultMatX+'.matrixIn[2]')
 
 
 
@@ -76,11 +81,20 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         if tZ == True:
             cmds.connectAttr(DecMatX+'.outputTranslateZ',Slave+'.translateZ')
         if rX == True:
-            cmds.connectAttr(DecMatX+'.outputRotateX',Slave+'.rotateX')
+            MatX = DecMatX
+            if cmds.objectType(Slave) == "joint" :
+                MatX = DecMatX_Jnt
+            cmds.connectAttr(MatX+'.outputRotateX',Slave+'.rotateX')
         if rY == True:
-            cmds.connectAttr(DecMatX+'.outputRotateY',Slave+'.rotateY')
+            MatX = DecMatX
+            if cmds.objectType(Slave) == "joint" :
+                MatX = DecMatX_Jnt
+            cmds.connectAttr(MatX+'.outputRotateY',Slave+'.rotateY')
         if rZ == True:
-            cmds.connectAttr(DecMatX+'.outputRotateZ',Slave+'.rotateZ')
+            MatX = DecMatX
+            if cmds.objectType(Slave) == "joint" :
+                MatX = DecMatX_Jnt
+            cmds.connectAttr(MatX+'.outputRotateZ',Slave+'.rotateZ')
         if sX == True:
             cmds.connectAttr(DecMatX+'.outputScaleX',Slave+'.scaleX')
         if sY == True:
@@ -101,13 +115,18 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
         if cmds.objectType(Slave) == 'joint' :
             afterScript += 'cmds.delete("{}")\n'.format(ComposeMatX)
             afterScript += 'cmds.delete("{}")\n'.format(MultMatX_Jnt_Parent)
+            afterScript += 'cmds.delete("{}")\n'.format(MultMatX_Jnt)
+            afterScript += 'cmds.delete("{}")\n'.format(DecMatX_Jnt)
         Script = cmds.scriptNode(stp ='python', st = 1, afterScript = afterScript, name='MATRIX_CONSTRAIN_BY_{}'.format(Master))
         cmds.connectAttr(Script + '.nodeState', locator + '.visibility')
         cmds.parent(locator, Slave)
 
         #Bookmark parenthese
         if BookmarkName == None:
-            return DecMatX
+            if cmds.objectType(Slave) == 'joint' :
+                return [DecMatX,DecMatX_Jnt]
+            else :
+                return DecMatX
         else :
             Bookmark.createBookmark(BookmarkName)
 
@@ -125,7 +144,10 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=DecMatX, column = 4 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
             Bookmark.addNodeToBookmark(bookmark_node=BookmarkName, node_name=Slave, column = 5 +BookColumnOffset ,row = 0+BookRowOffset ,state=0)
             
-        return DecMatX
+            if cmds.objectType(Slave) == 'joint' :
+                return [DecMatX,DecMatX_Jnt]
+            else :
+                return DecMatX
     else : 
         MultMatX  = cmds.shadingNode('multMatrix',asUtility=True, n='MultMatX_'+Slave)
         DecMatXFin = cmds.shadingNode('decomposeMatrix', asUtility=True, n='DecMatX_'+Slave)

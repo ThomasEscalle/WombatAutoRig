@@ -880,7 +880,9 @@ def createArm(settings, side = "L"):
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"IK_Arm_{side}.ikBlend")
     
     cmds.connectAttr(f"FK_Arm_{side}.rotate", f"DrvJnt_Arm_{side}.rotate")
+    cmds.connectAttr(f"FK_Arm_{side}.t", f"DrvJnt_Arm_{side}.t")
     cmds.connectAttr(f"FK_Elbow_{side}.rotate", f"DrvJnt_Elbow_{side}.rotate")
+    cmds.connectAttr(f"FK_Elbow_{side}.t", f"DrvJnt_Elbow_{side}.t")
     
     cmds.createNode("reverse", n="Reverse_Arm_{}".format(side))
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Reverse_Arm_{side}.inputX")
@@ -907,9 +909,9 @@ def createArm(settings, side = "L"):
     FK_Arm = [f"CTRL_FK_Arm_{side}"]
     FK_Elbow = [f"CTRL_FK_Elbow_{side}"]
     FK_Wrist = [f"CTRL_FK_Wrist_{side}"]
-    MatrixConstrain.MatrixConstrain(FK_Arm, f"FK_Arm_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-14, BookColumnOffset=BookmarkColumnOffset)
-    MatrixConstrain.MatrixConstrain(FK_Elbow, f"FK_Elbow_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-15, BookColumnOffset=BookmarkColumnOffset)
-    MatrixConstrain.MatrixConstrain(FK_Wrist, f"FK_Wrist_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-16, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(FK_Arm, f"FK_Arm_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-14, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(FK_Elbow, f"FK_Elbow_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-15, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(FK_Wrist, f"FK_Wrist_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-16, BookColumnOffset=BookmarkColumnOffset)
 
     Bind_Clavicle = [f"Bind_Clavicle_{side}"]
     MatrixConstrain.MatrixConstrain(Bind_Clavicle, f"CTRL_FK_Arm_{side}_Hook", Offset=True, rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-17, BookColumnOffset=BookmarkColumnOffset)
@@ -978,21 +980,31 @@ def createArm(settings, side = "L"):
     MatrixConstrain.MatrixConstrain(DrvJntWrist, f"Bind_Hand_{side}_Hook", sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-19, BookColumnOffset=BookmarkColumnOffset)
 
     #Node Conditon
-    cmds.createNode("condition", n=f"Cond_Constraint_DrvJnt_{side}")
+    cmds.createNode("condition", n=f"Cond_ConstraintRotate_DrvJnt_{side}")
+    cmds.createNode("condition", n=f"Cond_ConstraintTranslate_DrvJnt_{side}")
     CTRL_IK_Wrist = [f"CTRL_Wrist_{side}"]
-    FK_Constraint = MatrixConstrain.MatrixConstrain(FK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Arm", BookRowOffset=-20, BookColumnOffset=BookmarkColumnOffset)
-    cmds.disconnectAttr(f"{FK_Constraint}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
-    cmds.disconnectAttr(f"{FK_Constraint}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
-    cmds.disconnectAttr(f"{FK_Constraint}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ")
-    cmds.connectAttr(f"{FK_Constraint}.outputRotate", f"Cond_Constraint_DrvJnt_{side}.colorIfTrue")
+    FK_Constraint = MatrixConstrain.MatrixConstrain(FK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-20, BookColumnOffset=BookmarkColumnOffset)
+    cmds.disconnectAttr(f"{FK_Constraint[1]}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
+    cmds.disconnectAttr(f"{FK_Constraint[1]}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
+    cmds.disconnectAttr(f"{FK_Constraint[1]}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ")
+    cmds.connectAttr(f"{FK_Constraint[1]}.outputRotate", f"Cond_ConstraintRotate_DrvJnt_{side}.colorIfTrue")
+    cmds.disconnectAttr(f"{FK_Constraint[0]}.outputTranslateX",f"DrvJnt_Wrist_{side}.translateX")
+    cmds.disconnectAttr(f"{FK_Constraint[0]}.outputTranslateY",f"DrvJnt_Wrist_{side}.translateY")
+    cmds.disconnectAttr(f"{FK_Constraint[0]}.outputTranslateZ",f"DrvJnt_Wrist_{side}.translateZ")
+    cmds.connectAttr(f"{FK_Constraint[0]}.outputTranslate", f"Cond_ConstraintTranslate_DrvJnt_{side}.colorIfTrue")
     IK_Constraint = MatrixConstrain.MatrixConstrain(CTRL_IK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Arm", BookRowOffset=-21, BookColumnOffset=BookmarkColumnOffset)
-    cmds.disconnectAttr(f"{IK_Constraint}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
-    cmds.disconnectAttr(f"{IK_Constraint}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
-    cmds.disconnectAttr(f"{IK_Constraint}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ") 
-    cmds.connectAttr(f"{IK_Constraint}.outputRotate", f"Cond_Constraint_DrvJnt_{side}.colorIfFalse")
+    cmds.disconnectAttr(f"{IK_Constraint[1]}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
+    cmds.disconnectAttr(f"{IK_Constraint[1]}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
+    cmds.disconnectAttr(f"{IK_Constraint[1]}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ") 
+    cmds.connectAttr(f"{IK_Constraint[1]}.outputRotate", f"Cond_ConstraintRotate_DrvJnt_{side}.colorIfFalse")
 
-    cmds.connectAttr(f"Cond_Constraint_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.r")
-    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_Constraint_DrvJnt_{side}.secondTerm")
+    coloriffalseR = cmds.getAttr(f"DrvJnt_Wrist_{side}.translateX")
+    cmds.setAttr(f"Cond_ConstraintTranslate_DrvJnt_{side}.colorIfFalseR", coloriffalseR)
+
+    cmds.connectAttr(f"Cond_ConstraintRotate_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.r")
+    cmds.connectAttr(f"Cond_ConstraintTranslate_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.t")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_ConstraintRotate_DrvJnt_{side}.secondTerm")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_ConstraintTranslate_DrvJnt_{side}.secondTerm")
 
     #Bookmark
     Bookmark.createBookmark("IkFk_Arm")
