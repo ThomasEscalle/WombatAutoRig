@@ -10,6 +10,7 @@ from wombatAutoRig.src.core import TwistExtractor
 from wombatAutoRig.src.core import NewCTRL
 from wombatAutoRig.src.core import Bookmark
 from wombatAutoRig.src.core import ColumnRibbon
+from wombatAutoRig.src.core import skinCage
 
 
 #(Reprendre les twist parce que j'ai fait betise jsp a voir/ probleme surtout au niveau des pieds a cause de l'angle qui est different)
@@ -76,7 +77,18 @@ def compute(settings):
 
     createSpine(settings)
 
-#Attacher bras a clavicle ===> Joint PLacement
+    if settings["bindSkin"] == True :
+        joints = cmds.sets( "Bind_JNTs", q=True )
+        body_mesh = "group_Harley_0000_Harley_Queen_Geo_Harley_0000_Harley_Queen_Geo"  
+        #Create skin cage
+        cage_meshes = skinCage.SkinCage(settings=settings)
+
+        #Transfer skin weights to the body mesh
+        skinCage.transfer_skin_weights(joints, cage_meshes, body_mesh)
+
+        #suppr cubes
+        cmds.delete(cage_meshes)
+
 
 
 def createLeg(settings, side = "L"):
@@ -1000,6 +1012,8 @@ def createArm(settings, side = "L"):
 
     coloriffalseR = cmds.getAttr(f"DrvJnt_Wrist_{side}.translateX")
     cmds.setAttr(f"Cond_ConstraintTranslate_DrvJnt_{side}.colorIfFalseR", coloriffalseR)
+    cmds.setAttr(f"Cond_ConstraintTranslate_DrvJnt_{side}.colorIfFalseG", 0)
+    cmds.setAttr(f"Cond_ConstraintTranslate_DrvJnt_{side}.colorIfFalseB", 0)
 
     cmds.connectAttr(f"Cond_ConstraintRotate_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.r")
     cmds.connectAttr(f"Cond_ConstraintTranslate_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.t")
