@@ -60,9 +60,9 @@ def transformRelative(controller, position = [0,0,0], rotation = [0,0,0], scale 
     goodScale = AutorigHelper.resizeCtrl(bbox = settings["bbox"] , size = scale)
 
 
-    cmds.setAttr(controller + ".translate", goodPos[0], goodPos[1], goodPos[2] ,settings)
-    cmds.setAttr(controller + ".rotate", rotation[0], rotation[1], rotation[2] ,settings)
-    cmds.setAttr(controller + ".scale", goodScale[0], goodScale[1], goodScale[2] ,  settings)
+    cmds.setAttr(controller + ".translate", goodPos[0], goodPos[1], goodPos[2])
+    cmds.setAttr(controller + ".rotate", rotation[0], rotation[1], rotation[2])
+    cmds.setAttr(controller + ".scale", goodScale[0], goodScale[1], goodScale[2])
 
 def setShapeSize(controller, size):
     shapes = cmds.listRelatives(controller, shapes=True)
@@ -93,6 +93,11 @@ def createFingerController(name, parentJoint, settings , rotation = [-90, -90 , 
     cmds.rotate(rotation[0], 0, 0, name, r=True, os=True, fo=True)
     cmds.rotate(0, rotation[1], 0, name, r=True, os=True, fo=True)
     cmds.scale(0.5, 0.5, 0.5, name, r=True, ws=True)
+
+    goodScale = AutorigHelper.resizeCtrl(bbox = settings["bbox"] , size = [0.5,0.5,0.5])
+    cmds.setAttr(name + ".scale", goodScale[0], goodScale[1], goodScale[2])
+    
+
     Color.setColor(name, color)
     cmds.parent(name, "AutoRig_Data|ControllersPlacement|Global_Controllers")
 
@@ -356,22 +361,30 @@ def placeSpineControllers(settings) :
     worldPosRoot = cmds.xform("PlacementJnt_Root", q=True, ws=True, t=True)
     worldPosChest = cmds.xform("PlacementJnt_Chest", q=True, ws=True, t=True)
 
+
     # Create the controllers
     # - PlacementCtrl_Spine_Fk_#
     # - PlacementCtrl_Spine_Ik_#
     #  Where # is the index of the controller
     for i in range(nbrSpineControllers):
+
+        interpol = (i + 1) / (nbrSpineControllers + 1)
+
         # Place the controller in the middle of the spine
-        pos = [worldPosRoot[0] + (worldPosChest[0] - worldPosRoot[0]) * (i + 1) / (nbrSpineControllers + 1), worldPosRoot[1] + (worldPosChest[1] - worldPosRoot[1]) * (i + 1) / (nbrSpineControllers + 1), worldPosRoot[2] + (worldPosChest[2] - worldPosRoot[2]) * (i + 1) / (nbrSpineControllers + 1)]
+        pos = [worldPosRoot[0] + (worldPosChest[0] - worldPosRoot[0]) * interpol,
+                worldPosRoot[1] + (worldPosChest[1] - worldPosRoot[1]) * interpol, 
+                worldPosRoot[2] + (worldPosChest[2] - worldPosRoot[2]) * interpol]
         print("pos", pos)
 
         cmds.circle(name="PlacementCtrl_Spine_Fk_" + str(i + 1), normal=[0, 1, 0], radius=1)
         transformRelative("PlacementCtrl_Spine_Fk_" + str(i + 1), pos, [0, 0, 0], [14.8, 14.8, 14.8] , settings)
+        cmds.setAttr("PlacementCtrl_Spine_Fk_" + str(i + 1) + ".translate", pos[0], pos[1], pos[2])
         Color.setColor("PlacementCtrl_Spine_Fk_" + str(i + 1), "yellow")
         cmds.parent("PlacementCtrl_Spine_Fk_" + str(i + 1), "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
         cmds.circle(name="PlacementCtrl_Spine_Ik_" + str(i + 1), normal=[0, 1, 0], radius=1)
         transformRelative("PlacementCtrl_Spine_Ik_" + str(i + 1), pos, [0, 0, 0], [16, 16, 16] , settings)
+        cmds.setAttr("PlacementCtrl_Spine_Ik_" + str(i + 1) + ".translate", pos[0], pos[1], pos[2])
         Color.setColor("PlacementCtrl_Spine_Ik_" + str(i + 1), "blue")
         cmds.parent("PlacementCtrl_Spine_Ik_" + str(i + 1), "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
@@ -384,6 +397,7 @@ def placeSpineControllers(settings) :
 
         cmds.circle(name="PlacementCtrl_Spine_Ribbon_" + str(i + 1), normal=[0, 1, 0], radius=1)
         transformRelative("PlacementCtrl_Spine_Ribbon_" + str(i + 1), pos, [0, 0, 0], [13, 13, 13] , settings)
+        cmds.setAttr("PlacementCtrl_Spine_Ribbon_" + str(i + 1) + ".translate", pos[0], pos[1], pos[2])
         Color.setColor("PlacementCtrl_Spine_Ribbon_" + str(i + 1), "purple")
         cmds.parent("PlacementCtrl_Spine_Ribbon_" + str(i + 1), "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
