@@ -16,7 +16,7 @@ def Cube(Joint1, Joint2, CTRL):
 
     #Scale Y et Z par rapport a la bbox du CTRL et X par rapport a la distance entre les joints
     bbox_CTRL = cmds.xform(CTRL, query=True, boundingBox=True)
-    radius = max((bbox_CTRL[4] - bbox_CTRL[1])/2, (bbox_CTRL[3] - bbox_CTRL[0])/2, (bbox_CTRL[5] - bbox_CTRL[2])/2)/2
+    radius = max((bbox_CTRL[4] - bbox_CTRL[1])/2, (bbox_CTRL[3] - bbox_CTRL[0])/2, (bbox_CTRL[5] - bbox_CTRL[2])/2)/4
     cmds.setAttr(cube + ".s", translateX*2, radius, radius)
 
     Joints = cmds.sets( "Bind_JNTs", q=True )
@@ -94,7 +94,7 @@ def Cube(Joint1, Joint2, CTRL):
     
     #skin the cube by the SkinJoints
 
-    cmds.skinCluster(SkinJoints, cube, toSelectedBones=True, maximumInfluences=5)
+    cmds.skinCluster(SkinJoints, cube, toSelectedBones=True, maximumInfluences=5, sm=1)
     
     return cube
 
@@ -113,13 +113,16 @@ def CubeSpine(Joint1, CTRL, settings):
     ScaleY = DistanceRootChest / ((JntNbr-1))
 
     bbox_CTRL = cmds.xform(CTRL, query=True, boundingBox=True)
-    ScaleXZ = max((bbox_CTRL[4] - bbox_CTRL[1])/2, (bbox_CTRL[3] - bbox_CTRL[0])/2, (bbox_CTRL[5] - bbox_CTRL[2])/2)/2
+    ScaleXZ = max((bbox_CTRL[4] - bbox_CTRL[1])/2, (bbox_CTRL[3] - bbox_CTRL[0])/2, (bbox_CTRL[5] - bbox_CTRL[2])/2)
+
+    if "Root" in Joint1:
+        ScaleXZ /= 2
 
     cmds.setAttr(cube + ".s", ScaleXZ, ScaleY, ScaleXZ)
 
     cmds.matchTransform(cube, Joint1, pos=True)
 
-    cmds.skinCluster(Joint1, cube, toSelectedBones=True, maximumInfluences=5)
+    cmds.skinCluster(Joint1, cube, toSelectedBones=True, maximumInfluences=5, sm=1)
 
     return cube
 
@@ -214,27 +217,8 @@ def SkinCage(settings):
 def transfer_skin_weights(joints, source_meshes, target_mesh):
     """Transfers skin weights from the proxy geometry to the target mesh."""
     # Create a skin cluster on the target mesh
-    skin_cluster = cmds.skinCluster(joints, target_mesh, maximumInfluences=5, toSelectedBones=True)[0]
+    skin_cluster = cmds.skinCluster(joints, target_mesh, maximumInfluences=5, toSelectedBones=True, sm=1)[0]
 
-    # Transfer weights
-    for source in source_meshes:
-        sourceSkin = None
-        for node in source.connections():
-            if node.nodeType() == 'skinCluster':
-                sourceSkin = node
-                break
-        cmds.copySkinWeights(destinationSkin=skin_cluster, ss=sourceSkin, noMirror=True, surfaceAssociation='closestPoint')
-    print("Skin weights transferred!")
-
-
-
-#joints = cmds.ls(selection=True)  
-#body_mesh = "group_Harley_0000_Harley_Queen_Geo_Harley_0000_Harley_Queen_Geo"  
-##Create skin cage
-#cage_meshes = SkinCage(settings=settings)
-#
-##Transfer skin weights to the body mesh
-#transfer_skin_weights(joints, cage_meshes, body_mesh)
-#
-##suppr cubes
-#cmds.delete(cage_meshes)
+    cmds.select(source_meshes)
+    cmds.select(target_mesh, add=True)
+    cmds.copySkinWeights(noMirror=True, surfaceAssociation='closestPoint')
