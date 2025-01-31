@@ -4,6 +4,7 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 from wombatAutoRig.src.core import AutorigHelper
+from wombatAutoRig.src.core import MirrorJointPlacement
 
 from wombatAutoRig.src.ui import IconLoader
 
@@ -42,7 +43,17 @@ class PageJointPlacement(PageBase):
         mirrorDirection = self.ui.cb_MirrorDirection.currentIndex()
         # Leg L -> R
         if(mirrorDirection == 0):
-            pass
+            MirrorJointPlacement.mirrorJointLegLtoR()
+        # Leg R -> L
+        if(mirrorDirection == 1):
+            MirrorJointPlacement.mirrorJointLegRtoL()
+
+        # Arm L -> R
+        if(mirrorDirection == 2):
+            MirrorJointPlacement.mirrorJointArmLtoR()
+        # Arm R -> L
+        if(mirrorDirection == 3):
+            MirrorJointPlacement.mirrorJointArmRtoL()
 
     # Triggers the signals
     def onCanceled(self):

@@ -148,12 +148,6 @@ def CubePreserve(Joint1, CTRL):
 def SkinCage(settings):
     skinCage = []
 
-    skinCage.append(CubePreserve("Preserve_Elbow_L", "CTRL_Pin_Elbow_L"))
-    skinCage.append(CubePreserve("Preserve_Elbow_R", "CTRL_Pin_Elbow_R"))
-
-    skinCage.append(CubePreserve("Preserve_Knee_L", "CTRL_Pin_Knee_L"))
-    skinCage.append(CubePreserve("Preserve_Knee_R", "CTRL_Pin_Knee_R"))
-
     skinCage.append(Cube("DrvJnt_Arm_L", "DrvJnt_Elbow_L", "CTRL_FK_Elbow_L"))
     skinCage.append(Cube("DrvJnt_Arm_R", "DrvJnt_Elbow_R", "CTRL_FK_Elbow_R"))
 
@@ -164,7 +158,6 @@ def SkinCage(settings):
     skinCage.append(Cube("DrvJnt_Leg_L", "DrvJnt_Knee_L", "CTRL_FK_Knee_L"))
     skinCage.append(Cube("DrvJnt_Leg_R", "DrvJnt_Knee_R", "CTRL_FK_Knee_R"))
 
-    skinCage.append(Cube("Bind_Hip", "Bind_Hip_L", "CTRL_FK_Knee_L"))
     #skinCage.append(Cube("Bind_Hip", "Bind_Hip_R", "CTRL_FK_Knee_R"))
 
     skinCage.append(Cube("DrvJnt_Knee_L", "DrvJnt_Ankle_L", "CTRL_FK_Knee_L"))
@@ -226,16 +219,22 @@ def SkinCage(settings):
     skinCage.append(Cube("Bind_Pinky_02_R", "Bind_Pinky_03_R", "CTRL_Finger_Pinky_01_R"))
     skinCage.append(Cube("Bind_Pinky_03_R", "Bind_Pinky_end_R", "CTRL_Finger_Pinky_01_R"))
 
+    for i in range(int(settings["nbrJointsSpine"])-2):
+        skinCage.append(CubeSpine(f"Bind_RibbonSpine_0{i+1}", "CTRL_RibbonSpine_01", settings=settings))
 
     skinCage.append(Cube("Bind_Clavicle_L", "Bind_Clavicle_end_L", "CTRL_Clavicle_L"))
     skinCage.append(Cube("Bind_Clavicle_R", "Bind_Clavicle_end_R", "CTRL_Clavicle_R"))
 
-
-    for i in range(int(settings["nbrJointsSpine"])-2):
-        skinCage.append(CubeSpine(f"Bind_RibbonSpine_0{i+1}", "CTRL_RibbonSpine_01", settings=settings))
-
     skinCage.append(CubeSpine(f"Bind_Root", "CTRL_Root", settings=settings))
     skinCage.append(CubeSpine(f"Bind_Chest", "CTRL_FK_Chest", settings=settings))
+
+    skinCage.append(CubePreserve("Preserve_Elbow_L", "CTRL_Pin_Elbow_L"))
+    skinCage.append(CubePreserve("Preserve_Elbow_R", "CTRL_Pin_Elbow_R"))
+
+    skinCage.append(CubePreserve("Preserve_Knee_L", "CTRL_Pin_Knee_L"))
+    skinCage.append(CubePreserve("Preserve_Knee_R", "CTRL_Pin_Knee_R"))
+
+    skinCage.append(Cube("Bind_Hip", "Bind_Hip_L", "CTRL_FK_Knee_L"))
 
 
     return skinCage

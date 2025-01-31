@@ -85,6 +85,10 @@ importlib.reload(TemplateBase)
 from wombatAutoRig.src.core import NewCTRL
 importlib.reload(NewCTRL)
 
+# Recharge le module wombatAutoRig.src.core.JointPlacement
+from wombatAutoRig.src.core import MirrorJointPlacement
+importlib.reload(MirrorJointPlacement)
+
 # Recharge le module wombatAutoRig.src.ui.DlgNewTemplate
 from wombatAutoRig.src.ui import DlgNewTemplate
 importlib.reload(DlgNewTemplate)
