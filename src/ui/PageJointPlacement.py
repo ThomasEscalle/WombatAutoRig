@@ -25,11 +25,25 @@ class PageJointPlacement(PageBase):
         self.ui.btnTemplate.clicked.connect(self.templateButtonClicked)
         self.ui.btnTemplate.setIcon(IconLoader.loadIcon("eye"))
 
+        self.ui.cb_MirrorDirection.clear()
+        self.ui.cb_MirrorDirection.addItem("Leg L -> R")
+        self.ui.cb_MirrorDirection.addItem("Leg R -> L")
+        self.ui.cb_MirrorDirection.addItem("Arm L -> R")
+        self.ui.cb_MirrorDirection.addItem("Arm R -> L")
+        self.ui.btnMirro.clicked.connect(self.mirror)
+
     # Signal to create the rig
     canceled = Signal()
     accepted = Signal()
     entered = Signal()
     
+    def mirror(self):
+        print("Mirror")
+        mirrorDirection = self.ui.cb_MirrorDirection.currentIndex()
+        # Leg L -> R
+        if(mirrorDirection == 0):
+            pass
+
     # Triggers the signals
     def onCanceled(self):
         self.canceled.emit()
