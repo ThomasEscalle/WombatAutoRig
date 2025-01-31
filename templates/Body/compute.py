@@ -79,7 +79,7 @@ def compute(settings):
 
     if settings["bindSkin"] == True :
         joints = cmds.sets( "Bind_JNTs", q=True )
-        body_mesh = "group_Harley_0000_Harley_Queen_Geo_Harley_0000_Harley_Queen_Geo"  
+        body_mesh = settings["geo"]  
         #Create skin cage
         cage_meshes = skinCage.SkinCage(settings=settings)
 

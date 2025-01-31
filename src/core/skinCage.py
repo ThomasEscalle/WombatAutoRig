@@ -4,7 +4,7 @@ import math
 
 def Cube(Joint1, Joint2, CTRL):
     #creer un cube
-    cube = cmds.polyCube(name=f"cage_{Joint1}", w=1, h=1, d=1)[0]
+    cube = cmds.polyCube(name=f"cage_{Joint1}", w=1, h=1, d=1, sx=3, sy=3, sz=3)[0]
 
     #le parenter dans le joint master
     cmds.parent(cube, Joint1)
@@ -34,7 +34,7 @@ def Cube(Joint1, Joint2, CTRL):
 
     elif "Knee" in Joint1:
         for Joint in Joints:
-            if "Knee" in Joint:
+            if "Knee" and not "Preserve" in Joint:
                 SkinJoints.append(Joint)
     
     elif "Ball" in Joint1:
@@ -54,7 +54,7 @@ def Cube(Joint1, Joint2, CTRL):
 
     elif "Elbow" in Joint1:
         for Joint in Joints:
-            if "Elbow" in Joint:
+            if "Elbow" and not "Preserve" in Joint:
                 SkinJoints.append(Joint)
 
     elif "Hand" in Joint1:
@@ -99,7 +99,7 @@ def Cube(Joint1, Joint2, CTRL):
     return cube
 
 def CubeSpine(Joint1, CTRL, settings):
-    cube = cmds.polyCube(name=f"cage_{Joint1}", w=1, h=1, d=1)[0]
+    cube = cmds.polyCube(name=f"cage_{Joint1}", w=1, h=1, d=1, sx=3, sy=3, sz=3)[0]
 
     #Récuperer la hauteur du root, celle du chest et le nombre de jnt spine pour en déduire le scaleY, le scale X et Z étant donné par la BBox max du CTRL
     #Pour le translate il suffira de match all transform
@@ -113,10 +113,10 @@ def CubeSpine(Joint1, CTRL, settings):
     ScaleY = DistanceRootChest / ((JntNbr-1))
 
     bbox_CTRL = cmds.xform(CTRL, query=True, boundingBox=True)
-    ScaleXZ = max((bbox_CTRL[4] - bbox_CTRL[1])/2, (bbox_CTRL[3] - bbox_CTRL[0])/2, (bbox_CTRL[5] - bbox_CTRL[2])/2)
+    ScaleXZ = max((bbox_CTRL[4] - bbox_CTRL[1])/2, (bbox_CTRL[3] - bbox_CTRL[0])/2, (bbox_CTRL[5] - bbox_CTRL[2])/2)*2
 
     if "Root" in Joint1:
-        ScaleXZ /= 2
+        ScaleXZ /= 4
 
     cmds.setAttr(cube + ".s", ScaleXZ, ScaleY, ScaleXZ)
 
@@ -126,8 +126,33 @@ def CubeSpine(Joint1, CTRL, settings):
 
     return cube
 
+def CubePreserve(Joint1, CTRL):
+    cube = cmds.polyCube(name=f"cage_{Joint1}", w=1, h=1, d=1, sx=3, sy=3, sz=3)[0]
+
+    bbox_CTRL = cmds.xform(CTRL, query=True, boundingBox=True)
+    ScaleXZ = max((bbox_CTRL[4] - bbox_CTRL[1])/2, (bbox_CTRL[3] - bbox_CTRL[0])/2, (bbox_CTRL[5] - bbox_CTRL[2])/2)
+    ScaleY = ScaleXZ/10
+
+    if ScaleXZ == 0:
+        ScaleXZ=1
+        ScaleY=1
+
+    cmds.matchTransform(cube, Joint1, pos=True)
+
+    cmds.setAttr(cube + ".s", ScaleXZ, ScaleY, ScaleXZ)
+
+    cmds.skinCluster(Joint1, cube, toSelectedBones=True, maximumInfluences=5, sm=1)
+
+    return cube
+
 def SkinCage(settings):
     skinCage = []
+
+    skinCage.append(CubePreserve("Preserve_Elbow_L", "CTRL_Pin_Elbow_L"))
+    skinCage.append(CubePreserve("Preserve_Elbow_R", "CTRL_Pin_Elbow_R"))
+
+    skinCage.append(CubePreserve("Preserve_Knee_L", "CTRL_Pin_Knee_L"))
+    skinCage.append(CubePreserve("Preserve_Knee_R", "CTRL_Pin_Knee_R"))
 
     skinCage.append(Cube("DrvJnt_Arm_L", "DrvJnt_Elbow_L", "CTRL_FK_Elbow_L"))
     skinCage.append(Cube("DrvJnt_Arm_R", "DrvJnt_Elbow_R", "CTRL_FK_Elbow_R"))
@@ -211,6 +236,7 @@ def SkinCage(settings):
 
     skinCage.append(CubeSpine(f"Bind_Root", "CTRL_Root", settings=settings))
     skinCage.append(CubeSpine(f"Bind_Chest", "CTRL_FK_Chest", settings=settings))
+
 
     return skinCage
     
