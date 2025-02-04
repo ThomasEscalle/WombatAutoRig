@@ -195,6 +195,8 @@ importlib.reload(ui_DlgQuickLoad)
 from wombatAutoRig.src.ui import DlgQuickLoad
 importlib.reload(DlgQuickLoad)
 
+from wombatAutoRig.src.core import MatchingIkFk
+importlib.reload(MatchingIkFk)
 
 from wombatAutoRig.src.ui import DlgMatchIkFk
 importlib.reload(DlgMatchIkFk)

@@ -13,6 +13,8 @@ from maya.OpenMayaUI import MQtUtil
 
 from wombatAutoRig.src.ui.forms.ui_DlgMatchIkFk import Ui_DlgMatchIkFk
 
+from wombatAutoRig.src.core import MatchingIkFk
+
 def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
     return shiboken2.wrapInstance(int(main_window_ptr), QtWidgets.QWidget)
@@ -43,10 +45,18 @@ class DlgMatchIkFk(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         side_Str = self.ui.cb_Side.currentText()
         match_Str = self.ui.cb_Match.currentText()
 
-        print("###################")
-        print("Side: ", side_Str)
-        print("Match: ", match_Str)
-        print("###################")
+        #get the CTRL selected
+        slection = cmds.ls(selection=True)
+        if slection == None:
+            return "Please select a CTRL to have the relative path"
+        CTRL = slection[0]
+
+        if match_Str == "Ik -> Fk":
+            MatchingIkFk.matchFkIk(CTRL=CTRL, Member = side_Str)
+
+        if match_Str == "Fk -> Ik":
+            MatchingIkFk.matchIkFk(CTRL=CTRL, Member = side_Str)
+
         pass
 
     
