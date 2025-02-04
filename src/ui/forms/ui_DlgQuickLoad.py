@@ -17,9 +17,24 @@ class Ui_DlgQuickLoad(object):
     def setupUi(self, DlgQuickLoad):
         if not DlgQuickLoad.objectName():
             DlgQuickLoad.setObjectName(u"DlgQuickLoad")
-        DlgQuickLoad.resize(597, 165)
+        DlgQuickLoad.resize(594, 222)
         self.verticalLayout = QVBoxLayout(DlgQuickLoad)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.label_2 = QLabel(DlgQuickLoad)
+        self.label_2.setObjectName(u"label_2")
+
+        self.verticalLayout.addWidget(self.label_2)
+
+        self.cb_Template = QComboBox(DlgQuickLoad)
+        self.cb_Template.setObjectName(u"cb_Template")
+
+        self.verticalLayout.addWidget(self.cb_Template)
+
+        self.label = QLabel(DlgQuickLoad)
+        self.label.setObjectName(u"label")
+
+        self.verticalLayout.addWidget(self.label)
+
         self.btnShowJnts = QPushButton(DlgQuickLoad)
         self.btnShowJnts.setObjectName(u"btnShowJnts")
 
@@ -72,6 +87,8 @@ class Ui_DlgQuickLoad(object):
 
     def retranslateUi(self, DlgQuickLoad):
         DlgQuickLoad.setWindowTitle(QCoreApplication.translate("DlgQuickLoad", u"Dialog", None))
+        self.label_2.setText(QCoreApplication.translate("DlgQuickLoad", u"Template :", None))
+        self.label.setText("")
         self.btnShowJnts.setText(QCoreApplication.translate("DlgQuickLoad", u"Show Joints", None))
         self.btnShowIkCtrls.setText(QCoreApplication.translate("DlgQuickLoad", u"Show Ik Ctrls", None))
         self.btnShowFkCtrls.setText(QCoreApplication.translate("DlgQuickLoad", u"Show Fk Ctrls", None))
