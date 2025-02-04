@@ -55,6 +55,8 @@ class Ui_PageJointPlacement(object):
         self.cb_MirrorDirection = QComboBox(PageJointPlacement)
         self.cb_MirrorDirection.addItem("")
         self.cb_MirrorDirection.addItem("")
+        self.cb_MirrorDirection.addItem("")
+        self.cb_MirrorDirection.addItem("")
         self.cb_MirrorDirection.setObjectName(u"cb_MirrorDirection")
 
         self.horizontalLayout.addWidget(self.cb_MirrorDirection)
@@ -84,8 +86,10 @@ class Ui_PageJointPlacement(object):
         self.btnShowLRA.setText(QCoreApplication.translate("PageJointPlacement", u"Show LRA", None))
         self.btnTemplate.setText(QCoreApplication.translate("PageJointPlacement", u"Toggle template geo", None))
         self.label_3.setText("")
-        self.cb_MirrorDirection.setItemText(0, QCoreApplication.translate("PageJointPlacement", u"L", None))
-        self.cb_MirrorDirection.setItemText(1, QCoreApplication.translate("PageJointPlacement", u"R", None))
+        self.cb_MirrorDirection.setItemText(0, QCoreApplication.translate("PageJointPlacement", u"Leg : L -> R", None))
+        self.cb_MirrorDirection.setItemText(1, QCoreApplication.translate("PageJointPlacement", u"Leg : R -> L", None))
+        self.cb_MirrorDirection.setItemText(2, QCoreApplication.translate("PageJointPlacement", u"Arm : L -> R", None))
+        self.cb_MirrorDirection.setItemText(3, QCoreApplication.translate("PageJointPlacement", u"Arm : R -> L", None))
 
         self.btnMirro.setText(QCoreApplication.translate("PageJointPlacement", u"Mirror", None))
     # retranslateUi

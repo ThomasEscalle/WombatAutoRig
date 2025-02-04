@@ -195,9 +195,16 @@ importlib.reload(ui_DlgQuickLoad)
 from wombatAutoRig.src.ui import DlgQuickLoad
 importlib.reload(DlgQuickLoad)
 
+
+from wombatAutoRig.src.ui import DlgMatchIkFk
+importlib.reload(DlgMatchIkFk)
+
+from wombatAutoRig.src.ui.forms import ui_DlgMatchIkFk
+importlib.reload(ui_DlgMatchIkFk)
+
 wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
 #CartoonEye.test()
 
-#dialog = DlgCartoonEye.DlgCartoonEye()
+#dialog = DlgMatchIkFk.DlgMatchIkFk()
 #dialog.run()  # Appeler la fonction run() après rechargement
