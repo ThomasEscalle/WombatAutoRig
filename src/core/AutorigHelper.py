@@ -126,3 +126,20 @@ def resizeCtrl(bbox, size):
     sizeList[2] = sizeList[2] * (sizeY / referenceSizeY)
 
     return tuple(sizeList)
+
+# Add a suffix to all the children of the given node
+def addSuffixRecursive(node, suffix):
+    children = cmds.listRelatives(node, children=True, fullPath=True)
+    print(children)
+    if children:
+        for child in children:
+            addSuffixRecursive(child, suffix)
+    cmds.rename(node, node.split("|")[-1] + suffix)
+
+# Remove a suffix from all the children of the given node
+def removeSuffixRecursive(node, suffix):
+    children = cmds.listRelatives(node, children=True, fullPath=True)
+    if children:
+        for child in children:
+            removeSuffixRecursive(child, suffix)
+    cmds.rename(node, node.split("|")[-1].replace(suffix, ""))

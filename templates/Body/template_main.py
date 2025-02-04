@@ -223,6 +223,12 @@ class Template(TemplateBase.TemplateBase):
     def onValidationAccepted(self):
         print("onValidationAccepted")
 
+        # Duplicate the "AutoRig_Data" group, and set the suffix to "_123456789"
+        cmds.duplicate("AutoRig_Data", name="AutoRig_Data_NEW")
+        AutorigHelper.addSuffixRecursive("AutoRig_Data_NEW", "_123456789")
+        
+
+
         settings = self.mw.getSettings()
 
         # Create the folder hierarchy
@@ -240,6 +246,17 @@ class Template(TemplateBase.TemplateBase):
         if(settings["keepHistory"] == False):
             AutorigHelper.removeDefaultAutorigFolder("autorig")
         else :
+            # Delete the original autorig folder
+            cmds.delete("AutoRig_Data")
+
+
+            # Remove the suffix from the duplicated autorig folder
+            AutorigHelper.removeSuffixRecursive("AutoRig_Data_NEW_123456789", "_123456789")
+            
+            
+            # Rename the duplicated autorig folder to the original name
+            cmds.rename("AutoRig_Data_NEW", "AutoRig_Data")
+
             # Save the settings object into an attribute as json on the "AutoRig_Data" node (group)
             AutorigHelper.saveSettings(settings)
             pass

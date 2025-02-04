@@ -82,6 +82,8 @@ class DlgQuickLoad(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         # Load the template
         self.template.onValidationAccepted()
 
+        self.close()
+
         
 
 
@@ -116,13 +118,38 @@ class DlgQuickLoad(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         return template
 
     def btnShowIkCtrls(self):
-        print("btnShowIkCtrls")
+        # Show the "AutoRig_Data|ControllersPlacement|IK_Controllers"
+        cmds.showHidden("AutoRig_Data|ControllersPlacement")
+        cmds.showHidden("AutoRig_Data|ControllersPlacement|IK_Controllers")
+        cmds.showHidden("AutoRig_Data|ControllersPlacement|Global_Controllers")
+
+        cmds.hide("AutoRig_Data|ControllersPlacement|FK_Controllers")
+        cmds.hide("AutoRig_Data|ControllersPlacement|Other_Controllers")
+
 
     def btnShowFkCtrls(self):
-        print("btnShowFkCtrls")
+        # Show the "AutoRig_Data|ControllersPlacement|FK_Controllers"
+        cmds.showHidden("AutoRig_Data|ControllersPlacement")
+        cmds.showHidden("AutoRig_Data|ControllersPlacement|FK_Controllers")
+        cmds.showHidden("AutoRig_Data|ControllersPlacement|Global_Controllers")
+
+        cmds.hide("AutoRig_Data|ControllersPlacement|IK_Controllers")
+        cmds.hide("AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     def btnShowOtherCtrls(self):
-        print("btnShowOtherCtrls")
+        # Show the "AutoRig_Data|ControllersPlacement|Other_Controllers"
+        cmds.showHidden("AutoRig_Data|ControllersPlacement")
+        cmds.showHidden("AutoRig_Data|ControllersPlacement|Other_Controllers")
+        cmds.showHidden("AutoRig_Data|ControllersPlacement|Global_Controllers")
+
+        cmds.hide("AutoRig_Data|ControllersPlacement|IK_Controllers")
+        cmds.hide("AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     def btnShowJoints(self):
-        print("btnShowJoints")
+        cmds.showHidden("AutoRig_Data|JointsPlacement")
+        # Hide the controllers
+        cmds.showHidden("AutoRig_Data|ControllersPlacement")
+        cmds.hide("AutoRig_Data|ControllersPlacement|Global_Controllers")
+        cmds.hide("AutoRig_Data|ControllersPlacement|IK_Controllers")
+        cmds.hide("AutoRig_Data|ControllersPlacement|FK_Controllers")
+        cmds.hide("AutoRig_Data|ControllersPlacement|Other_Controllers")
