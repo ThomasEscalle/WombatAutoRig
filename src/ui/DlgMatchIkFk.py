@@ -28,7 +28,7 @@ class DlgMatchIkFk(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
 
-        self.setWindowTitle("Quick Load")
+        self.setWindowTitle("Match Ik Fk")
 
         self.ui.btnApply.clicked.connect(self.apply)
 

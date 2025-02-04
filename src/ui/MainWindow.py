@@ -120,6 +120,9 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
     def getSettings(self):
         return self.settings
 
+    def setSettings(self, settings):
+        self.settings = settings
+
     def nextPage(self):
         
         # Check if the current page is the last one
@@ -237,6 +240,7 @@ class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
     
     def quickLoad(self):
         dlg = DlgQuickLoad.DlgQuickLoad()
+        dlg.setMainwindow(self)
         dlg.run()
 
     def autoFill(self):

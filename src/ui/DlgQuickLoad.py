@@ -13,7 +13,7 @@ from maya.OpenMayaUI import MQtUtil
 
 from wombatAutoRig.src.ui.forms.ui_DlgQuickLoad import Ui_DlgQuickLoad
 from wombatAutoRig.src.core import FileHelper
-
+from wombatAutoRig.src.core import AutorigHelper
 
 from wombatAutoRig.src.core import TemplateManager
 
@@ -32,6 +32,8 @@ class DlgQuickLoad(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
 
+        self.mainwindow = None
+        self.template = None
 
         self.setWindowTitle("Quick Load")
 
@@ -47,7 +49,8 @@ class DlgQuickLoad(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.refresh()  
 
 
-
+    def setMainwindow(self, mainwindow):
+        self.mainwindow = mainwindow
 
     # Show window with docking ability
     def run(self):
@@ -59,6 +62,28 @@ class DlgQuickLoad(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         if not cmds.objExists("AutoRig_Data"):
             print("AutoRig_Data group doesn't exist")
             self.close()
+
+        self.template = self.getSelectedTemplate()
+
+        if self.template == None:
+            print("No template selected")
+            return
+
+        # Load the "settings" attribute
+        settings = AutorigHelper.loadSettings()
+
+
+        # Set the main window into the template
+        self.template.setMainwindow(self.mainwindow)    
+
+        # Set the settings in the mainwindow
+        self.mainwindow.setSettings(settings)
+
+        # Load the template
+        self.template.onValidationAccepted()
+
+        
+
 
         
     # Search for the templates installed in the templates folder

@@ -93,6 +93,15 @@ def saveSettings(settings) :
     cmds.addAttr("AutoRig_Data", longName="settings", dataType="string")
     cmds.setAttr("AutoRig_Data.settings", str(settings), type="string")
 
+# Load the settings object from the "AutoRig_Data" node (group)
+def loadSettings():
+    # Load the settings object from the "AutoRig_Data" node (group)
+    if cmds.attributeQuery("settings", node="AutoRig_Data", exists=True):
+        settings = cmds.getAttr("AutoRig_Data.settings")
+        return eval(settings)
+    else:
+        return None
+
 
 def resizeJnts(bbox, size):
     referenceSizeY = 170
