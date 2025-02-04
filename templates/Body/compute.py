@@ -84,7 +84,8 @@ def compute(settings):
         cage_meshes = skinCage.SkinCage(settings=settings)
 
         #Transfer skin weights to the body mesh
-        skinCage.transfer_skin_weights(joints, cage_meshes, body_mesh)
+        for geo in body_mesh:
+            skinCage.transfer_skin_weights(joints, cage_meshes, geo)
 
         #suppr cubes
         cmds.delete(cage_meshes)
