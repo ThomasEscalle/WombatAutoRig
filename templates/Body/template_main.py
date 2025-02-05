@@ -26,6 +26,11 @@ class Template(TemplateBase.TemplateBase):
     def __init__(self):
         super(Template, self).__init__()
 
+        # Check if the "matrixNodes" plugin is loaded
+        if not cmds.pluginInfo("matrixNodes", query=True, loaded=True):
+            cmds.loadPlugin("matrixNodes")
+
+
         self.name = "Body"
         self.identifier = "Body"
         self.version = "0.0.1"
@@ -223,9 +228,10 @@ class Template(TemplateBase.TemplateBase):
     def onValidationAccepted(self):
         print("onValidationAccepted")
 
-        # Duplicate the "AutoRig_Data" group, and set the suffix to "_123456789"
-        cmds.duplicate("AutoRig_Data", name="AutoRig_Data_NEW")
-        AutorigHelper.addSuffixRecursive("AutoRig_Data_NEW", "_123456789")
+        if(settings["keepHistory"] == True):
+            # Duplicate the "AutoRig_Data" group, and set the suffix to "_123456789"
+            cmds.duplicate("AutoRig_Data", name="AutoRig_Data_NEW")
+            AutorigHelper.addSuffixRecursive("AutoRig_Data_NEW", "_123456789")
         
 
 
