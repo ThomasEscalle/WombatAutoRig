@@ -9,6 +9,7 @@ from wombatAutoRig.src.ui.forms import ui_PageControllerPlacement
 
 from wombatAutoRig.src.ui import DlgControllers
 from wombatAutoRig.src.ui import DlgColor
+from wombatAutoRig.src.core import MirrorControllerPlacement
 
 from wombatAutoRig.src.ui.PageBase import PageBase
 from wombatAutoRig.src.ui import IconLoader
@@ -54,16 +55,16 @@ class PageControllerPlacement(PageBase):
         mirrorDirection = self.ui.cb_MirrorDirection.currentIndex()
         # Leg L -> R
         if(mirrorDirection == 0):
-            pass
+            MirrorControllerPlacement.mirrorCtrlsLegLtoR()
         # Leg R -> L
         if(mirrorDirection == 1):
-            pass 
+            MirrorControllerPlacement.mirrorCtrlsLegRtoL()
         # Arm L -> R
         if(mirrorDirection == 2):
-            pass 
+            MirrorControllerPlacement.mirrorCtrlsArmLtoR()
         # Arm R -> L
         if(mirrorDirection == 3):
-            pass
+            MirrorControllerPlacement.mirrorCtrlsArmRtoL()
 
     # Triggers the signals
     def onCanceled(self):
