@@ -17,7 +17,7 @@ class Ui_PageControllerPlacement(object):
     def setupUi(self, PageControllerPlacement):
         if not PageControllerPlacement.objectName():
             PageControllerPlacement.setObjectName(u"PageControllerPlacement")
-        PageControllerPlacement.resize(667, 267)
+        PageControllerPlacement.resize(667, 593)
         self.verticalLayout = QVBoxLayout(PageControllerPlacement)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(PageControllerPlacement)
@@ -69,6 +69,30 @@ class Ui_PageControllerPlacement(object):
 
         self.verticalLayout.addWidget(self.btnColors)
 
+        self.label_4 = QLabel(PageControllerPlacement)
+        self.label_4.setObjectName(u"label_4")
+
+        self.verticalLayout.addWidget(self.label_4)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.cb_MirrorDirection = QComboBox(PageControllerPlacement)
+        self.cb_MirrorDirection.addItem("")
+        self.cb_MirrorDirection.addItem("")
+        self.cb_MirrorDirection.addItem("")
+        self.cb_MirrorDirection.addItem("")
+        self.cb_MirrorDirection.setObjectName(u"cb_MirrorDirection")
+
+        self.horizontalLayout_2.addWidget(self.cb_MirrorDirection)
+
+        self.pushButton = QPushButton(PageControllerPlacement)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.horizontalLayout_2.addWidget(self.pushButton)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
+
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
@@ -89,5 +113,12 @@ class Ui_PageControllerPlacement(object):
         self.label_3.setText("")
         self.btnControllers.setText(QCoreApplication.translate("PageControllerPlacement", u"Replace controllers", None))
         self.btnColors.setText(QCoreApplication.translate("PageControllerPlacement", u"Colors", None))
+        self.label_4.setText("")
+        self.cb_MirrorDirection.setItemText(0, QCoreApplication.translate("PageControllerPlacement", u"Leg : L -> R", None))
+        self.cb_MirrorDirection.setItemText(1, QCoreApplication.translate("PageControllerPlacement", u"Leg : R -> L", None))
+        self.cb_MirrorDirection.setItemText(2, QCoreApplication.translate("PageControllerPlacement", u"Arm : L -> R", None))
+        self.cb_MirrorDirection.setItemText(3, QCoreApplication.translate("PageControllerPlacement", u"Arm : R -> L", None))
+
+        self.pushButton.setText(QCoreApplication.translate("PageControllerPlacement", u"Mirror", None))
     # retranslateUi
 

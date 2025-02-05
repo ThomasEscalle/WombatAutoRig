@@ -28,6 +28,7 @@ class PageControllerPlacement(PageBase):
         self.ui.btnOther.clicked.connect(self.onOtherClicked)
         self.ui.btnControllers.clicked.connect(self.onControllersClicked)
         self.ui.btnColors.clicked.connect(self.onColorsClicked)
+        self.ui.pushButton.clicked.connect(self.mirror)
 
         # Set icons
         self.ui.btnFkMode.setIcon(IconLoader.loadIcon("skull"))
@@ -46,6 +47,24 @@ class PageControllerPlacement(PageBase):
     accepted = Signal()
     entered = Signal()
     
+
+    # When you want to mirror
+    def mirror(self):
+        print("Mirror")
+        mirrorDirection = self.ui.cb_MirrorDirection.currentIndex()
+        # Leg L -> R
+        if(mirrorDirection == 0):
+            pass
+        # Leg R -> L
+        if(mirrorDirection == 1):
+            pass 
+        # Arm L -> R
+        if(mirrorDirection == 2):
+            pass 
+        # Arm R -> L
+        if(mirrorDirection == 3):
+            pass
+
     # Triggers the signals
     def onCanceled(self):
         self.canceled.emit()

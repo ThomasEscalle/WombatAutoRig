@@ -25,7 +25,6 @@ class Ui_PageJointPlacement(object):
         font = QFont()
         font.setPointSize(12)
         font.setBold(True)
-        font.setWeight(75)
         self.label.setFont(font)
 
         self.verticalLayout.addWidget(self.label)

@@ -228,6 +228,8 @@ class Template(TemplateBase.TemplateBase):
     def onValidationAccepted(self):
         print("onValidationAccepted")
 
+        settings = self.mw.getSettings()
+        
         if(settings["keepHistory"] == True):
             # Duplicate the "AutoRig_Data" group, and set the suffix to "_123456789"
             cmds.duplicate("AutoRig_Data", name="AutoRig_Data_NEW")
@@ -235,7 +237,6 @@ class Template(TemplateBase.TemplateBase):
         
 
 
-        settings = self.mw.getSettings()
 
         # Create the folder hierarchy
         AutorigHelper.createDefaultFolder(settings["name"])
