@@ -63,7 +63,33 @@ def transformRelative(controller, position = [0,0,0], rotation = [0,0,0], scale 
         # Check if the snapTo is a joint and if it is located in the settings
         for joint in settings["joints"]:
             if joint["name"] == snapTo:
-                position = joint["position"]
+                positionSrc = joint["position"]
+                goodPosSrc = joint["goodPos"]
+
+                rotationSrc = joint["orientation"]
+
+                # Check if the "snapTo" joint exists in the scene
+                if cmds.objExists(snapTo):
+                    # Get the world position of the joint named snapTo
+                    positionScene = cmds.xform(snapTo, q=True, ws=True, t=True)
+
+                    # Get the offset between the positionScene and the goodPosSrc
+                    offset = [positionScene[0] - goodPosSrc[0], positionScene[1] - goodPosSrc[1], positionScene[2] - goodPosSrc[2]]
+
+                    # Add the offset to the goodPos
+                    goodPos = [goodPos[0] + offset[0], goodPos[1] + offset[1], goodPos[2] + offset[2]]
+
+
+                    # Get the world rotation of the joint named snapTo
+                    rotationScene = cmds.xform(snapTo, q=True, ws=True, ro=True)
+
+                    # Get the offset between the rotationScene and the rotation
+                    offsetRotation = [rotationScene[0] - rotationSrc[0], rotationScene[1] - rotationSrc[1], rotationScene[2] - rotationSrc[2]]
+
+                    # Add the offset to the rotation
+                    #rotation = [rotation[0] + offsetRotation[0], rotation[1] + offsetRotation[1], rotation[2] + offsetRotation[2]]
+
+
                 break
     
     cmds.setAttr(controller + ".translate", goodPos[0], goodPos[1], goodPos[2])
@@ -274,7 +300,7 @@ def placeGlobalControllers(settings) :
 
     # PlacementCtrl_Root
     PlacementCtrl_Root = cmds.circle(name="PlacementCtrl_Root", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Root", [0, 93, -1.7], [0, 0, 0], [20, 20, 16] , settings)
+    transformRelative("PlacementCtrl_Root", [0, 93, -1.7], [0, 0, 0], [20, 20, 16] , settings , snapTo="PlacementJnt_Root")
     setShapeSize("PlacementCtrl_Root", 2)
     Color.setColor("PlacementCtrl_Root", "yellow")
     cmds.parent("PlacementCtrl_Root", "AutoRig_Data|ControllersPlacement|Global_Controllers")
@@ -334,13 +360,13 @@ def placeSpineControllers(settings) :
 
     # PlacementCtrl_Hip
     PlacementCtrl_Hip = Controllers.createController("3D_Shapes/boat", "PlacementCtrl_Hip")
-    transformRelative("PlacementCtrl_Hip", [0, 101, -2.0], [180, 90, 0], [14.6, 8, 8.2] , settings)
+    transformRelative("PlacementCtrl_Hip", [0, 101, -2.0], [180, 90, 0], [14.6, 8, 8.2] , settings, snapTo="PlacementJnt_Root")
     Color.setColor("PlacementCtrl_Hip", "chocolate")
     cmds.parent("PlacementCtrl_Hip", "AutoRig_Data|ControllersPlacement|Global_Controllers")
 
     # PlacementCtrl_Shoulder
     PlacementCtrl_Shoulder = cmds.circle(name="PlacementCtrl_Shoulder", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Shoulder", [0, 139, -1.8], [0, 0, 0], [13.6, 13.6, 9.6] , settings)
+    transformRelative("PlacementCtrl_Shoulder", [0, 139, -1.8], [0, 0, 0], [13.6, 13.6, 9.6] , settings, snapTo="PlacementJnt_Chest")
     cmds.move(0, -3.633511, 0, "PlacementCtrl_Shoulder.cv[5]", "PlacementCtrl_Shoulder.cv[1]", r=True, os=True, wd=True)
     setShapeSize("PlacementCtrl_Shoulder", 2)
     Color.setColor("PlacementCtrl_Shoulder", "yellow")
@@ -348,14 +374,14 @@ def placeSpineControllers(settings) :
 
     # PlacementCtrl_ShoulderIk
     PlacementCtrl_ShoulderIk = cmds.circle(name="PlacementCtrl_ShoulderIk", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_ShoulderIk", [0, 139, -4.1], [0, 0, 0], [10.5, 10.5, 7] , settings)
+    transformRelative("PlacementCtrl_ShoulderIk", [0, 139, -4.1], [0, 0, 0], [10.5, 10.5, 7] , settings, snapTo="PlacementJnt_Chest")
     cmds.move(0, -3.633511, 0, "PlacementCtrl_ShoulderIk.cv[5]", "PlacementCtrl_ShoulderIk.cv[1]", r=True, os=True, wd=True)
     Color.setColor("PlacementCtrl_ShoulderIk", "blue")
     cmds.parent("PlacementCtrl_ShoulderIk", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
     # PlacementCtrl_IkRoot
     PlacementCtrl_IkRoot = cmds.circle(name="PlacementCtrl_IkRoot", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_IkRoot", [0, 93, -1.7], [0, 0, 0], [18.156, 18.156, 14.525] , settings)
+    transformRelative("PlacementCtrl_IkRoot", [0, 93, -1.7], [0, 0, 0], [18.156, 18.156, 14.525] , settings, snapTo="PlacementJnt_Root")
     Color.setColor("PlacementCtrl_IkRoot", "blue")
     cmds.parent("PlacementCtrl_IkRoot", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
@@ -383,13 +409,13 @@ def placeSpineControllers(settings) :
         print("pos", pos)
 
         cmds.circle(name="PlacementCtrl_Spine_Fk_" + str(i + 1), normal=[0, 1, 0], radius=1)
-        transformRelative("PlacementCtrl_Spine_Fk_" + str(i + 1), pos, [0, 0, 0], [14.8, 14.8, 14.8] , settings)
+        transformRelative("PlacementCtrl_Spine_Fk_" + str(i + 1), pos, [0, 0, 0], [14.8, 14.8, 14.8] , settings,snapTo="PlacementJnt_Root")
         cmds.setAttr("PlacementCtrl_Spine_Fk_" + str(i + 1) + ".translate", pos[0], pos[1], pos[2])
         Color.setColor("PlacementCtrl_Spine_Fk_" + str(i + 1), "yellow")
         cmds.parent("PlacementCtrl_Spine_Fk_" + str(i + 1), "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
         cmds.circle(name="PlacementCtrl_Spine_Ik_" + str(i + 1), normal=[0, 1, 0], radius=1)
-        transformRelative("PlacementCtrl_Spine_Ik_" + str(i + 1), pos, [0, 0, 0], [16, 16, 16] , settings)
+        transformRelative("PlacementCtrl_Spine_Ik_" + str(i + 1), pos, [0, 0, 0], [16, 16, 16] , settings,snapTo="PlacementJnt_Root")
         cmds.setAttr("PlacementCtrl_Spine_Ik_" + str(i + 1) + ".translate", pos[0], pos[1], pos[2])
         Color.setColor("PlacementCtrl_Spine_Ik_" + str(i + 1), "blue")
         cmds.parent("PlacementCtrl_Spine_Ik_" + str(i + 1), "AutoRig_Data|ControllersPlacement|IK_Controllers")
@@ -402,7 +428,7 @@ def placeSpineControllers(settings) :
         pos = [worldPosRoot[0] + (worldPosChest[0] - worldPosRoot[0]) * (i + 1) / (nbrSpineJnts + 1), worldPosRoot[1] + (worldPosChest[1] - worldPosRoot[1]) * (i + 1) / (nbrSpineJnts + 1), worldPosRoot[2] + (worldPosChest[2] - worldPosRoot[2]) * (i + 1) / (nbrSpineJnts + 1)]
 
         cmds.circle(name="PlacementCtrl_Spine_Ribbon_" + str(i + 1), normal=[0, 1, 0], radius=1)
-        transformRelative("PlacementCtrl_Spine_Ribbon_" + str(i + 1), pos, [0, 0, 0], [13, 13, 13] , settings)
+        transformRelative("PlacementCtrl_Spine_Ribbon_" + str(i + 1), pos, [0, 0, 0], [13, 13, 13] , settings,snapTo="PlacementJnt_Root")
         cmds.setAttr("PlacementCtrl_Spine_Ribbon_" + str(i + 1) + ".translate", pos[0], pos[1], pos[2])
         Color.setColor("PlacementCtrl_Spine_Ribbon_" + str(i + 1), "purple")
         cmds.parent("PlacementCtrl_Spine_Ribbon_" + str(i + 1), "AutoRig_Data|ControllersPlacement|Other_Controllers")
@@ -440,60 +466,60 @@ def placeLegsControllers(settings) :
 
     # PlacementCtrl_Fk_Leg_R
     PlacementCtrl_Fk_Leg_R = cmds.circle(name="PlacementCtrl_Fk_Leg_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Leg_R", [-9.621,82.611, -1.5], [0, 0, 0], [10, 10, 10] , settings)
+    transformRelative("PlacementCtrl_Fk_Leg_R", [-9.621,82.611, -1.5], [0, 0, 0], [10, 10, 10] , settings , snapTo="PlacementJnt_Hip_R")
     Color.setColor("PlacementCtrl_Fk_Leg_R", "red")
     setShapeSize("PlacementCtrl_Fk_Leg_R", 2)
     cmds.parent("PlacementCtrl_Fk_Leg_R", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Fk_Knee_R
     PlacementCtrl_Fk_Knee_R = cmds.circle(name="PlacementCtrl_Fk_Knee_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Knee_R", [-8.677, 49, -1.5], [0, 0, 0], [7.2, 7.2, 7.2] , settings)
+    transformRelative("PlacementCtrl_Fk_Knee_R", [-8.677, 49, -1.5], [0, 0, 0], [7.2, 7.2, 7.2] , settings, snapTo="PlacementJnt_Knee_R")
     Color.setColor("PlacementCtrl_Fk_Knee_R", "red")
     setShapeSize("PlacementCtrl_Fk_Knee_R", 2)
     cmds.parent("PlacementCtrl_Fk_Knee_R", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Fk_Ankle_R
     PlacementCtrl_Fk_Ankle_R = cmds.circle(name="PlacementCtrl_Fk_Ankle_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Ankle_R", [-7.324, 12.9, 0], [0, 0, 0], [7, 7, 7] , settings)
+    transformRelative("PlacementCtrl_Fk_Ankle_R", [-7.324, 12.9, 0], [0, 0, 0], [7, 7, 7] , settings, snapTo="PlacementJnt_Ankle_R")
     Color.setColor("PlacementCtrl_Fk_Ankle_R", "red")
     setShapeSize("PlacementCtrl_Fk_Ankle_R", 2)
     cmds.parent("PlacementCtrl_Fk_Ankle_R", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Fk_Ball_R
     PlacementCtrl_Fk_Ball_R = cmds.circle(name="PlacementCtrl_Fk_Ball_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Ball_R", [-7.7, 3, 7.7], [-65.46, 0, 0], [7, 7, 7] , settings)
+    transformRelative("PlacementCtrl_Fk_Ball_R", [-7.7, 3, 7.7], [-65.46, 0, 0], [7, 7, 7] , settings, snapTo="PlacementJnt_Ball_R")
     Color.setColor("PlacementCtrl_Fk_Ball_R", "red")
     setShapeSize("PlacementCtrl_Fk_Ball_R", 2)
     cmds.parent("PlacementCtrl_Fk_Ball_R", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Foot_R
     PlacementCtrl_Foot_R = Controllers.createController("Foot/foot", "PlacementCtrl_Foot_R")
-    transformRelative("PlacementCtrl_Foot_R", [-7.9, 0, 6.497], [0, 0, 0], [8.6, 7, 6.8] , settings)
+    transformRelative("PlacementCtrl_Foot_R", [-7.9, 0, 6.497], [0, 0, 0], [8.6, 7, 6.8] , settings , snapTo="PlacementJnt_Ankle_R")
     Color.setColor("PlacementCtrl_Foot_R", "red")
     setShapeSize("PlacementCtrl_Foot_R", 2)
     cmds.parent("PlacementCtrl_Foot_R", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
     # PlacementCtrl_Pv_Leg_R
     PlacementCtrl_Pv_Leg_R = Controllers.createController("3D_Shapes/corner" , "PlacementCtrl_Pv_Leg_R")
-    transformRelative("PlacementCtrl_Pv_Leg_R", [-9, 50, 38], [-90, 0, 0], [1, 1, 1] , settings)
+    transformRelative("PlacementCtrl_Pv_Leg_R", [-9, 50, 38], [-90, 0, 0], [1, 1, 1] , settings , snapTo="PlacementJnt_Knee_L")
     Color.setColor("PlacementCtrl_Pv_Leg_R", "red")
     cmds.parent("PlacementCtrl_Pv_Leg_R", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
     # PlacementCtrl_Ribbon_Leg_R
     PlacementCtrl_Ribbon_Leg_R = cmds.circle(name="PlacementCtrl_Ribbon_Leg_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Ribbon_Leg_R", [-9.621, 67, -0.8], [0, 0, 0], [8.4, 8.4, 8.4] , settings)
+    transformRelative("PlacementCtrl_Ribbon_Leg_R", [-9.621, 67, -0.8], [0, 0, 0], [8.4, 8.4, 8.4] , settings, snapTo="PlacementJnt_Hip_L")
     Color.setColor("PlacementCtrl_Ribbon_Leg_R", "red")
     cmds.parent("PlacementCtrl_Ribbon_Leg_R", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Ribbon_Knee_R
     PlacementCtrl_Ribbon_Knee_R = cmds.circle(name="PlacementCtrl_Ribbon_Knee_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Ribbon_Knee_R", [-8.677, 30, -4], [0, 0, 0], [6.4, 6.4, 6.4] , settings)
+    transformRelative("PlacementCtrl_Ribbon_Knee_R", [-8.677, 30, -4], [0, 0, 0], [6.4, 6.4, 6.4] , settings, snapTo="PlacementJnt_Knee_R")
     Color.setColor("PlacementCtrl_Ribbon_Knee_R", "red")
     cmds.parent("PlacementCtrl_Ribbon_Knee_R", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Pin_Knee_R
     PlacementCtrl_Pin_Knee_R = cmds.circle(name="PlacementCtrl_Pin_Knee_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Pin_Knee_R", [-8.677, 49, -1.5], [0, 0, 0], [5.4, 5.4, 5.4] , settings)
+    transformRelative("PlacementCtrl_Pin_Knee_R", [-8.677, 49, -1.5], [0, 0, 0], [5.4, 5.4, 5.4] , settings, snapTo="PlacementJnt_Knee_R")
     Color.setColor("PlacementCtrl_Pin_Knee_R", "red")
     cmds.parent("PlacementCtrl_Pin_Knee_R", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
@@ -504,60 +530,60 @@ def placeLegsControllers(settings) :
 
     # PlacementCtrl_Fk_Leg_L
     PlacementCtrl_Fk_Leg_L = cmds.circle(name="PlacementCtrl_Fk_Leg_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Leg_L", [9.621, 82.611, -1.5], [0, 0, 0], [10, 10, 10] , settings)
+    transformRelative("PlacementCtrl_Fk_Leg_L", [9.621, 82.611, -1.5], [0, 0, 0], [10, 10, 10] , settings, snapTo="PlacementJnt_Hip_L")
     Color.setColor("PlacementCtrl_Fk_Leg_L", "turquoise")
     setShapeSize("PlacementCtrl_Fk_Leg_L", 2)
     cmds.parent("PlacementCtrl_Fk_Leg_L", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Fk_Knee_L
     PlacementCtrl_Fk_Knee_L = cmds.circle(name="PlacementCtrl_Fk_Knee_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Knee_L", [8.677, 49, -1.5], [0, 0, 0], [7.2, 7.2, 7.2] , settings)
+    transformRelative("PlacementCtrl_Fk_Knee_L", [8.677, 49, -1.5], [0, 0, 0], [7.2, 7.2, 7.2] , settings, snapTo="PlacementJnt_Knee_L")
     Color.setColor("PlacementCtrl_Fk_Knee_L", "turquoise")
     setShapeSize("PlacementCtrl_Fk_Knee_L", 2)
     cmds.parent("PlacementCtrl_Fk_Knee_L", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Fk_Ankle_L
     PlacementCtrl_Fk_Ankle_L = cmds.circle(name="PlacementCtrl_Fk_Ankle_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Ankle_L", [7.324, 12.9, 0], [0, 0, 0], [7, 7, 7] , settings)
+    transformRelative("PlacementCtrl_Fk_Ankle_L", [7.324, 12.9, 0], [0, 0, 0], [7, 7, 7] , settings, snapTo="PlacementJnt_Ankle_L")
     Color.setColor("PlacementCtrl_Fk_Ankle_L", "turquoise")
     setShapeSize("PlacementCtrl_Fk_Ankle_L", 2)
     cmds.parent("PlacementCtrl_Fk_Ankle_L", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Fk_Ball_L
     PlacementCtrl_Fk_Ball_L = cmds.circle(name="PlacementCtrl_Fk_Ball_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Ball_L", [7.7, 3, 7.7], [-65.46, 0, 0], [7, 7, 7] , settings)
+    transformRelative("PlacementCtrl_Fk_Ball_L", [7.7, 3, 7.7], [-65.46, 0, 0], [7, 7, 7] , settings, snapTo="PlacementJnt_Ball_L")
     Color.setColor("PlacementCtrl_Fk_Ball_L", "turquoise")
     setShapeSize("PlacementCtrl_Fk_Ball_L", 2)
     cmds.parent("PlacementCtrl_Fk_Ball_L", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Foot_L
     PlacementCtrl_Foot_L = Controllers.createController("Foot/foot", "PlacementCtrl_Foot_L")
-    transformRelative("PlacementCtrl_Foot_L", [7.9, 0, 6.497], [0, 0, 0], [8.6, 7, 6.8] , settings)
+    transformRelative("PlacementCtrl_Foot_L", [7.9, 0, 6.497], [0, 0, 0], [8.6, 7, 6.8] , settings, snapTo="PlacementJnt_Ankle_L")
     Color.setColor("PlacementCtrl_Foot_L", "turquoise")
     setShapeSize("PlacementCtrl_Foot_L", 2)
     cmds.parent("PlacementCtrl_Foot_L", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
     # PlacementCtrl_Pv_Leg_L
     PlacementCtrl_Pv_Leg_L = Controllers.createController("3D_Shapes/corner", "PlacementCtrl_Pv_Leg_L")
-    transformRelative("PlacementCtrl_Pv_Leg_L", [9, 50, 38], [-90, 0, 0], [1, 1, 1] , settings)
+    transformRelative("PlacementCtrl_Pv_Leg_L", [9, 50, 38], [-90, 0, 0], [1, 1, 1] , settings, snapTo="PlacementJnt_Knee_L")
     Color.setColor("PlacementCtrl_Pv_Leg_L", "turquoise")
     cmds.parent("PlacementCtrl_Pv_Leg_L", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
     # PlacementCtrl_Ribbon_Leg_L
     PlacementCtrl_Ribbon_Leg_L = cmds.circle(name="PlacementCtrl_Ribbon_Leg_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Ribbon_Leg_L", [9.621, 67, -0.8], [0, 0, 0], [8.4, 8.4, 8.4] , settings)
+    transformRelative("PlacementCtrl_Ribbon_Leg_L", [9.621, 67, -0.8], [0, 0, 0], [8.4, 8.4, 8.4] , settings, snapTo="PlacementJnt_Hip_L")
     Color.setColor("PlacementCtrl_Ribbon_Leg_L", "turquoise")
     cmds.parent("PlacementCtrl_Ribbon_Leg_L", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Ribbon_Knee_L
     PlacementCtrl_Ribbon_Knee_L = cmds.circle(name="PlacementCtrl_Ribbon_Knee_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Ribbon_Knee_L", [8.677, 30, -4], [0, 0, 0], [6.4, 6.4, 6.4] , settings)
+    transformRelative("PlacementCtrl_Ribbon_Knee_L", [8.677, 30, -4], [0, 0, 0], [6.4, 6.4, 6.4] , settings, snapTo="PlacementJnt_Knee_L")
     Color.setColor("PlacementCtrl_Ribbon_Knee_L", "turquoise")
     cmds.parent("PlacementCtrl_Ribbon_Knee_L", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Pin_Knee_L
     PlacementCtrl_Pin_Knee_L = cmds.circle(name="PlacementCtrl_Pin_Knee_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Pin_Knee_L", [8.677, 49, -1.5], [0, 0, 0], [5.4, 5.4, 5.4] , settings)
+    transformRelative("PlacementCtrl_Pin_Knee_L", [8.677, 49, -1.5], [0, 0, 0], [5.4, 5.4, 5.4] , settings, snapTo="PlacementJnt_Knee_L")
     Color.setColor("PlacementCtrl_Pin_Knee_L", "turquoise")
     cmds.parent("PlacementCtrl_Pin_Knee_L", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
@@ -591,59 +617,59 @@ def placeArmsControllers(settings):
 
     # PlacementCtrl_Clavicle_R
     PlacementCtrl_Clavicle_R = Controllers.createController("3D_Shapes/boat", "PlacementCtrl_Clavicle_R")
-    transformRelative("PlacementCtrl_Clavicle_R", [-12, 132, -5.4], [0, 0, 15], [5, 5, 4.5] , settings)
+    transformRelative("PlacementCtrl_Clavicle_R", [-12, 132, -5.4], [0, 0, 15], [5, 5, 4.5] , settings, snapTo="PlacementJnt_Clavicle_R")
     Color.setColor("PlacementCtrl_Clavicle_R", "red")
     cmds.parent("PlacementCtrl_Clavicle_R", "AutoRig_Data|ControllersPlacement|Global_Controllers")
 
     # PlacementCtrl_Fk_Shoulder_R
     PlacementCtrl_Fk_Shoulder_R = cmds.circle(name="PlacementCtrl_Fk_Shoulder_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Shoulder_R", [-16.5, 130, -5.2], [0, 0, -58.2], [6.5, 6.5, 6.5] , settings)
+    transformRelative("PlacementCtrl_Fk_Shoulder_R", [-16.5, 130, -5.2], [0, 0, -58.2], [6.5, 6.5, 6.5] , settings, snapTo="PlacementJnt_Arm_R")
     Color.setColor("PlacementCtrl_Fk_Shoulder_R", "red")
     setShapeSize("PlacementCtrl_Fk_Shoulder_R", 2)
     cmds.parent("PlacementCtrl_Fk_Shoulder_R", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Fk_Elbow_R
     PlacementCtrl_Fk_Elbow_R = cmds.circle(name="PlacementCtrl_Fk_Elbow_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Elbow_R", [-30,116,-8.4], [0, 0, -51], [6, 6, 6] , settings)
+    transformRelative("PlacementCtrl_Fk_Elbow_R", [-30,116,-8.4], [0, 0, -51], [6, 6, 6] , settings, snapTo="PlacementJnt_Elbow_R")
     Color.setColor("PlacementCtrl_Fk_Elbow_R", "red")
     setShapeSize("PlacementCtrl_Fk_Elbow_R", 2)
     cmds.parent("PlacementCtrl_Fk_Elbow_R", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Fk_Wrist_R
     PlacementCtrl_Fk_Wrist_R = cmds.circle(name="PlacementCtrl_Fk_Wrist_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Wrist_R", [-49,98,-4], [-12.4, 0.7,-47], [-3.7, 3.7, 3.7] , settings)
+    transformRelative("PlacementCtrl_Fk_Wrist_R", [-49,98,-4], [-12.4, 0.7,-47], [-3.7, 3.7, 3.7] , settings , snapTo="PlacementJnt_Wrist_R")
     Color.setColor("PlacementCtrl_Fk_Wrist_R", "red")
     setShapeSize("PlacementCtrl_Fk_Wrist_R", 2)
     cmds.parent("PlacementCtrl_Fk_Wrist_R", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Ik_Arm_R
     PlacementCtrl_Ik_Arm_R = cmds.circle(name="PlacementCtrl_Ik_Arm_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Ik_Arm_R", [-49,98,-4], [-12.4, 0.7,-47], [-3.7, 3.7, 3.7] , settings)
+    transformRelative("PlacementCtrl_Ik_Arm_R", [-49,98,-4], [-12.4, 0.7,-47], [-3.7, 3.7, 3.7] , settings , snapTo="PlacementJnt_Wrist_R")
     Color.setColor("PlacementCtrl_Ik_Arm_R", "red")
     setShapeSize("PlacementCtrl_Ik_Arm_R", 2)
     cmds.parent("PlacementCtrl_Ik_Arm_R", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
     # PlacementCtrl_Pv_Arm_R
     PlacementCtrl_Pv_Arm_R = Controllers.createController("3D_Shapes/corner", "PlacementCtrl_Pv_Arm_R")
-    transformRelative("PlacementCtrl_Pv_Arm_R", [-29, 116, -34], [-90, 180, 0], [1, 1, 1] , settings)
+    transformRelative("PlacementCtrl_Pv_Arm_R", [-29, 116, -34], [-90, 180, 0], [1, 1, 1] , settings, snapTo="PlacementJnt_Elbow_R")
     Color.setColor("PlacementCtrl_Pv_Arm_R", "red")
     cmds.parent("PlacementCtrl_Pv_Arm_R", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
     # PlacementCtrl_Ribbon_Arm_R
     PlacementCtrl_Ribbon_Arm_R = cmds.circle(name="PlacementCtrl_Ribbon_Arm_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Ribbon_Arm_R", [-22, 123,-6.5], [7.1,0,-51], [6, 6, 6] , settings)
+    transformRelative("PlacementCtrl_Ribbon_Arm_R", [-22, 123,-6.5], [7.1,0,-51], [6, 6, 6] , settings, snapTo="PlacementJnt_Arm_R")
     Color.setColor("PlacementCtrl_Ribbon_Arm_R", "red")
     cmds.parent("PlacementCtrl_Ribbon_Arm_R", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Ribbon_Elbow_R
     PlacementCtrl_Ribbon_Elbow_R = cmds.circle(name="PlacementCtrl_Ribbon_Elbow_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Ribbon_Elbow_R", [-40, 106 , -6.5], [-6, 0 , -51], [5, 5, 5] , settings)
+    transformRelative("PlacementCtrl_Ribbon_Elbow_R", [-40, 106 , -6.5], [-6, 0 , -51], [5, 5, 5] , settings, snapTo="PlacementJnt_Elbow_R")
     Color.setColor("PlacementCtrl_Ribbon_Elbow_R", "red")
     cmds.parent("PlacementCtrl_Ribbon_Elbow_R", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Pin_Elbow_R
     PlacementCtrl_Pin_Elbow_R = cmds.circle(name="PlacementCtrl_Pin_Elbow_R", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Pin_Elbow_R", [-30,116,-8.4], [0, 0, -51], [5.2, 5.2, 5.2] , settings)
+    transformRelative("PlacementCtrl_Pin_Elbow_R", [-30,116,-8.4], [0, 0, -51], [5.2, 5.2, 5.2] , settings, snapTo="PlacementJnt_Elbow_R")
     Color.setColor("PlacementCtrl_Pin_Elbow_R", "red")
     cmds.parent("PlacementCtrl_Pin_Elbow_R", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
@@ -654,58 +680,58 @@ def placeArmsControllers(settings):
     
     # PlacementCtrl_Clavicle_L
     PlacementCtrl_Clavicle_L = Controllers.createController("3D_Shapes/boat", "PlacementCtrl_Clavicle_L")
-    transformRelative("PlacementCtrl_Clavicle_L", [12, 132, -5.4], [0, 0, -15], [5, 5, 4.5] , settings)
+    transformRelative("PlacementCtrl_Clavicle_L", [12, 132, -5.4], [0, 0, -15], [5, 5, 4.5] , settings, snapTo="PlacementJnt_Clavicle_L")
     Color.setColor("PlacementCtrl_Clavicle_L", "turquoise")
     cmds.parent("PlacementCtrl_Clavicle_L", "AutoRig_Data|ControllersPlacement|Global_Controllers")
 
     # PlacementCtrl_Fk_Shoulder_L
     PlacementCtrl_Fk_Shoulder_L = cmds.circle(name="PlacementCtrl_Fk_Shoulder_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Shoulder_L", [16.5, 130, -5.2], [0, 0, 58.2], [6.5, 6.5, 6.5] , settings)
+    transformRelative("PlacementCtrl_Fk_Shoulder_L", [16.5, 130, -5.2], [0, 0, 58.2], [6.5, 6.5, 6.5] , settings, snapTo="PlacementJnt_Arm_L")
     Color.setColor("PlacementCtrl_Fk_Shoulder_L", "turquoise")
     setShapeSize("PlacementCtrl_Fk_Shoulder_L", 2)
     cmds.parent("PlacementCtrl_Fk_Shoulder_L", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Fk_Elbow_L
     PlacementCtrl_Fk_Elbow_L = cmds.circle(name="PlacementCtrl_Fk_Elbow_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Elbow_L", [30, 116, -8.4], [0, 0, 51], [6, 6, 6] , settings)
+    transformRelative("PlacementCtrl_Fk_Elbow_L", [30, 116, -8.4], [0, 0, 51], [6, 6, 6] , settings, snapTo="PlacementJnt_Elbow_L")
     Color.setColor("PlacementCtrl_Fk_Elbow_L", "turquoise")
     setShapeSize("PlacementCtrl_Fk_Elbow_L", 2)
     cmds.parent("PlacementCtrl_Fk_Elbow_L", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Fk_Wrist_L
     PlacementCtrl_Fk_Wrist_L = cmds.circle(name="PlacementCtrl_Fk_Wrist_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Fk_Wrist_L", [49, 98, -4], [12.4, -0.7, 47], [3.7, 3.7, 3.7] , settings)
+    transformRelative("PlacementCtrl_Fk_Wrist_L", [49, 98, -4], [12.4, -0.7, 47], [3.7, 3.7, 3.7] , settings, snapTo="PlacementJnt_Wrist_L")
     Color.setColor("PlacementCtrl_Fk_Wrist_L", "turquoise")
     setShapeSize("PlacementCtrl_Fk_Wrist_L", 2)
     cmds.parent("PlacementCtrl_Fk_Wrist_L", "AutoRig_Data|ControllersPlacement|FK_Controllers")
 
     # PlacementCtrl_Ik_Arm_L
     PlacementCtrl_Ik_Arm_L = cmds.circle(name="PlacementCtrl_Ik_Arm_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Ik_Arm_L", [49, 98, -4], [12.4, -0.7, 47], [3.7, 3.7, 3.7] , settings)
+    transformRelative("PlacementCtrl_Ik_Arm_L", [49, 98, -4], [12.4, -0.7, 47], [3.7, 3.7, 3.7] , settings, snapTo="PlacementJnt_Wrist_L")
     Color.setColor("PlacementCtrl_Ik_Arm_L", "turquoise")
     setShapeSize("PlacementCtrl_Ik_Arm_L", 2)
     cmds.parent("PlacementCtrl_Ik_Arm_L", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
     # PlacementCtrl_Pv_Arm_L
     PlacementCtrl_Pv_Arm_L = Controllers.createController("3D_Shapes/corner", "PlacementCtrl_Pv_Arm_L")
-    transformRelative("PlacementCtrl_Pv_Arm_L", [29, 116, -34], [-90, 180, 0], [1, 1, 1] , settings)
+    transformRelative("PlacementCtrl_Pv_Arm_L", [29, 116, -34], [-90, 180, 0], [1, 1, 1] , settings, snapTo="PlacementJnt_Elbow_L")
     Color.setColor("PlacementCtrl_Pv_Arm_L", "turquoise")
     cmds.parent("PlacementCtrl_Pv_Arm_L", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
     # PlacementCtrl_Ribbon_Arm_L
     PlacementCtrl_Ribbon_Arm_L = cmds.circle(name="PlacementCtrl_Ribbon_Arm_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Ribbon_Arm_L", [22, 123, -6.5], [-7.1, 0, 51], [6, 6, 6] , settings)
+    transformRelative("PlacementCtrl_Ribbon_Arm_L", [22, 123, -6.5], [-7.1, 0, 51], [6, 6, 6] , settings, snapTo="PlacementJnt_Arm_L")
     Color.setColor("PlacementCtrl_Ribbon_Arm_L", "turquoise")
     cmds.parent("PlacementCtrl_Ribbon_Arm_L", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Ribbon_Elbow_L
     PlacementCtrl_Ribbon_Elbow_L = cmds.circle(name="PlacementCtrl_Ribbon_Elbow_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Ribbon_Elbow_L", [40, 106, -6.5], [6, 0, 51], [5, 5, 5] , settings)
+    transformRelative("PlacementCtrl_Ribbon_Elbow_L", [40, 106, -6.5], [6, 0, 51], [5, 5, 5] , settings, snapTo="PlacementJnt_Elbow_L")
     Color.setColor("PlacementCtrl_Ribbon_Elbow_L", "turquoise")
     cmds.parent("PlacementCtrl_Ribbon_Elbow_L", "AutoRig_Data|ControllersPlacement|Other_Controllers")
 
     # PlacementCtrl_Pin_Elbow_L
     PlacementCtrl_Pin_Elbow_L = cmds.circle(name="PlacementCtrl_Pin_Elbow_L", normal=[0, 1, 0], radius=1)
-    transformRelative("PlacementCtrl_Pin_Elbow_L", [30, 116, -8.4], [0, 0, 51], [5.2, 5.2, 5.2] , settings)
+    transformRelative("PlacementCtrl_Pin_Elbow_L", [30, 116, -8.4], [0, 0, 51], [5.2, 5.2, 5.2] , settings, snapTo="PlacementJnt_Elbow_L")
     Color.setColor("PlacementCtrl_Pin_Elbow_L", "turquoise")
     cmds.parent("PlacementCtrl_Pin_Elbow_L", "AutoRig_Data|ControllersPlacement|Other_Controllers")
