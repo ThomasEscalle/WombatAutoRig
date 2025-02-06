@@ -54,12 +54,18 @@ from wombatAutoRig.src.core import AutorigHelper
 # - PlacementCtrl_Pin_Knee_R
 # - PlacementCtrl_Pin_Knee_L
 
-
-def transformRelative(controller, position = [0,0,0], rotation = [0,0,0], scale = [1, 1, 1] , settings = None):
+# @param snapTo : The joint to snap the controller to, we have it's position
+def transformRelative(controller, position = [0,0,0], rotation = [0,0,0], scale = [1, 1, 1] , settings = None, snapTo = ""):
     goodPos = AutorigHelper.resizeCtrl(bbox = settings["bbox"] , size = position)
     goodScale = AutorigHelper.resizeCtrl(bbox = settings["bbox"] , size = scale)
 
-
+    if snapTo != "":
+        # Check if the snapTo is a joint and if it is located in the settings
+        for joint in settings["joints"]:
+            if joint["name"] == snapTo:
+                position = joint["position"]
+                break
+    
     cmds.setAttr(controller + ".translate", goodPos[0], goodPos[1], goodPos[2])
     cmds.setAttr(controller + ".rotate", rotation[0], rotation[1], rotation[2])
     cmds.setAttr(controller + ".scale", goodScale[0], goodScale[1], goodScale[2])

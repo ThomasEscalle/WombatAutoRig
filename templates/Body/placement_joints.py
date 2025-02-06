@@ -9,11 +9,23 @@ from maya import cmds
 
 # fonction that clear the selection and create a joint at the given position and orientation
 def createJoint(name, position, orientation, settings, ro="xyz"):
+
+
+
     cmds.select(clear=True)
+    goodpos = AutorigHelper.resizeJnts(bbox = settings["bbox"] , size = position)
     joint = cmds.joint(name=name, p=AutorigHelper.resizeJnts(bbox = settings["bbox"] , size = position), roo=ro)
     cmds.joint(joint, e=True, o=orientation, ch=True, zso=True)
     cmds.setAttr(joint+ ".displayLocalAxis", 1)
     Color.setColor(joint, "white")
+
+    # Save the joint and the position in the settings
+    if "joints" not in settings:
+        settings["joints"] = []
+    obj_dict = {"name": name, "goodPos": goodpos, "orientation": orientation , "position": position }
+    settings["joints"].append(obj_dict)
+    
+
     return joint
 
 

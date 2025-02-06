@@ -224,6 +224,9 @@ class Template(TemplateBase.TemplateBase):
     def onValidationEntered(self):
         print("onValidationEntered")
 
+        settings = self.mw.getSettings()
+        print(settings)
+
     # This method is called when the joint limits are finished (when the user clicks the "Next" button)
     def onValidationAccepted(self):
         print("onValidationAccepted")
