@@ -354,7 +354,8 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1, BindSet = None):
     cmds.addAttr(CtrlOption, ln="SQUASH", at="double", min=0, max=1, dv=1, k=True)
     cmds.addAttr(CtrlOption, ln="_________",sn = "_________", at="enum", en="_________", keyable=True)
     cmds.addAttr(CtrlOption, ln=f"IkVisibility", at="bool", dv=False, k=True)
-    cmds.addAttr(CtrlOption, ln=f"FkVisibility", at="bool", dv=False, k=True)
+    cmds.addAttr(CtrlOption, ln=f"FkVisibility", at="bool", dv=True, k=True)
+    cmds.addAttr(CtrlOption, ln=f"PinVisibility", at="bool", dv=False, k=True)
     cmds.addAttr(CtrlOption, ln="________",sn = "________", at="enum", en="________", keyable=True)
     cmds.addAttr(CtrlOption, ln="TwistChest", at="double", dv=0, k=True)
     cmds.addAttr(CtrlOption, ln="TwistMid", at="double", dv=0, k=True)
@@ -1091,6 +1092,40 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1, BindSet = None):
             else :
                 pass
 
+
+    #Connect Visibility
+    cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlUpperBody + ".visibility")
+    cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMid[0] + ".visibility")
+    cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKChest + ".visibility")
+
+    cmds.connectAttr(CtrlOption + ".IkVisibility", CTRLIKRoot[0] + ".visibility")
+    cmds.connectAttr(CtrlOption + ".IkVisibility", CtrlIkMid[0] + ".visibility")
+    cmds.connectAttr(CtrlOption + ".IkVisibility", CTRLIK[0] + ".visibility")
+
+    if CTRLFK == 3:
+        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMidBottom[0] + ".visibility")
+        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMidTop[0] + ".visibility")
+    
+        cmds.connectAttr(CtrlOption + ".IkVisibility", CtrlIKMidBottom[0] + ".visibility")
+        cmds.connectAttr(CtrlOption + ".IkVisibility", CtrlIKMidTop[0] + ".visibility")
+
+    if CTRLFK == 5:
+        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMid1[0] + ".visibility")
+        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMid2[0] + ".visibility")
+        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMid3[0] + ".visibility")
+        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMid4[0] + ".visibility")
+    
+        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlIKMid1[0] + ".visibility")
+        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlIKMid2[0] + ".visibility")
+        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlIKMid3[0] + ".visibility")
+        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlIKMid4[0] + ".visibility")
+
+    for i in range(JntNbr-2):
+        Shape = cmds.listRelatives(f"CTRL_RibbonSpine_0{i+1}", s=True)
+        cmds.connectAttr(CtrlOption + ".PinVisibility", Shape[0] + ".lodVisibility")
+
+    cmds.setAttr("ExtraNodes_Spine_01.visibility", 0)
+        
     return CtrlUpperBody + "_Offset"
 
 
