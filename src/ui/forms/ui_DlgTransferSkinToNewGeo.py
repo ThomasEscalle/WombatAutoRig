@@ -20,6 +20,11 @@ class Ui_TransferSkinToNewGeo(object):
         TransferSkinToNewGeo.resize(437, 151)
         self.verticalLayout = QVBoxLayout(TransferSkinToNewGeo)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.label = QLabel(TransferSkinToNewGeo)
+        self.label.setObjectName(u"label")
+
+        self.verticalLayout.addWidget(self.label)
+
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.leSkinedGrp = QLineEdit(TransferSkinToNewGeo)
@@ -79,7 +84,10 @@ class Ui_TransferSkinToNewGeo(object):
 
     def retranslateUi(self, TransferSkinToNewGeo):
         TransferSkinToNewGeo.setWindowTitle(QCoreApplication.translate("TransferSkinToNewGeo", u"Dialog", None))
+        self.label.setText(QCoreApplication.translate("TransferSkinToNewGeo", u"Select two groups with same object name and hierarchy.", None))
+        self.leSkinedGrp.setPlaceholderText(QCoreApplication.translate("TransferSkinToNewGeo", u"Skined Geo Group", None))
         self.btnSelectSkinedGrp.setText(QCoreApplication.translate("TransferSkinToNewGeo", u"Select", None))
+        self.leTargetGrp.setPlaceholderText(QCoreApplication.translate("TransferSkinToNewGeo", u"Target Group", None))
         self.btnSelectGrp.setText(QCoreApplication.translate("TransferSkinToNewGeo", u"Select", None))
         self.btnApply.setText(QCoreApplication.translate("TransferSkinToNewGeo", u"Apply", None))
         self.btnCancel.setText(QCoreApplication.translate("TransferSkinToNewGeo", u"Cancel", None))

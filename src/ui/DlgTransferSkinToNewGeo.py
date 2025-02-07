@@ -34,12 +34,48 @@ class DlgTransferSkinToNewGeo(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.ui.btnApply.clicked.connect(self.apply)
         self.ui.btnCancel.clicked.connect(self.close)
 
+        self.ui.btnSelectSkinedGrp.clicked.connect(self.selectSkinedGrp)
+        self.ui.btnSelectGrp.clicked.connect(self.selectGrp)
+
     # Show window with docking ability
     def run(self):
         self.show(dockable = True)
 
+    # Select the skined group
+    def selectSkinedGrp(self):
+        self.ui.leSkinedGrp.setText(cmds.ls(sl=True, long=True)[0])
+    
+    # Select the target group
+    def selectGrp(self):
+        self.ui.leTargetGrp.setText(cmds.ls(sl=True, long=True)[0])
+
+    # Apply the transfer of the skin
     def apply(self) :
-        pass
+        
+        # Get the groups as string
+        skinedGrp = self.ui.leSkinedGrp.text()
+        targetGrp = self.ui.leTargetGrp.text()
+
+        # Check if the skinedGrp and targetGrp are not empty
+        if skinedGrp == "" or targetGrp == "":
+            print("Please fill all fields")
+            return
+
+        # Iterate over all the objects in the skinedGrp, get their path
+        for obj in cmds.listRelatives(skinedGrp, children=True, fullPath=True):
+
+            # Check if there is an object with the same name and the same relative path in the targetGrp
+            relativePath = obj.replace(skinedGrp, "")
+            if cmds.objExists(targetGrp + relativePath):
+
+
+                print("Transfer the skin from " + obj + " to " + targetGrp + relativePath)  
+
+            else:
+                print("obj doesn't exist : " + targetGrp + relativePath)
+                continue
+
+
         super(DlgTransferSkinToNewGeo, self).accept()
 
     
