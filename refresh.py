@@ -204,9 +204,18 @@ importlib.reload(DlgMatchIkFk)
 from wombatAutoRig.src.ui.forms import ui_DlgMatchIkFk
 importlib.reload(ui_DlgMatchIkFk)
 
+from wombatAutoRig.src.ui.forms import ui_DlgTransferSkinToNewGeo
+importlib.reload(ui_DlgTransferSkinToNewGeo)
+
+from wombatAutoRig.src.ui import DlgTransferSkinToNewGeo
+importlib.reload(DlgTransferSkinToNewGeo)
+
+
+
+
 wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
 #CartoonEye.test()
 
-#dialog = DlgMatchIkFk.DlgMatchIkFk()
+#dialog = DlgTransferSkinToNewGeo.DlgTransferSkinToNewGeo()
 #dialog.run()  # Appeler la fonction run() après rechargement

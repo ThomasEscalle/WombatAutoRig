@@ -87,7 +87,7 @@ def transformRelative(controller, position = [0,0,0], rotation = [0,0,0], scale 
                     offsetRotation = [rotationScene[0] - rotationSrc[0], rotationScene[1] - rotationSrc[1], rotationScene[2] - rotationSrc[2]]
 
                     # Add the offset to the rotation
-                    #rotation = [rotation[0] + offsetRotation[0], rotation[1] + offsetRotation[1], rotation[2] + offsetRotation[2]]
+                    # rotation = [rotation[0] + offsetRotation[0], rotation[1] + offsetRotation[1], rotation[2] + offsetRotation[2]]
 
 
                 break
