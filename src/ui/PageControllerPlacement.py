@@ -24,24 +24,25 @@ class PageControllerPlacement(PageBase):
         self.ui.setupUi(self)
 
         # Connect signals
-        self.ui.btnFkMode.clicked.connect(self.onFkModeClicked)
-        self.ui.btnIkMode.clicked.connect(self.onIkModeClicked)
-        self.ui.btnOther.clicked.connect(self.onOtherClicked)
+        self.ui.cb_IkCTRLS.stateChanged.connect(self.onIkClicked)
+        self.ui.cb_fkCTRLS.stateChanged.connect(self.onFkClicked)
+        self.ui.cb_otherCTRLS.stateChanged.connect(self.onOtherClicked)
+        self.ui.cb_ShowGeo.stateChanged.connect(self.onShowGeo)
+        self.ui.cb_ShowJoints.stateChanged.connect(self.onShowJoints)
+
         self.ui.btnControllers.clicked.connect(self.onControllersClicked)
         self.ui.btnColors.clicked.connect(self.onColorsClicked)
         self.ui.pushButton.clicked.connect(self.mirror)
 
+        self.ui.cb_IkCTRLS.setChecked(True)
+        self.ui.cb_ShowGeo.setChecked(True)
+
         # Set icons
-        self.ui.btnFkMode.setIcon(IconLoader.loadIcon("skull"))
-        self.ui.btnIkMode.setIcon(IconLoader.loadIcon("skeleton"))
-        self.ui.btnOther.setIcon(IconLoader.loadIcon("other"))
         self.ui.btnColors.setIcon(IconLoader.loadIcon("colors"))
         self.ui.btnControllers.setIcon(IconLoader.loadIcon("controller"))
 
-        # Set the default mode to Fk
-        self.ui.btnFkMode.hide()
-        self.ui.btnIkMode.show()
-        self.ui.btnOther.hide()
+        self.settings = None
+
 
     # Signal to create the rig
     canceled = Signal()
@@ -78,6 +79,8 @@ class PageControllerPlacement(PageBase):
     def onEntered(self):
         self.entered.emit()
 
+    def setSettings(self,settings): 
+        self.settings = settings
     
     
     def autoFill(self):
@@ -87,48 +90,44 @@ class PageControllerPlacement(PageBase):
     def canGoNext(self):
         return True
 
-
-    # Ik -> Fk -> Other
-
-    # When the user clicks the Fk mode button
-    # Hide the Fk mode button and show the Ik mode button to make it look like a toggle
-    def onFkModeClicked(self):
-        self.ui.btnOther.show()
-        self.ui.btnIkMode.hide()
-        self.ui.btnFkMode.hide()
-
-        cmds.showHidden("AutoRig_Data|ControllersPlacement|Other_Controllers")
-        cmds.hide("AutoRig_Data|ControllersPlacement|IK_Controllers")
-        cmds.hide("AutoRig_Data|ControllersPlacement|FK_Controllers")
-
     def addDataToSettings(self,settings):
-        print("Add the data to the settings")
         return settings
 
-    # When the user clicks the Ik mode button
-    # Hide the Ik mode button and show the Fk mode button to make it look like a toggle
-    def onIkModeClicked(self):
-        self.ui.btnFkMode.show()
-        self.ui.btnOther.hide()
-        self.ui.btnIkMode.hide()
 
-        cmds.showHidden("AutoRig_Data|ControllersPlacement|FK_Controllers")
-        cmds.hide("AutoRig_Data|ControllersPlacement|Other_Controllers")
-        cmds.hide("AutoRig_Data|ControllersPlacement|IK_Controllers")
+    def onFkClicked(self):
+        if self.ui.cb_fkCTRLS.isChecked():
+            cmds.showHidden("AutoRig_Data|ControllersPlacement|FK_Controllers")
+        else:
+            cmds.hide("AutoRig_Data|ControllersPlacement|FK_Controllers")
+
+    def onIkClicked(self):
+        if self.ui.cb_IkCTRLS.isChecked():
+            cmds.showHidden("AutoRig_Data|ControllersPlacement|IK_Controllers")
+        else:
+            cmds.hide("AutoRig_Data|ControllersPlacement|IK_Controllers")
 
     def onOtherClicked(self):
-        self.ui.btnIkMode.show()
-        self.ui.btnFkMode.hide()
-        self.ui.btnOther.hide()
+        if self.ui.cb_otherCTRLS.isChecked():
+            cmds.showHidden("AutoRig_Data|ControllersPlacement|Other_Controllers")
+        else:
+            cmds.hide("AutoRig_Data|ControllersPlacement|Other_Controllers")
 
-        cmds.showHidden("AutoRig_Data|ControllersPlacement|IK_Controllers")
-        cmds.hide("AutoRig_Data|ControllersPlacement|Other_Controllers")
-        cmds.hide("AutoRig_Data|ControllersPlacement|FK_Controllers")
+    def onShowGeo(self):
+        if self.settings is not None:
+            geo_elements = self.settings["geo"]
 
+            if self.ui.cb_ShowGeo.isChecked():
+                for geo in geo_elements:
+                    cmds.showHidden(geo)
+            else:
+                for geo in geo_elements:
+                    cmds.hide(geo)
 
-
-
-
+    def onShowJoints(self):
+        if self.ui.cb_ShowJoints.isChecked():
+            cmds.showHidden("AutoRig_Data|JointsPlacement")
+        else:
+            cmds.hide("AutoRig_Data|JointsPlacement")
 
     def onControllersClicked(self):
         dlg = DlgControllers.DlgControllers()

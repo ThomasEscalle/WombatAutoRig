@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>667</width>
-    <height>593</height>
+    <width>699</width>
+    <height>771</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,23 +37,41 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="btnFkMode">
+      <widget class="QCheckBox" name="cb_IkCTRLS">
        <property name="text">
-        <string>Fk Mode</string>
+        <string>IK CTRLs</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btnIkMode">
+      <widget class="QCheckBox" name="cb_fkCTRLS">
        <property name="text">
-        <string>Ik Mode</string>
+        <string>FK CTRLs</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btnOther">
+      <widget class="QCheckBox" name="cb_otherCTRLS">
        <property name="text">
-        <string>Other</string>
+        <string>OTHER CTRLs</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QCheckBox" name="cb_ShowGeo">
+       <property name="text">
+        <string>Show Geo</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cb_ShowJoints">
+       <property name="text">
+        <string>Show Joints</string>
        </property>
       </widget>
      </item>

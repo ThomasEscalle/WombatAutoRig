@@ -17,7 +17,7 @@ class Ui_PageControllerPlacement(object):
     def setupUi(self, PageControllerPlacement):
         if not PageControllerPlacement.objectName():
             PageControllerPlacement.setObjectName(u"PageControllerPlacement")
-        PageControllerPlacement.resize(667, 593)
+        PageControllerPlacement.resize(699, 771)
         self.verticalLayout = QVBoxLayout(PageControllerPlacement)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(PageControllerPlacement)
@@ -36,23 +36,38 @@ class Ui_PageControllerPlacement(object):
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.btnFkMode = QPushButton(PageControllerPlacement)
-        self.btnFkMode.setObjectName(u"btnFkMode")
+        self.cb_IkCTRLS = QCheckBox(PageControllerPlacement)
+        self.cb_IkCTRLS.setObjectName(u"cb_IkCTRLS")
 
-        self.horizontalLayout.addWidget(self.btnFkMode)
+        self.horizontalLayout.addWidget(self.cb_IkCTRLS)
 
-        self.btnIkMode = QPushButton(PageControllerPlacement)
-        self.btnIkMode.setObjectName(u"btnIkMode")
+        self.cb_fkCTRLS = QCheckBox(PageControllerPlacement)
+        self.cb_fkCTRLS.setObjectName(u"cb_fkCTRLS")
 
-        self.horizontalLayout.addWidget(self.btnIkMode)
+        self.horizontalLayout.addWidget(self.cb_fkCTRLS)
 
-        self.btnOther = QPushButton(PageControllerPlacement)
-        self.btnOther.setObjectName(u"btnOther")
+        self.cb_otherCTRLS = QCheckBox(PageControllerPlacement)
+        self.cb_otherCTRLS.setObjectName(u"cb_otherCTRLS")
 
-        self.horizontalLayout.addWidget(self.btnOther)
+        self.horizontalLayout.addWidget(self.cb_otherCTRLS)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout)
+
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.cb_ShowGeo = QCheckBox(PageControllerPlacement)
+        self.cb_ShowGeo.setObjectName(u"cb_ShowGeo")
+
+        self.horizontalLayout_3.addWidget(self.cb_ShowGeo)
+
+        self.cb_ShowJoints = QCheckBox(PageControllerPlacement)
+        self.cb_ShowJoints.setObjectName(u"cb_ShowJoints")
+
+        self.horizontalLayout_3.addWidget(self.cb_ShowJoints)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
 
         self.label_3 = QLabel(PageControllerPlacement)
         self.label_3.setObjectName(u"label_3")
@@ -107,9 +122,11 @@ class Ui_PageControllerPlacement(object):
         PageControllerPlacement.setWindowTitle(QCoreApplication.translate("PageControllerPlacement", u"Form", None))
         self.label.setText(QCoreApplication.translate("PageControllerPlacement", u"Controllers Placement", None))
         self.label_2.setText("")
-        self.btnFkMode.setText(QCoreApplication.translate("PageControllerPlacement", u"Fk Mode", None))
-        self.btnIkMode.setText(QCoreApplication.translate("PageControllerPlacement", u"Ik Mode", None))
-        self.btnOther.setText(QCoreApplication.translate("PageControllerPlacement", u"Other", None))
+        self.cb_IkCTRLS.setText(QCoreApplication.translate("PageControllerPlacement", u"IK CTRLs", None))
+        self.cb_fkCTRLS.setText(QCoreApplication.translate("PageControllerPlacement", u"FK CTRLs", None))
+        self.cb_otherCTRLS.setText(QCoreApplication.translate("PageControllerPlacement", u"OTHER CTRLs", None))
+        self.cb_ShowGeo.setText(QCoreApplication.translate("PageControllerPlacement", u"Show Geo", None))
+        self.cb_ShowJoints.setText(QCoreApplication.translate("PageControllerPlacement", u"Show Joints", None))
         self.label_3.setText("")
         self.btnControllers.setText(QCoreApplication.translate("PageControllerPlacement", u"Replace controllers", None))
         self.btnColors.setText(QCoreApplication.translate("PageControllerPlacement", u"Colors", None))

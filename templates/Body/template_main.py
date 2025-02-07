@@ -188,6 +188,9 @@ class Template(TemplateBase.TemplateBase):
     # This method is called when the controller placement is entered
     def onControllerPlacementEntered(self):
         settings = self.mw.getSettings()
+
+        self.pages[3].setSettings(settings)
+
         AutorigHelper.hideControllersPlacement(0)
 
         placement_controllers.placeControllers(settings)
