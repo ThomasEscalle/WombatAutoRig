@@ -684,7 +684,12 @@ def createSpine(settings):
     
     for i in range(NbrJoints - 2):
         NewCTRL.Bend(f"PlacementCtrl_Spine_Ribbon_{i+1}", f"CTRL_RibbonSpine_0{i+1}", f"CTRL_RibbonSpine_0{i+1}")
+        Shape = cmds.listRelatives(f"CTRL_RibbonSpine_0{i+1}", s=True)
+        for shape in Shape:
+            cmds.connectAttr("CTRL_Settings_Spine" + ".PinVisibility", shape + ".lodVisibility")
 
+    #parent Ctrl Option into Ctrl Settings
+    cmds.parent("CTRL_Option", "CTRL_Settings")
 
 
 def createArm(settings, side = "L"):

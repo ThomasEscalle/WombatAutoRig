@@ -1120,9 +1120,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1, BindSet = None):
         cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlIKMid3[0] + ".visibility")
         cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlIKMid4[0] + ".visibility")
 
-    for i in range(JntNbr-2):
-        Shape = cmds.listRelatives(f"CTRL_RibbonSpine_0{i+1}", s=True)
-        cmds.connectAttr(CtrlOption + ".PinVisibility", Shape[0] + ".lodVisibility")
+        
 
     cmds.setAttr("ExtraNodes_Spine_01.visibility", 0)
         
