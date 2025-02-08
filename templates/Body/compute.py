@@ -717,6 +717,7 @@ def createSpine(settings):
 
     #parent Ctrl Option into Ctrl Settings
     cmds.parent("CTRL_Settings_Spine", "CTRL_Settings")
+    cmds.makeIdentity("CTRL_Settings_Spine", t=True)
 
 
 def createArm(settings, side = "L"):
