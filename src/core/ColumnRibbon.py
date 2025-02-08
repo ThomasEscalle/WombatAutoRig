@@ -1094,31 +1094,7 @@ def ColumnRibbon(name="Default", height=2, JntNbr=7, CTRLFK=1, BindSet = None):
 
 
     #Connect Visibility
-    cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlUpperBody + ".visibility")
-    cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMid[0] + ".visibility")
-    cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKChest + ".visibility")
 
-    cmds.connectAttr(CtrlOption + ".IkVisibility", CTRLIKRoot[0] + ".visibility")
-    cmds.connectAttr(CtrlOption + ".IkVisibility", CtrlIkMid[0] + ".visibility")
-    cmds.connectAttr(CtrlOption + ".IkVisibility", CTRLIK[0] + ".visibility")
-
-    if CTRLFK == 3:
-        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMidBottom[0] + ".visibility")
-        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMidTop[0] + ".visibility")
-    
-        cmds.connectAttr(CtrlOption + ".IkVisibility", CtrlIKMidBottom[0] + ".visibility")
-        cmds.connectAttr(CtrlOption + ".IkVisibility", CtrlIKMidTop[0] + ".visibility")
-
-    if CTRLFK == 5:
-        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMid1[0] + ".visibility")
-        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMid2[0] + ".visibility")
-        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMid3[0] + ".visibility")
-        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlFKMid4[0] + ".visibility")
-    
-        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlIKMid1[0] + ".visibility")
-        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlIKMid2[0] + ".visibility")
-        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlIKMid3[0] + ".visibility")
-        cmds.connectAttr(CtrlOption + ".FkVisibility", CtrlIKMid4[0] + ".visibility")
 
         
 

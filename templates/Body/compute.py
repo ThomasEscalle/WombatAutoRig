@@ -13,11 +13,13 @@ from wombatAutoRig.src.core import ColumnRibbon
 from wombatAutoRig.src.core import skinCage
 
 
-#(Reprendre les twist parce que j'ai fait betise jsp a voir/ probleme surtout au niveau des pieds a cause de l'angle qui est different)
 #Faire les doigts (attentes CTRLs)
 #SpaceFollow
 
-
+def visibilityShape(CTRL, type):
+    Shape = cmds.listRelatives(CTRL, s=True)
+    for shape in Shape:
+        cmds.connectAttr("CTRL_Settings_Spine" + f".{type}Visibility", shape + ".lodVisibility")
 
 def compute(settings):
 
@@ -649,8 +651,8 @@ def createSpine(settings):
     NewCTRL.Bend("PlacementCtrl_Shoulder", "CTRL_FK_Chest", "CTRL_FK_Chest")
     NewCTRL.Bend("PlacementCtrl_Settings_Spine", "CTRL_Option", "CTRL_Settings_Spine")
 
-    NewCTRL.Bend("PlacementCtrl_ShoulderIk", "CTRL_IK_Chest", "CTRL_Chest_Ik")
-    NewCTRL.Bend("PlacementCtrl_IkRoot", "CTRL_IK_Root", "CTRL_Root_IK")
+    NewCTRL.Bend("PlacementCtrl_ShoulderIk", "CTRL_IK_Chest", "CTRL_IK_Chest")
+    NewCTRL.Bend("PlacementCtrl_IkRoot", "CTRL_IK_Root", "CTRL_IK_Root")
 
     if NbrFK == 1 :
         NewCTRL.Bend("PlacementCtrl_Spine_Ik_1", "CTRL_IK_Mid", "CTRL_IK_Mid")
@@ -687,6 +689,31 @@ def createSpine(settings):
         Shape = cmds.listRelatives(f"CTRL_RibbonSpine_0{i+1}", s=True)
         for shape in Shape:
             cmds.connectAttr("CTRL_Settings_Spine" + ".PinVisibility", shape + ".lodVisibility")
+
+    visibilityShape("CTRL_FK_Mid", "Fk")
+    visibilityShape("CTRL_FK_Chest", "Fk")
+
+    visibilityShape("CTRL_IK_Root", "Ik")
+    visibilityShape("CTRL_IK_Mid", "Ik")
+    visibilityShape("CTRL_IK_Chest", "Ik")
+
+    if NbrFK == 3:
+        visibilityShape("CTRL_FK_Mid_Bottom", "Fk") 
+        visibilityShape("CTRL_FK_Mid_Top", "Fk")
+    
+        visibilityShape("CTRL_IK_Mid_Bottom", "Ik")
+        visibilityShape("CTRL_IK_Mid_Top", "Ik")
+
+    if NbrFK == 5:
+        visibilityShape("CTRL_IK_Mid1", "Ik")
+        visibilityShape("CTRL_IK_Mid2", "Ik")
+        visibilityShape("CTRL_IK_Mid3", "Ik")
+        visibilityShape("CTRL_IK_Mid4", "Ik")
+    
+        visibilityShape("CTRL_FK_Mid1", "Fk")
+        visibilityShape("CTRL_FK_Mid2", "Fk")
+        visibilityShape("CTRL_FK_Mid3", "Fk")
+        visibilityShape("CTRL_FK_Mid4", "Fk")
 
     #parent Ctrl Option into Ctrl Settings
     cmds.parent("CTRL_Settings_Spine", "CTRL_Settings")
