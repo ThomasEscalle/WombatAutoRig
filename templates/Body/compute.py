@@ -689,7 +689,7 @@ def createSpine(settings):
             cmds.connectAttr("CTRL_Settings_Spine" + ".PinVisibility", shape + ".lodVisibility")
 
     #parent Ctrl Option into Ctrl Settings
-    cmds.parent("CTRL_Option", "CTRL_Settings")
+    cmds.parent("CTRL_Settings_Spine", "CTRL_Settings")
 
 
 def createArm(settings, side = "L"):
