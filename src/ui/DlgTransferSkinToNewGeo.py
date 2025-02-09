@@ -14,10 +14,65 @@ import maya.cmds as cmds
 from wombatAutoRig.src.ui.forms import ui_DlgTransferSkinToNewGeo
 
 
+def process( skinedGrp, targetGrp):
+    print ("###### INFO : Processing " + skinedGrp + " to " + targetGrp)    
+    # Iterate over all the objects in the skinedGrp, get their path
+    for obj in cmds.listRelatives(skinedGrp, children=True, fullPath=True, allDescendents=True):
+        # Check if there is an object with the same name and the same relative path in the targetGrp
+        relativePath = obj.replace(skinedGrp, "")
+
+        # Check if the object is not a mesh
+        if cmds.objectType(obj) != "mesh":
+            continue
+
+        secondArg = targetGrp + relativePath
+        if cmds.objExists(secondArg):
+            print("Transfer the skin from " + obj + " to " + targetGrp + relativePath)  
+            
+            firstArg = obj
+
+
+            joints = getInfluencingJoints(firstArg)
+            if not joints:
+                continue
+
+            cmds.select(secondArg)
+
+            print("secondArg : " + secondArg)   
+            # Skin the second object to the joints
+            cmds.skinCluster(joints, secondArg, tsb=True)
+
+            # Transfer the skin weights
+            cmds.select(firstArg)
+            cmds.select(secondArg, add=True)
+            cmds.CopySkinWeights()
+        else:
+            print("## WARNING : obj doesn't exist : " + targetGrp + relativePath)
+            continue
+
+
 
 def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
     return shiboken2.wrapInstance(int(main_window_ptr), QtWidgets.QWidget)
+
+
+def getInfluencingJoints(sel=None):
+
+    if not sel:
+        print("No object selected.")
+        return
+
+    # Get the skin cluster
+    skinCluster = cmds.ls(cmds.listHistory(sel), type="skinCluster")
+    if not skinCluster:
+        print("No skin cluster found in " + sel)
+        return None
+
+    # Get the influencing joints
+    joints = cmds.skinCluster(skinCluster[0], query=True, inf=True)
+    print(joints)
+    return joints
 
 
 # Classe de la fenêtre de création de template
@@ -61,19 +116,7 @@ class DlgTransferSkinToNewGeo(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             print("Please fill all fields")
             return
 
-        # Iterate over all the objects in the skinedGrp, get their path
-        for obj in cmds.listRelatives(skinedGrp, children=True, fullPath=True):
-
-            # Check if there is an object with the same name and the same relative path in the targetGrp
-            relativePath = obj.replace(skinedGrp, "")
-            if cmds.objExists(targetGrp + relativePath):
-
-
-                print("Transfer the skin from " + obj + " to " + targetGrp + relativePath)  
-
-            else:
-                print("obj doesn't exist : " + targetGrp + relativePath)
-                continue
+        process(skinedGrp, targetGrp)
 
 
         super(DlgTransferSkinToNewGeo, self).accept()
