@@ -654,6 +654,9 @@ def createSpine(settings):
     NewCTRL.Bend("PlacementCtrl_ShoulderIk", "CTRL_IK_Chest", "CTRL_IK_Chest")
     NewCTRL.Bend("PlacementCtrl_IkRoot", "CTRL_IK_Root", "CTRL_IK_Root")
 
+    NewCTRL.Bend("PlacementCtrl_Tangent_Root", "CTRL_Tangent_Root", "CTRL_Tangent_Root")
+    NewCTRL.Bend("PlacementCtrl_Tangent_Chest", "CTRL_Tangent_Chest", "CTRL_Tangent_Chest")
+
     if NbrFK == 1 :
         NewCTRL.Bend("PlacementCtrl_Spine_Ik_1", "CTRL_IK_Mid", "CTRL_IK_Mid")
         NewCTRL.Bend("PlacementCtrl_Spine_Fk_1", "CTRL_FK_Mid", "CTRL_FK_Mid")
@@ -717,7 +720,7 @@ def createSpine(settings):
 
     #parent Ctrl Option into Ctrl Settings
     cmds.parent("CTRL_Settings_Spine", "CTRL_Settings")
-    cmds.makeIdentity("CTRL_Settings_Spine", t=True)
+    cmds.makeIdentity("CTRL_Settings_Spine", t=True, a=True)
 
 
 def createArm(settings, side = "L"):
