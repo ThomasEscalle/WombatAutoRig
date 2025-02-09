@@ -107,6 +107,9 @@ def setShapeSize(controller, size):
 def placeControllers(settings):
     print("Place the controllers")
     
+    # Hide the LRAs of the joints
+    AutorigHelper.disableLocalRotationAxis()
+
 
     placeGlobalControllers(settings)
     placeSpineControllers(settings)
@@ -385,6 +388,17 @@ def placeSpineControllers(settings) :
     Color.setColor("PlacementCtrl_IkRoot", "blue")
     cmds.parent("PlacementCtrl_IkRoot", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
+    # Placement Ctrl_Tangent_Root
+    PlacementCtrl_Tangent_Root = cmds.circle(name="PlacementCtrl_Tangent_Root", normal=[0, 1, 0], radius=1)
+    transformRelative("PlacementCtrl_Tangent_Root", [22.5, 93, -3.2], [90, 0, 0], [1.97, 1.97, 1.97] , settings, snapTo="PlacementJnt_Root")
+    Color.setColor("PlacementCtrl_Tangent_Root", "blue")
+    cmds.parent("PlacementCtrl_Tangent_Root", "AutoRig_Data|ControllersPlacement|IK_Controllers")
+
+    # PlacementCtrl_Tangent_Chest
+    PlacementCtrl_Tangent_Chest = cmds.circle(name="PlacementCtrl_Tangent_Chest", normal=[0, 1, 0], radius=1)
+    transformRelative("PlacementCtrl_Tangent_Chest", [21, 139, -3.2], [90, 0, 0], [1.97, 1.97, 1.97] , settings, snapTo="PlacementJnt_Chest")
+    Color.setColor("PlacementCtrl_Tangent_Chest", "blue")
+    cmds.parent("PlacementCtrl_Tangent_Chest", "AutoRig_Data|ControllersPlacement|IK_Controllers")
 
 
     # Ik, Fk controllers
