@@ -13,6 +13,7 @@ from maya.OpenMayaUI import MQtUtil
 
 from wombatAutoRig.src.ui.forms.ui_DlgCartoonEye import Ui_DlgCartoonEye
 from wombatAutoRig.src.core import CartoonEye
+from wombatAutoRig.src.core import ResortVertices
 
 
 def maya_main_window():
@@ -58,10 +59,10 @@ class DlgCartoonEye(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         faceGeo = self.ui.leFaceGeo.text()
         
         
-        topVtx = self.ui.leTopVtx.text()
+        topVtx = ResortVertices.get_ordered_vertices(self.ui.leTopVtx.text(), firstVertex = self.ui.leFirstTopVtx.text()) #l'ui .text n'existe pas j'ai inventé le nom par rapport à ta nomenclature
         topVtx = topVtx.split(" ")
 
-        bottomVtx = self.ui.leBottomVtx.text()
+        bottomVtx = ResortVertices.get_ordered_vertices(self.ui.leBottomVtx.text(), firstVertex = self.ui.leFirstBottomVtx.text())
         bottomVtx = bottomVtx.split(" ")
 
         # Get the side of the eye (cbSide)
