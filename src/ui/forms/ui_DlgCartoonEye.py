@@ -17,7 +17,7 @@ class Ui_DlgCartoonEye(object):
     def setupUi(self, DlgCartoonEye):
         if not DlgCartoonEye.objectName():
             DlgCartoonEye.setObjectName(u"DlgCartoonEye")
-        DlgCartoonEye.resize(476, 332)
+        DlgCartoonEye.resize(494, 482)
         self.verticalLayout = QVBoxLayout(DlgCartoonEye)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.formLayout = QFormLayout()
@@ -48,10 +48,30 @@ class Ui_DlgCartoonEye(object):
 
         self.formLayout.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout)
 
+        self.label_6 = QLabel(DlgCartoonEye)
+        self.label_6.setObjectName(u"label_6")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_6)
+
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.leFirstBottomEyelidVertex = QLineEdit(DlgCartoonEye)
+        self.leFirstBottomEyelidVertex.setObjectName(u"leFirstBottomEyelidVertex")
+
+        self.horizontalLayout_6.addWidget(self.leFirstBottomEyelidVertex)
+
+        self.btnFirstBottomEyelidVertex = QPushButton(DlgCartoonEye)
+        self.btnFirstBottomEyelidVertex.setObjectName(u"btnFirstBottomEyelidVertex")
+
+        self.horizontalLayout_6.addWidget(self.btnFirstBottomEyelidVertex)
+
+
+        self.formLayout.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_6)
+
         self.label_2 = QLabel(DlgCartoonEye)
         self.label_2.setObjectName(u"label_2")
 
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_2)
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_2)
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -72,12 +92,19 @@ class Ui_DlgCartoonEye(object):
         self.horizontalLayout_2.addWidget(self.btnBottomVtxRemove)
 
 
-        self.formLayout.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_2)
+        self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout_2)
+
+        self.line = QFrame(DlgCartoonEye)
+        self.line.setObjectName(u"line")
+        self.line.setFrameShape(QFrame.HLine)
+        self.line.setFrameShadow(QFrame.Sunken)
+
+        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.line)
 
         self.label_3 = QLabel(DlgCartoonEye)
         self.label_3.setObjectName(u"label_3")
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_3)
+        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.label_3)
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
@@ -93,7 +120,12 @@ class Ui_DlgCartoonEye(object):
         self.horizontalLayout_3.addWidget(self.btnEyeGeoAdd)
 
 
-        self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout_3)
+        self.formLayout.setLayout(5, QFormLayout.FieldRole, self.horizontalLayout_3)
+
+        self.label_4 = QLabel(DlgCartoonEye)
+        self.label_4.setObjectName(u"label_4")
+
+        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_4)
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
@@ -109,24 +141,39 @@ class Ui_DlgCartoonEye(object):
         self.horizontalLayout_4.addWidget(self.btnFaceGeoAdd)
 
 
-        self.formLayout.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_4)
-
-        self.label_4 = QLabel(DlgCartoonEye)
-        self.label_4.setObjectName(u"label_4")
-
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_4)
+        self.formLayout.setLayout(6, QFormLayout.FieldRole, self.horizontalLayout_4)
 
         self.label_5 = QLabel(DlgCartoonEye)
         self.label_5.setObjectName(u"label_5")
 
-        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.label_5)
+        self.formLayout.setWidget(7, QFormLayout.LabelRole, self.label_5)
 
         self.cbSide = QComboBox(DlgCartoonEye)
         self.cbSide.addItem("")
         self.cbSide.addItem("")
         self.cbSide.setObjectName(u"cbSide")
 
-        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.cbSide)
+        self.formLayout.setWidget(7, QFormLayout.FieldRole, self.cbSide)
+
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.leFirstTopEyelidVertex = QLineEdit(DlgCartoonEye)
+        self.leFirstTopEyelidVertex.setObjectName(u"leFirstTopEyelidVertex")
+
+        self.horizontalLayout_7.addWidget(self.leFirstTopEyelidVertex)
+
+        self.btnFirstTopEyelidVertex = QPushButton(DlgCartoonEye)
+        self.btnFirstTopEyelidVertex.setObjectName(u"btnFirstTopEyelidVertex")
+
+        self.horizontalLayout_7.addWidget(self.btnFirstTopEyelidVertex)
+
+
+        self.formLayout.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_7)
+
+        self.label_7 = QLabel(DlgCartoonEye)
+        self.label_7.setObjectName(u"label_7")
+
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_7)
 
 
         self.verticalLayout.addLayout(self.formLayout)
@@ -166,17 +213,21 @@ class Ui_DlgCartoonEye(object):
         self.label.setText(QCoreApplication.translate("DlgCartoonEye", u"Top Eyelid Vertices :", None))
         self.btnTopVtxAdd.setText(QCoreApplication.translate("DlgCartoonEye", u"+", None))
         self.btnTopVtxRemove.setText(QCoreApplication.translate("DlgCartoonEye", u"X", None))
+        self.label_6.setText(QCoreApplication.translate("DlgCartoonEye", u"First Top Eyelid Vertex :", None))
+        self.btnFirstBottomEyelidVertex.setText(QCoreApplication.translate("DlgCartoonEye", u"+", None))
         self.label_2.setText(QCoreApplication.translate("DlgCartoonEye", u"Bottom Eyelid Vertices :", None))
         self.btnBottomVtxAdd.setText(QCoreApplication.translate("DlgCartoonEye", u"+", None))
         self.btnBottomVtxRemove.setText(QCoreApplication.translate("DlgCartoonEye", u"X", None))
         self.label_3.setText(QCoreApplication.translate("DlgCartoonEye", u"Eye Geo :", None))
         self.btnEyeGeoAdd.setText(QCoreApplication.translate("DlgCartoonEye", u"+", None))
-        self.btnFaceGeoAdd.setText(QCoreApplication.translate("DlgCartoonEye", u"+", None))
         self.label_4.setText(QCoreApplication.translate("DlgCartoonEye", u"Face Geo :", None))
+        self.btnFaceGeoAdd.setText(QCoreApplication.translate("DlgCartoonEye", u"+", None))
         self.label_5.setText(QCoreApplication.translate("DlgCartoonEye", u"Side", None))
         self.cbSide.setItemText(0, QCoreApplication.translate("DlgCartoonEye", u"L", None))
         self.cbSide.setItemText(1, QCoreApplication.translate("DlgCartoonEye", u"R", None))
 
+        self.btnFirstTopEyelidVertex.setText(QCoreApplication.translate("DlgCartoonEye", u"+", None))
+        self.label_7.setText(QCoreApplication.translate("DlgCartoonEye", u"First Bottom Eyelid Vertex :", None))
         self.btnApply.setText(QCoreApplication.translate("DlgCartoonEye", u"Apply", None))
         self.btnCreate.setText(QCoreApplication.translate("DlgCartoonEye", u"Create", None))
         self.btnCancel.setText(QCoreApplication.translate("DlgCartoonEye", u"Cancel", None))

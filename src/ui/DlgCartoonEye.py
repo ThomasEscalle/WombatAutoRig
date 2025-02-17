@@ -45,6 +45,8 @@ class DlgCartoonEye(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.ui.btnBottomVtxRemove.clicked.connect(self.removeBottomVtx)
         self.ui.btnEyeGeoAdd.clicked.connect(self.addEyeGeo)
         self.ui.btnFaceGeoAdd.clicked.connect(self.addFaceGeo)
+        self.ui.btnFirstTopEyelidVertex.clicked.connect(self.addFirstTopEyelidVertex)
+        self.ui.btnFirstBottomEyelidVertex.clicked.connect(self.addFirstBottomEyelidVertex)
 
 
 
@@ -61,9 +63,11 @@ class DlgCartoonEye(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         
         topVtx = topVtx.split(" ")
         topVtx = ResortVertices.get_ordered_vertices(self.ui.leTopVtx.text(), firstVertex = self.ui.leFirstTopVtx.text()) #l'ui .text n'existe pas j'ai inventé le nom par rapport à ta nomenclature
+        topFirstVtx = self.ui.leFirstBottomEyelidVertex.text()
 
         bottomVtx = bottomVtx.split(" ")
         bottomVtx = ResortVertices.get_ordered_vertices(self.ui.leBottomVtx.text(), firstVertex = self.ui.leFirstBottomVtx.text())
+        bottomFirstVtx = self.ui.leFirstTopEyelidVertex.text()
 
         # Get the side of the eye (cbSide)
         side = self.ui.cbSide.currentText()
@@ -71,7 +75,20 @@ class DlgCartoonEye(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         CartoonEye.cartoonEye(eyeGeo, faceGeo, topVtx, bottomVtx, side)
 
 
+    def addFirstTopEyelidVertex(self):
+        # Get the selected vertex (only one) and set it to the line edit 'leFirstTopVtx'
+        sel = cmds.ls(sl=True, fl=True)
+        print("TOP")
 
+        if sel:
+            self.ui.leFirstTopEyelidVertex.setText(sel[0])
+
+    def addFirstBottomEyelidVertex(self):
+        # Get the selected vertex (only one) and set it to the line edit 'leFirstBottomVtx'
+        sel = cmds.ls(sl=True, fl=True)
+        print("BOTTOM")
+        if sel:
+            self.ui.leFirstBottomEyelidVertex.setText(sel[0])
 
     # Create and close
     def create(self):
