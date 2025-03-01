@@ -10,7 +10,7 @@ from wombatAutoRig.src.core import TwistExtractor
 from wombatAutoRig.src.core import NewCTRL
 from wombatAutoRig.src.core import Bookmark
 from wombatAutoRig.src.core import ColumnRibbon
-from wombatAutoRig.src.core import skinCage
+from wombatAutoRig.src.core import SkinCage
 
 
 #Faire les doigts (attentes CTRLs)
@@ -83,11 +83,11 @@ def compute(settings):
         joints = cmds.sets( "Bind_JNTs", q=True )
         body_mesh = settings["geo"]  
         #Create skin cage
-        cage_meshes = skinCage.SkinCage(settings=settings)
+        cage_meshes = SkinCage.SkinCage(settings=settings)
 
         #Transfer skin weights to the body mesh
         for geo in body_mesh:
-            skinCage.transfer_skin_weights(joints, cage_meshes, geo)
+            SkinCage.transfer_skin_weights(joints, cage_meshes, geo)
 
         #suppr cubes
         cmds.delete(cage_meshes)
