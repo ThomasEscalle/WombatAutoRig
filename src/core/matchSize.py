@@ -12,7 +12,7 @@ matchSize (return None): This tool allows you to easily put a mesh on the center
 '''
 
 
-def matchSize(source, target, justifyY):
+def matchSize(source=None, target=None, justifyY="min"):
     if target:
         cmds.makeIdentity(target, t=True, r=True, s=True, a=True)
         #get target BBox
