@@ -1,5 +1,17 @@
 import maya.cmds as cmds
 
+'''
+matchSize (return None): This tool allows you to easily put a mesh on the center of the world based on its shape. It can also take an another mesh as a source and it will match its position and its size 
+
+@source ==> str   : specify the source you want your object to match. If you don't want your object to match a source just give None
+@target ==> str   : specify your mesh to move
+@justifyY ==> str : you have 3 option : "min" -> put the mesh on the surface / "center" put the middle of the mesh on the surface / "max" put the mesh below the surface
+
+
+
+'''
+
+
 def matchSize(source, target, justifyY):
     if target:
         cmds.makeIdentity(target, t=True, r=True, s=True, a=True)
