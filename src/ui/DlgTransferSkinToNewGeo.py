@@ -14,43 +14,6 @@ import maya.cmds as cmds
 from wombatAutoRig.src.ui.forms import ui_DlgTransferSkinToNewGeo
 
 
-def process( skinedGrp, targetGrp):
-    print ("###### INFO : Processing " + skinedGrp + " to " + targetGrp)    
-    # Iterate over all the objects in the skinedGrp, get their path
-    for obj in cmds.listRelatives(skinedGrp, children=True, fullPath=True, allDescendents=True):
-        # Check if there is an object with the same name and the same relative path in the targetGrp
-        relativePath = obj.replace(skinedGrp, "")
-
-        # Check if the object is not a mesh
-        if cmds.objectType(obj) != "mesh":
-            continue
-
-        secondArg = targetGrp + relativePath
-        if cmds.objExists(secondArg):
-            print("Transfer the skin from " + obj + " to " + targetGrp + relativePath)  
-            
-            firstArg = obj
-
-
-            joints = getInfluencingJoints(firstArg)
-            if not joints:
-                continue
-
-            cmds.select(secondArg)
-
-            print("secondArg : " + secondArg)   
-            # Skin the second object to the joints
-            cmds.skinCluster(joints, secondArg, tsb=True)
-
-            # Transfer the skin weights
-            cmds.select(firstArg)
-            cmds.select(secondArg, add=True)
-            cmds.CopySkinWeights()
-        else:
-            print("## WARNING : obj doesn't exist : " + targetGrp + relativePath)
-            continue
-
-
 
 def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
@@ -73,6 +36,71 @@ def getInfluencingJoints(sel=None):
     joints = cmds.skinCluster(skinCluster[0], query=True, inf=True)
     print(joints)
     return joints
+
+
+def process( skinedGrp, targetGrp):
+    print ("###### INFO : Processing " + skinedGrp + " to " + targetGrp)    
+    # Iterate over all the objects in the skinedGrp, get their path
+    for obj in cmds.listRelatives(skinedGrp, children=True, fullPath=True, allDescendents=True):
+        # Check if there is an object with the same name and the same relative path in the targetGrp
+        relativePath = obj.replace(skinedGrp, "")
+
+        # If the object is a shape, get the parent
+        if cmds.objectType(obj) == "mesh":
+            obj = cmds.listRelatives(obj, parent=True, fullPath=True)[0]
+
+        if "Orig" in relativePath:
+            continue
+
+        # Get the target object
+        targetObj = targetGrp + relativePath
+
+
+
+        # Check if the target object exists and is a mesh, and is visible
+        if cmds.objExists(targetObj)  and cmds.getAttr(obj + ".visibility") == 1 and cmds.objectType(targetObj) == "mesh":
+
+            print("############# INFO : Processing " + relativePath +  " to " + targetObj)
+        
+            # Get the skin cluster of the object
+            skinCluster = cmds.ls(cmds.listHistory(obj), type="skinCluster")
+
+            # Check if the object has a skin cluster
+            if skinCluster == []:
+                print("# ERROR # No skin cluster found in " + obj)
+                continue
+            if not skinCluster:
+                print("# ERROR # No skin cluster found in " + obj)
+                return None
+            
+            # Get the influencing joints
+            joints = cmds.skinCluster(skinCluster[0], query=True, inf=True)
+
+            # If there are no influencing joints, skip the object
+            if not joints:
+                print("# ERROR # No influencing joints found in " + obj)
+                continue
+
+            print("############# INFO : Influencing joints : " + str(joints))
+            
+
+            # Skin the target object with the joints
+            cmds.select(joints, r=True)
+            cmds.select(targetObj, add=True)
+            cmds.skinCluster(tsb=True)
+
+            # Copy the skin weights
+            cmds.select(obj, r=True)
+            cmds.select(targetObj, add=True)
+            cmds.CopySkinWeights()
+
+            print("")
+
+
+
+
+
+
 
 
 # Classe de la fenêtre de création de template
