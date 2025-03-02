@@ -180,8 +180,8 @@ importlib.reload(CartoonEye)
 from wombatAutoRig.src.core import ColumnRibbon
 importlib.reload(ColumnRibbon)
 
-from wombatAutoRig.src.core import skinCage
-importlib.reload(skinCage)
+from wombatAutoRig.src.core import SkinCage
+importlib.reload(SkinCage)
 
 from wombatAutoRig.src.ui import DlgCartoonEye
 importlib.reload(DlgCartoonEye)
