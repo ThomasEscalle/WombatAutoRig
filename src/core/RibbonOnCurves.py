@@ -76,6 +76,9 @@ Fonction qui permet de créer un ribbon facial a partir de 2 curves.
 def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False, wsDrvJnt=True):
     #Creation Loft
     Curves = cmds.ls(selection=True)
+    #delete curves history 
+    for curve in Curves:
+        cmds.delete(curve, ch=True)
     Loft = cmds.loft(Curves, rsn=Rev, rebuild=Joints, name=Name, u=True, autoReverse=True)
 
     #Hierarchie

@@ -37,3 +37,5 @@ cd "Program Files\Autodesk\Maya2024\bin"
 .\pyside2-uic.exe -o C:\Users\3D3\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgMatchIkFk.py C:\Users\3D3\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgMatchIkFk.ui
 
 .\pyside2-uic.exe -o C:\Users\3D3\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgTransferSkinToNewGeo.py C:\Users\3D3\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgTransferSkinToNewGeo.ui
+
+.\pyside2-uic.exe -o C:\Users\3D3\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgCartoonEye.py C:\Users\3D3\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgCartoonEye.ui
