@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DlgAttachBlendShape</class>
+ <widget class="QDialog" name="DlgAttachBlendShape">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>804</width>
+    <height>278</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QComboBox" name="CB_Chanel">
+     <item>
+      <property name="text">
+       <string>Translate X</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Translate Y</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Translate Z</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Rotate X</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>RotateY</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Rotate Z</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Scale X</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Scale Y</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Scale Z</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Blenshape Name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="LE_BshpName"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Target Name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="Le_TargetName"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="LE_MaxValue"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Max Value</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>37</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="BtnApply">
+       <property name="text">
+        <string>Apply</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="BtnCancel">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
