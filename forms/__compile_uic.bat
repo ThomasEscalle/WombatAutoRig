@@ -31,3 +31,5 @@ cd D:\Autodesk\Maya2024\Maya2024\bin
 .\pyside2-uic.exe -o C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgControllers.py C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgControllers.ui
 
 .\pyside2-uic.exe -o C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_WidgetSelectComponent.py C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\forms\WidgetSelectComponent.ui
+
+.\pyside2-uic.exe -o C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\src\ui\forms\ui_DlgAttachBlendShape.py C:\Users\Thomas\OneDrive\Documents\maya\2024\scripts\wombatAutoRig\forms\DlgAttachBlendShape.ui
