@@ -139,8 +139,8 @@ def createFoot(settings, side = "L"):
     cmds.matchTransform(f"Loc_Bank_Ext_{side}", f"PlacementCtrl_Foot_Ext_{side}", pos=True, rot=False, scl=False)
     # PLace the Loc_Ball_L at the position of the Bind_Ball_L
     cmds.matchTransform(f"Loc_Ball_{side}", f"Bind_Ball_{side}", pos=True, rot=False, scl=False)
-    # Place the Loc_Toe_L at the position of the Bind_Toe_L
-    cmds.matchTransform(f"Loc_Toe_{side}", f"Bind_Toe_{side}", pos=True, rot=False, scl=False)
+    # Place the Loc_Toe_L at the position of the PlacementCtrl_Foot_Front_L
+    cmds.matchTransform(f"Loc_Toe_{side}", f"PlacementCtrl_Foot_Front_{side}", pos=True, rot=False, scl=False)
     # Place the Loc_Heel_L at the position of the PlacementCtrl_Foot_Back_L
     cmds.matchTransform(f"Loc_Heel_{side}", f"PlacementCtrl_Foot_Back_{side}", pos=True, rot=False, scl=False)
 
@@ -192,13 +192,19 @@ def createFoot(settings, side = "L"):
 
     # region Connections
     # Bank
+    if side == "L":
+        operationInt = 2
+        operationExt = 4
+    else:
+        operationInt = 4
+        operationExt = 2
     condBankInt = cmds.createNode("condition", n=f"Cond_Bank_Int_{side}")
-    cmds.setAttr(condBankInt+".operation", 2)
+    cmds.setAttr(condBankInt+".operation", operationInt)
     cmds.connectAttr(f"CTRL_Foot_{side}.Bank", condBankInt+".firstTerm", f=True)
     cmds.connectAttr(f"CTRL_Foot_{side}.Bank", condBankInt+".colorIfTrueR", f=True)
     cmds.connectAttr(condBankInt+".outColorR", f"Loc_Bank_Int_{side}.rotateZ", f=True)
     condBankExt = cmds.createNode("condition", n=f"Cond_Bank_Ext_{side}")
-    cmds.setAttr(condBankExt+".operation", 4)
+    cmds.setAttr(condBankExt+".operation", operationExt)
     cmds.connectAttr(f"CTRL_Foot_{side}.Bank", condBankExt+".firstTerm", f=True)
     cmds.connectAttr(f"CTRL_Foot_{side}.Bank", condBankExt+".colorIfTrueR", f=True)
     cmds.connectAttr(condBankExt+".outColorR", f"Loc_Bank_Ext_{side}.rotateZ", f=True)
