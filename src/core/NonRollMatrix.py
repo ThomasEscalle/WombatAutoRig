@@ -7,7 +7,7 @@ from wombatAutoRig.src.core import Bookmark
 # Creer un reseau de node matriciel qui extrait les rotation d'une articualtion proprement.
 
 
-def NonRollMatrix(JntStill, JntMove, OffsetBookmark=0):
+def NonRollMatrix(JntStill, JntMove, OffsetBookmark=0, rotateOrderQuat = 0):
     #Create Locators
     Loc_Still = cmds.spaceLocator(name='Loc_nonRoll_Still_{}'.format(JntStill))[0]
     Loc_Move = cmds.spaceLocator(name='Loc_nonRoll_Move_{}'.format(JntMove))[0]
@@ -34,6 +34,7 @@ def NonRollMatrix(JntStill, JntMove, OffsetBookmark=0):
     MultMatX = cmds.shadingNode("multMatrix", asUtility=True, n="MultMatX_NonRoll_{}".format(JntMove))
     DecMatX = cmds.shadingNode("decomposeMatrix", asUtility=True, n="DecMatX_NonRoll_{}".format(JntMove))
     QuatToE = cmds.shadingNode("quatToEuler", asUtility=True, n="QuatToE_NonRoll_{}".format(JntMove))
+    cmds.setAttr(QuatToE + ".inputRotateOrder", rotateOrderQuat)
 
     cmds.connectAttr(Loc_Move+".worldMatrix[0]", MultMatX+".matrixIn[0]")
     cmds.connectAttr(Loc_Still+".worldInverseMatrix[0]", MultMatX+".matrixIn[1]")

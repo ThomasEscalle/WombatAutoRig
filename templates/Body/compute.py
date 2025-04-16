@@ -471,7 +471,7 @@ def createLeg(settings, side = "L"):
     OffsetBook = 0
     if side == "L":
         OffsetBook+=1
-    NonRoll_Leg = NonRollMatrix.NonRollMatrix(f"Bind_Hip_{side}", f"DrvJnt_Leg_{side}", OffsetBookmark = OffsetBook)
+    NonRoll_Leg = NonRollMatrix.NonRollMatrix(f"Bind_Hip_{side}", f"DrvJnt_Leg_{side}", OffsetBookmark = OffsetBook, rotateOrderQuat = 3)
     NonRoll_Foot = NonRollMatrix.NonRollMatrix(f"DrvJnt_Ankle_{side}_NonRoll", f"Bind_Foot_{side}", OffsetBookmark = OffsetBook+2)
 
     #Bookmark parenthese
