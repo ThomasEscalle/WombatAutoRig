@@ -29,7 +29,8 @@ class Template(TemplateBase.TemplateBase):
         # Check if the "matrixNodes" plugin is loaded
         if not cmds.pluginInfo("matrixNodes", query=True, loaded=True):
             cmds.loadPlugin("matrixNodes")
-
+        if not cmds.pluginInfo("quatNodes", query=True, loaded=True):
+            cmds.loadPlugin("quatNodes")
 
         self.name = "Body"
         self.identifier = "Body"
