@@ -32,7 +32,7 @@ class DlgRibbon(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         self.setWindowTitle("Ribbon")
 
-        self.ui.btn_apply.clicked.connect(self.create)
+        self.ui.btn_apply.clicked.connect(self.apply)
         self.ui.btn_create.clicked.connect(self.create)
         self.ui.btn_cancel.clicked.connect(self.cancel)
 

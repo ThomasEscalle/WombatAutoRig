@@ -62,11 +62,11 @@ class DlgCartoonEye(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         
         
         #topVtx = topVtx.split(" ")
-        topVtx = ResortVertices.get_ordered_vertices(self.ui.leTopVtx.text().split(" "), firstVertex = self.ui.leFirstTopEyelidVertex.text()) #l'ui .text n'existe pas j'ai inventé le nom par rapport à ta nomenclature
+        topVtx = ResortVertices.get_ordered_vertices(self.ui.leTopVtx.text().split(" "), firstVertex = self.ui.leFirstBottomEyelidVertex.text()) #l'ui .text n'existe pas j'ai inventé le nom par rapport à ta nomenclature
         topFirstVtx = self.ui.leFirstBottomEyelidVertex.text()
 
         #bottomVtx = bottomVtx.split(" ")
-        bottomVtx = ResortVertices.get_ordered_vertices(self.ui.leBottomVtx.text().split(" "), firstVertex = self.ui.leFirstBottomEyelidVertex.text())
+        bottomVtx = ResortVertices.get_ordered_vertices(self.ui.leBottomVtx.text().split(" "), firstVertex = self.ui.leFirstTopEyelidVertex.text())
         bottomFirstVtx = self.ui.leFirstTopEyelidVertex.text()
 
         # Get the side of the eye (cbSide)

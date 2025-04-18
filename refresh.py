@@ -213,9 +213,9 @@ importlib.reload(DlgTransferSkinToNewGeo)
 
 
 
-#wombatAutoRig.run()  # Appeler la fonction run() après rechargement
+wombatAutoRig.run()  # Appeler la fonction run() après rechargement
 
 #CartoonEye.test()
 
-dialog = DlgCartoonEye.DlgCartoonEye()
-dialog.run()  # Appeler la fonction run() après rechargement
+#dialog = DlgCartoonEye.DlgCartoonEye()
+#dialog.run()  # Appeler la fonction run() après rechargement
