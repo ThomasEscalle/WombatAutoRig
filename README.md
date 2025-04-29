@@ -3,6 +3,12 @@
 ## Description
 Wombat AutoRig is a tool for automatically rigging 3D models in maya.
 
+## Demo
+
+
+[Wombat Demo](https://youtu.be/tm9YvAC9I3g?si=ttErLnY9Dpqxhlhk)
+
+
 ## Installation
 1. Download the repository as a zip file, or clone it using git to your local machine.
 2. Navigate to your maya scripts directory. On windows, this is usually located at `C:\Users\USERNAME\Documents\maya\VERSION\scripts`.
