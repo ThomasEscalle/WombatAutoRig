@@ -595,13 +595,13 @@ def createFinger(settings, side ="L", finger= "Thumb"):
     Metacarpus = [f"CTRL_Finger_{finger}_Metacarpus_{side}"]
     Finger01 = [f"CTRL_Finger_{finger}_01_{side}"]
     Finger02 = [f"CTRL_Finger_{finger}_02_{side}"]
-    MatrixConstrain.MatrixConstrain(Metacarpus, f"Bind_{finger}_Metacarpus_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
-    MatrixConstrain.MatrixConstrain(Finger01, f"Bind_{finger}_01_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
-    MatrixConstrain.MatrixConstrain(Finger02, f"Bind_{finger}_02_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+    MatrixConstrain.MatrixConstrain(Metacarpus, f"Bind_{finger}_Metacarpus_{side}", Offset=True, tX=True, tY=True, tZ=True, sX=True, sY=True, sZ=True,)
+    MatrixConstrain.MatrixConstrain(Finger01, f"Bind_{finger}_01_{side}", Offset=True, tX=True, tY=True, tZ=True, sX=True, sY=True, sZ=True,)
+    MatrixConstrain.MatrixConstrain(Finger02, f"Bind_{finger}_02_{side}", Offset=True, tX=True, tY=True, tZ=True, sX=True, sY=True, sZ=True,)
 
     if finger != "Thumb":
         Finger03 = [f"CTRL_Finger_{finger}_03_{side}"]
-        MatrixConstrain.MatrixConstrain(Finger03, f"Bind_{finger}_03_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False,)
+        MatrixConstrain.MatrixConstrain(Finger03, f"Bind_{finger}_03_{side}", Offset=True, tX=True, tY=True, tZ=True, sX=True, sY=True, sZ=True,)
 
     
 def createSpine(settings):
