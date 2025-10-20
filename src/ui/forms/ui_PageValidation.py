@@ -8,9 +8,9 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from PySide6.QtCore import *
+from PySide6.QtGui import *
+from PySide6.QtWidgets import *
 
 
 class Ui_PageValidation(object):
@@ -25,7 +25,7 @@ class Ui_PageValidation(object):
         font = QFont()
         font.setPointSize(12)
         font.setBold(True)
-        font.setWeight(75)
+        font.setWeight(QFont.Weight.Bold)
         self.label.setFont(font)
 
         self.verticalLayout.addWidget(self.label)

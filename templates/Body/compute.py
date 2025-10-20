@@ -218,7 +218,7 @@ def createLeg(settings, side = "L"):
 
     MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"DrvJnt_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Main", BookColumnOffset=BookmarkRowOffset, BookRowOffset = -1)
     MatrixConstrain.MatrixConstrain(Bind_Hip_L, f"FK_Leg_{side}_Hook", Offset=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Main", BookColumnOffset=BookmarkRowOffset, BookRowOffset = -2)
-    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"Preserve_Knee_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Main", BookColumnOffset=BookmarkRowOffset, BookRowOffset = -3)
+    MatrixConstrain.MatrixConstrain(DrvJnt_Leg_L, f"Preserve_Knee_{side}_Hook", Offset=True, BookmarkName="MatX_Main", BookColumnOffset=BookmarkRowOffset, BookRowOffset = -3)
     
     #region switch IK FK 
     cmds.duplicate(f"PlacementCtrl_Settings_Leg_{side}", n=f"Settings_Leg_{side}")
@@ -240,9 +240,35 @@ def createLeg(settings, side = "L"):
     cmds.parent(f"Settings_Leg_{side}", 'CTRL_Settings')
     #A contraindre par le CTRL Global
     
+
+    #region CTRL FK Joints
+
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Leg_{side}", f"FK_Leg_{side}", name=f"CTRL_FK_Leg_{side}", nbr=3)
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Knee_{side}", f"FK_Knee_{side}", name=f"CTRL_FK_Knee_{side}")
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Ankle_{side}", f"FK_Ankle_{side}", name=f"CTRL_FK_Ankle_{side}")
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Ball_{side}", f"FK_Ball_{side}", name=f"CTRL_FK_Ball_{side}")
+
+    cmds.parent(f"CTRL_FK_Leg_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+    cmds.parent(f"CTRL_FK_Knee_{side}_Offset", f"CTRL_FK_Leg_{side}")
+    cmds.parent(f"CTRL_FK_Ankle_{side}_Offset", f"CTRL_FK_Knee_{side}")
+    cmds.parent(f"CTRL_FK_Ball_{side}_Offset", f"CTRL_FK_Ankle_{side}")
+    #Connecting and constraining 
+    FK_Leg = [f"CTRL_FK_Leg_{side}"]
+    FK_Knee = [f"CTRL_FK_Knee_{side}"]
+    FK_Ankle = [f"CTRL_FK_Ankle_{side}"]
+    FK_Ball = [f"CTRL_FK_Ball_{side}"]
+    MatrixConstrain.MatrixConstrain(FK_Leg, f"FK_Leg_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-12)
+    MatrixConstrain.MatrixConstrain(FK_Knee, f"FK_Knee_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-13)
+    MatrixConstrain.MatrixConstrain(FK_Ankle, f"FK_Ankle_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-14)
+    MatrixConstrain.MatrixConstrain(FK_Ball, f"FK_Ball_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-15)
+
+    Bind_Hip = [f"Bind_Hip_{side}"]
+    MatrixConstrain.MatrixConstrain(Bind_Hip, f"CTRL_FK_Leg_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-16)
+
+
     #region Ribbon
-    Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5, BindSet= "Bind_JNTs", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-2)
-    Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5, BindSet= "Bind_JNTs", BookColumnOffset=BookmarkRowOffset, BookRowOffset=0)
+    Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5, BindSet= "Bind_JNTs", ScaleMaster=DrvJnt_Leg_L, BookColumnOffset=BookmarkRowOffset, BookRowOffset=-2)
+    Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5, BindSet= "Bind_JNTs", ScaleMaster=DrvJnt_Knee_L, BookColumnOffset=BookmarkRowOffset, BookRowOffset=0)
 
     Global = ["CTRL_{}_Global".format(settings["name"])]
     
@@ -330,6 +356,7 @@ def createLeg(settings, side = "L"):
     
     cmds.createNode("reverse", n="Reverse_Leg_{}".format(side))
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"Reverse_Leg_{side}.inputX")
+    cmds.connectAttr(f"Reverse_Leg_{side}.outputX", f"CTRL_FK_Leg_{side}_Offset.visibility")
     
     cmds.connectAttr(f"Reverse_Leg_{side}.outputX", f"FK_Leg_{side}.visibility")
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"IK_Leg_{side}.visibility")
@@ -340,33 +367,6 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"PV_Leg_{side}.visibility")
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"CTRL_Foot_{side}.visibility")
     cmds.connectAttr(f"Settings_Leg_{side}.Vis_Pin", f"CTRL_Pin_Knee_{side}.visibility")
-
-    #region CTRL FK Joints
-
-    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Leg_{side}", f"FK_Leg_{side}", name=f"CTRL_FK_Leg_{side}", nbr=3)
-    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Knee_{side}", f"FK_Knee_{side}", name=f"CTRL_FK_Knee_{side}")
-    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Ankle_{side}", f"FK_Ankle_{side}", name=f"CTRL_FK_Ankle_{side}")
-    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Ball_{side}", f"FK_Ball_{side}", name=f"CTRL_FK_Ball_{side}")
-
-    cmds.parent(f"CTRL_FK_Leg_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
-    cmds.parent(f"CTRL_FK_Knee_{side}_Offset", f"CTRL_FK_Leg_{side}")
-    cmds.parent(f"CTRL_FK_Ankle_{side}_Offset", f"CTRL_FK_Knee_{side}")
-    cmds.parent(f"CTRL_FK_Ball_{side}_Offset", f"CTRL_FK_Ankle_{side}")
-    #Connecting and constraining 
-    cmds.connectAttr(f"Reverse_Leg_{side}.outputX", f"CTRL_FK_Leg_{side}_Offset.visibility")
-    FK_Leg = [f"CTRL_FK_Leg_{side}"]
-    FK_Knee = [f"CTRL_FK_Knee_{side}"]
-    FK_Ankle = [f"CTRL_FK_Ankle_{side}"]
-    FK_Ball = [f"CTRL_FK_Ball_{side}"]
-    MatrixConstrain.MatrixConstrain(FK_Leg, f"FK_Leg_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-12)
-    MatrixConstrain.MatrixConstrain(FK_Knee, f"FK_Knee_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-13)
-    MatrixConstrain.MatrixConstrain(FK_Ankle, f"FK_Ankle_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-14)
-    MatrixConstrain.MatrixConstrain(FK_Ball, f"FK_Ball_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-15)
-
-    Bind_Hip = [f"Bind_Hip_{side}"]
-    MatrixConstrain.MatrixConstrain(Bind_Hip, f"CTRL_FK_Leg_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-16)
-
-
     
     #region Stretch Leg 
     
@@ -582,7 +582,7 @@ def createFinger(settings, side ="L", finger= "Thumb"):
         cmds.group(empty=True, name=f"CTRLs_Hand_{side}")
         cmds.parent(f"CTRLs_Hand_{side}", "{}|GlobalMove_01|CTRLs_01|CTRLs_Hands".format(settings["name"]))
         Bind_Hand = [f"Bind_Hand_{side}"]
-        MatrixConstrain.MatrixConstrain(Bind_Hand, f"CTRLs_Hand_{side}", Offset=True, sX=False, sY=False, sZ=False,)
+        MatrixConstrain.MatrixConstrain(Bind_Hand, f"CTRLs_Hand_{side}", Offset=True, sX=True, sY=True, sZ=True,)
 
     cmds.parent(f"CTRL_Finger_{finger}_Metacarpus_{side}_Offset", f"CTRLs_Hand_{side}")
     cmds.parent(f"CTRL_Finger_{finger}_01_{side}_Offset", f"CTRL_Finger_{finger}_Metacarpus_{side}")
@@ -862,6 +862,7 @@ def createArm(settings, side = "L"):
     cmds.addAttr(f"Settings_Arm_{side}", ln="IK_FK", at="enum", en="FK:IK", k=True)
     cmds.addAttr(f"Settings_Arm_{side}", ln="Vis_Bend", at="bool", nn="Vis Bend", k=True)
     cmds.addAttr(f"Settings_Arm_{side}", ln="Vis_Pin", at="bool", nn="Vis Pin", k=True)
+    cmds.addAttr(f"Settings_Arm_{side}", ln="Size", at="float", nn="Size", maxValue=10, minValue=0.1, defaultValue=1.0, k=True)
     cmds.setAttr(f"Settings_Arm_{side}.tx", keyable=False, channelBox=False)
     cmds.setAttr(f"Settings_Arm_{side}.ty", keyable=False, channelBox=False)
     cmds.setAttr(f"Settings_Arm_{side}.tz", keyable=False, channelBox=False)
@@ -873,9 +874,29 @@ def createArm(settings, side = "L"):
     cmds.setAttr(f"Settings_Arm_{side}.sz", keyable=False, channelBox=False)
     Offset.offset(f"Settings_Arm_{side}", nbr=2)
     
+    #region CTRL FK
+
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Shoulder_{side}", f"FK_Arm_{side}", name=f"CTRL_FK_Arm_{side}", nbr=3)
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Elbow_{side}", f"FK_Elbow_{side}", name=f"CTRL_FK_Elbow_{side}")
+    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Wrist_{side}", f"FK_Wrist_{side}", name=f"CTRL_FK_Wrist_{side}")
+
+    cmds.parent(f"CTRL_FK_Arm_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
+    cmds.parent(f"CTRL_FK_Elbow_{side}_Offset", f"CTRL_FK_Arm_{side}")
+    cmds.parent(f"CTRL_FK_Wrist_{side}_Offset", f"CTRL_FK_Elbow_{side}")
+    #Connecting and constraining 
+    FK_Arm = [f"CTRL_FK_Arm_{side}"]
+    FK_Elbow = [f"CTRL_FK_Elbow_{side}"]
+    FK_Wrist = [f"CTRL_FK_Wrist_{side}"]
+    MatrixConstrain.MatrixConstrain(FK_Arm, f"FK_Arm_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-14, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(FK_Elbow, f"FK_Elbow_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-15, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(FK_Wrist, f"FK_Wrist_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-16, BookColumnOffset=BookmarkColumnOffset)
+
+    Bind_Clavicle = [f"Bind_Clavicle_{side}"]
+    MatrixConstrain.MatrixConstrain(Bind_Clavicle, f"CTRL_FK_Arm_{side}_Hook", Offset=True, rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-17, BookColumnOffset=BookmarkColumnOffset)
+    
     #region Ribbon
-    Ribbon.Ribbon(Name=f"Ribbon_Arm_{side}", Span=5, BindSet = "Bind_JNTs", BookRowOffset=-6, BookColumnOffset=BookmarkColumnOffset)
-    Ribbon.Ribbon(Name=f"Ribbon_Elbow_{side}", Span=5, BindSet = "Bind_JNTs", BookRowOffset=-4, BookColumnOffset=BookmarkColumnOffset)
+    Ribbon.Ribbon(Name=f"Ribbon_Arm_{side}", Span=5, BindSet = "Bind_JNTs", ScaleMaster=DrvJnt_Arm_L, BookRowOffset=-6, BookColumnOffset=BookmarkColumnOffset)
+    Ribbon.Ribbon(Name=f"Ribbon_Elbow_{side}", Span=5, BindSet = "Bind_JNTs", ScaleMaster=DrvJnt_Elbow_L, BookRowOffset=-4, BookColumnOffset=BookmarkColumnOffset)
 
     Global = ["CTRL_{}_Global".format(settings["name"])]
     
@@ -944,6 +965,7 @@ def createArm(settings, side = "L"):
     
     cmds.createNode("reverse", n="Reverse_Arm_{}".format(side))
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Reverse_Arm_{side}.inputX")
+    cmds.connectAttr(f"Reverse_Arm_{side}.outputX", f"CTRL_FK_Arm_{side}_Offset.visibility")
     
     cmds.connectAttr(f"Reverse_Arm_{side}.outputX", f"FK_Arm_{side}.visibility")
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"IK_Arm_{side}.visibility")
@@ -952,27 +974,6 @@ def createArm(settings, side = "L"):
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"CTRL_Wrist_{side}.visibility")
     cmds.connectAttr(f"Settings_Arm_{side}.Vis_Pin", f"CTRL_Pin_Elbow_{side}.visibility")
 
-    
-    #region CTRL FK
-
-    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Shoulder_{side}", f"FK_Arm_{side}", name=f"CTRL_FK_Arm_{side}", nbr=3)
-    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Elbow_{side}", f"FK_Elbow_{side}", name=f"CTRL_FK_Elbow_{side}")
-    NewCTRL.NewCTRL(f"PlacementCtrl_Fk_Wrist_{side}", f"FK_Wrist_{side}", name=f"CTRL_FK_Wrist_{side}")
-
-    cmds.parent(f"CTRL_FK_Arm_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
-    cmds.parent(f"CTRL_FK_Elbow_{side}_Offset", f"CTRL_FK_Arm_{side}")
-    cmds.parent(f"CTRL_FK_Wrist_{side}_Offset", f"CTRL_FK_Elbow_{side}")
-    #Connecting and constraining 
-    cmds.connectAttr(f"Reverse_Arm_{side}.outputX", f"CTRL_FK_Arm_{side}_Offset.visibility")
-    FK_Arm = [f"CTRL_FK_Arm_{side}"]
-    FK_Elbow = [f"CTRL_FK_Elbow_{side}"]
-    FK_Wrist = [f"CTRL_FK_Wrist_{side}"]
-    MatrixConstrain.MatrixConstrain(FK_Arm, f"FK_Arm_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-14, BookColumnOffset=BookmarkColumnOffset)
-    MatrixConstrain.MatrixConstrain(FK_Elbow, f"FK_Elbow_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-15, BookColumnOffset=BookmarkColumnOffset)
-    MatrixConstrain.MatrixConstrain(FK_Wrist, f"FK_Wrist_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-16, BookColumnOffset=BookmarkColumnOffset)
-
-    Bind_Clavicle = [f"Bind_Clavicle_{side}"]
-    MatrixConstrain.MatrixConstrain(Bind_Clavicle, f"CTRL_FK_Arm_{side}_Hook", Offset=True, rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-17, BookColumnOffset=BookmarkColumnOffset)
 
     
     #region Stretch Arm 
@@ -999,6 +1000,8 @@ def createArm(settings, side = "L"):
     cmds.createNode("condition", n=f"Cond_Distance_Arm_{side}")
     cmds.createNode("condition", n=f"Cond_Boolean_Arm_{side}")
     cmds.createNode("condition", n=f"Cond_FK_Arm_{side}")
+    cmds.createNode("multiplyDivide", n=f"mult_ScaleElbow_{side}")
+    cmds.createNode("multiplyDivide", n=f"mult_ScaleArm_{side}")
     
     #Connecting the nodes
     cmds.connectAttr(f"Locator_Arm_{side}.translate", f"Distance_Arm_{side}.point1")
@@ -1029,32 +1032,47 @@ def createArm(settings, side = "L"):
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_FK_Arm_{side}.firstTerm")
     cmds.setAttr(f"Cond_FK_Arm_{side}.secondTerm", 1)
     
-    cmds.connectAttr(f"Cond_FK_Arm_{side}.outColor", f"DrvJnt_Elbow_{side}.s")
-    cmds.connectAttr(f"Cond_FK_Arm_{side}.outColor", f"DrvJnt_Arm_{side}.s")
+    cmds.connectAttr(f"Cond_FK_Arm_{side}.outColor", f"mult_ScaleElbow_{side}.input1")
+    cmds.connectAttr(f"Cond_FK_Arm_{side}.outColor", f"mult_ScaleArm_{side}.input1")
 
+    cmds.connectAttr(f"{FK_Elbow[0]}.s", f"mult_ScaleElbow_{side}.input2")
+    cmds.connectAttr(f"{FK_Arm[0]}.s", f"mult_ScaleArm_{side}.input2")
 
+    cmds.connectAttr(f"mult_ScaleElbow_{side}.output", f"DrvJnt_Elbow_{side}.s")
+    cmds.connectAttr(f"mult_ScaleArm_{side}.output", f"DrvJnt_Arm_{side}.s")
+
+    # region Wrist
     #DrvJnt wrsit constraint bind hand and is constraint by FK and IK
     DrvJntWrist = [f"DrvJnt_Wrist_{side}"]
-    MatrixConstrain.MatrixConstrain(DrvJntWrist, f"Bind_Hand_{side}_Hook", sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-19, BookColumnOffset=BookmarkColumnOffset)
+    MatrixConstrain.MatrixConstrain(DrvJntWrist, f"Bind_Hand_{side}_Hook", sX=True, sY=True, sZ=True, BookmarkName="MatX_Arm", BookRowOffset=-19, BookColumnOffset=BookmarkColumnOffset)
 
     #Node Conditon
     cmds.createNode("condition", n=f"Cond_ConstraintRotate_DrvJnt_{side}")
     cmds.createNode("condition", n=f"Cond_ConstraintTranslate_DrvJnt_{side}")
+    cmds.createNode("condition", n=f"Cond_ConstraintScale_DrvJnt_{side}")
     CTRL_IK_Wrist = [f"CTRL_Wrist_{side}"]
-    FK_Constraint = MatrixConstrain.MatrixConstrain(FK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-20, BookColumnOffset=BookmarkColumnOffset)
+    FK_Constraint = MatrixConstrain.MatrixConstrain(FK_Wrist, f"DrvJnt_Wrist_{side}", sX=True, sY=True, sZ=True, BookmarkName="MatX_Arm", BookRowOffset=-20, BookColumnOffset=BookmarkColumnOffset)
     cmds.disconnectAttr(f"{FK_Constraint[1]}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
     cmds.disconnectAttr(f"{FK_Constraint[1]}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
     cmds.disconnectAttr(f"{FK_Constraint[1]}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ")
     cmds.connectAttr(f"{FK_Constraint[1]}.outputRotate", f"Cond_ConstraintRotate_DrvJnt_{side}.colorIfTrue")
+    cmds.disconnectAttr(f"{FK_Constraint[0]}.outputScaleX",f"DrvJnt_Wrist_{side}.scaleX")
+    cmds.disconnectAttr(f"{FK_Constraint[0]}.outputScaleY",f"DrvJnt_Wrist_{side}.scaleY")
+    cmds.disconnectAttr(f"{FK_Constraint[0]}.outputScaleZ",f"DrvJnt_Wrist_{side}.scaleZ")
+    cmds.connectAttr(f"{FK_Constraint[0]}.outputScale", f"Cond_ConstraintScale_DrvJnt_{side}.colorIfTrue")
     cmds.disconnectAttr(f"{FK_Constraint[0]}.outputTranslateX",f"DrvJnt_Wrist_{side}.translateX")
     cmds.disconnectAttr(f"{FK_Constraint[0]}.outputTranslateY",f"DrvJnt_Wrist_{side}.translateY")
     cmds.disconnectAttr(f"{FK_Constraint[0]}.outputTranslateZ",f"DrvJnt_Wrist_{side}.translateZ")
     cmds.connectAttr(f"{FK_Constraint[0]}.outputTranslate", f"Cond_ConstraintTranslate_DrvJnt_{side}.colorIfTrue")
-    IK_Constraint = MatrixConstrain.MatrixConstrain(CTRL_IK_Wrist, f"DrvJnt_Wrist_{side}", sX=False, sY=False, sZ=False, tX=False, tY=False, tZ=False, BookmarkName="MatX_Arm", BookRowOffset=-21, BookColumnOffset=BookmarkColumnOffset)
+    IK_Constraint = MatrixConstrain.MatrixConstrain(CTRL_IK_Wrist, f"DrvJnt_Wrist_{side}", sX=True, sY=True, sZ=True, tX=False, tY=False, tZ=False, BookmarkName="MatX_Arm", BookRowOffset=-21, BookColumnOffset=BookmarkColumnOffset)
     cmds.disconnectAttr(f"{IK_Constraint[1]}.outputRotateX",f"DrvJnt_Wrist_{side}.rotateX")
     cmds.disconnectAttr(f"{IK_Constraint[1]}.outputRotateY",f"DrvJnt_Wrist_{side}.rotateY")
     cmds.disconnectAttr(f"{IK_Constraint[1]}.outputRotateZ",f"DrvJnt_Wrist_{side}.rotateZ") 
     cmds.connectAttr(f"{IK_Constraint[1]}.outputRotate", f"Cond_ConstraintRotate_DrvJnt_{side}.colorIfFalse")
+    cmds.disconnectAttr(f"{IK_Constraint[0]}.outputScaleX",f"DrvJnt_Wrist_{side}.scaleX")
+    cmds.disconnectAttr(f"{IK_Constraint[0]}.outputScaleY",f"DrvJnt_Wrist_{side}.scaleY")
+    cmds.disconnectAttr(f"{IK_Constraint[0]}.outputScaleZ",f"DrvJnt_Wrist_{side}.scaleZ")
+    cmds.connectAttr(f"{IK_Constraint[0]}.outputScale", f"Cond_ConstraintScale_DrvJnt_{side}.colorIfFalse")
 
     coloriffalseR = cmds.getAttr(f"DrvJnt_Wrist_{side}.translateX")
     cmds.setAttr(f"Cond_ConstraintTranslate_DrvJnt_{side}.colorIfFalseR", coloriffalseR)
@@ -1063,8 +1081,10 @@ def createArm(settings, side = "L"):
 
     cmds.connectAttr(f"Cond_ConstraintRotate_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.r")
     cmds.connectAttr(f"Cond_ConstraintTranslate_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.t")
+    cmds.connectAttr(f"Cond_ConstraintScale_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.s")
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_ConstraintRotate_DrvJnt_{side}.secondTerm")
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_ConstraintTranslate_DrvJnt_{side}.secondTerm")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_ConstraintScale_DrvJnt_{side}.secondTerm")
 
     #Bookmark
     Bookmark.createBookmark("IkFk_Arm")

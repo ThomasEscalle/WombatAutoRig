@@ -96,13 +96,13 @@ def RibbonOnCurve(Joints=5, DrvJnt=3, Rev=False, Name="Ribbon_Face", ws=False, w
         uvSpace = "U"
         for i in range(Joints):
             build_Rivet(name="Riv_{}_{}".format(Name,i), Nurbs=Loft)
-            cmds.setAttr("Riv_{}_{}.pos {}".format(Name,i,uvSpace), (1-(Joints-1)/(Joints))/2+(i)/(Joints))
+            cmds.setAttr("Riv_{}_{}.pos {}".format(Name,i,uvSpace), (i*((Joints)/(Joints-1)))/Joints)
             cmds.setAttr("Riv_{}_{}Shape.lodVisibility".format(Name,i), False)
     else :
         uvSpace = "V"
         for i in range(Joints):
             build_Rivet(name="Riv_{}_{}".format(Name,i), Nurbs=Loft)
-            cmds.setAttr("Riv_{}_{}.pos {}".format(Name,i,uvSpace), (1-(Joints-1)/(Joints))/2+(i)/(Joints))
+            cmds.setAttr("Riv_{}_{}.pos {}".format(Name,i,uvSpace), (i*((Joints)/(Joints-1)))/Joints)
             cmds.setAttr("Riv_{}_{}Shape.lodVisibility".format(Name,i), False)
     for i in range(Joints):
         cmds.select(["Riv_{}_{}".format(Name,i)], add=True)

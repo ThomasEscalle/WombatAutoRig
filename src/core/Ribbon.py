@@ -72,7 +72,7 @@ def build_Rivet(name, Nurbs):
         cmds.setAttr('%sShape.localPosition%s' %(Rivet, axis), k=False, cb=False)
 
 
-def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5 , BindSet= None, BookRowOffset=0, BookColumnOffset=0):
+def Ribbon(Name="Ribbon_01", Span=5 , BindSet= None, ScaleMaster=None, BookRowOffset=0, BookColumnOffset=0):
 
     #Hierarchie groupes
     group_Global= cmds.group(name="Grp_"+Name, empty=True)
@@ -115,6 +115,8 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5 , BindSet= 
 
     #Create Joints
     Ctrl_Global = ["CTRL_Global_{}".format(Name)]
+    if not ScaleMaster:
+        ScaleMaster = Ctrl_Global
     for i in range(Span):
         cmds.select(["rivet_{}_0{}".format(Name,i)])
         cmds.joint(name= "Bind_{}_0{}".format(Name,i))
@@ -122,7 +124,7 @@ def Ribbon(pos1=[2.5,0,0], pos2=[-2.5,0,0], Name="Ribbon_01", Span=5 , BindSet= 
         cmds.setAttr("Bind_{}_0{}.jointOrientY".format(Name,i), 90)
         Offset.offset("Bind_{}_0{}".format(Name,i), nbr=2)
         Color.setColor("Bind_{}_0{}".format(Name,i), color="white")
-        MatrixConstrain.MatrixConstrain(Ctrl_Global, "Bind_{}_0{}".format(Name,i), tX=False, tY=False, tZ=False, rX=False, rY=False, rZ=False)
+        MatrixConstrain.MatrixConstrain(ScaleMaster, "Bind_{}_0{}".format(Name,i), tX=False, tY=False, tZ=False, rX=False, rY=False, rZ=False)
     
     #Setting the BlendShape
     Ribbon_BlShp = cmds.nurbsPlane(lr=1/Span, u=Span, ax=[0,1,0], w=8, name="Blshp_"+Name)

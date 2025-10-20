@@ -1,17 +1,17 @@
-### Command : ./pyside2-uic.exe -o S:/3D/ScriptsMaya/SaveAs/generatedUi.py S:/3D/ScriptsMaya/SaveAs/save_as.ui
+### Command : ./PySide6-uic.exe -o S:/3D/ScriptsMaya/SaveAs/generatedUi.py S:/3D/ScriptsMaya/SaveAs/save_as.ui
 
 
 import sys
-from PySide2 import QtWidgets, QtCore, QtGui
+from PySide6 import QtWidgets, QtCore, QtGui
 import maya.OpenMayaUI as omui
-import shiboken2
+import shiboken6
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 import maya.cmds as cmds
 from maya.OpenMayaUI import MQtUtil
 
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from PySide6.QtCore import *
+from PySide6.QtGui import *
+from PySide6.QtWidgets import *
 
 from wombatAutoRig.src.ui import IconLoader
 from wombatAutoRig.src.core import FileHelper
@@ -36,7 +36,7 @@ from wombatAutoRig.src.core import TemplateBase
 
 def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
-    return shiboken2.wrapInstance(int(main_window_ptr), QtWidgets.QWidget)
+    return shiboken6.wrapInstance(int(main_window_ptr), QtWidgets.QWidget)
 
 
 class MainWindow(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):

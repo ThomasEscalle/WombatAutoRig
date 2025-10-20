@@ -1,9 +1,9 @@
-from PySide2 import QtWidgets, QtCore, QtGui
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6.QtCore import *
+from PySide6.QtGui import *
+from PySide6.QtWidgets import *
 # QPixMap is used to load the icons
-from PySide2.QtGui import QPixmap
+from PySide6.QtGui import QPixmap
 
 from wombatAutoRig.src.ui.forms import ui_PageTemplateSelection
 from wombatAutoRig.src.ui.PageBase import PageBase

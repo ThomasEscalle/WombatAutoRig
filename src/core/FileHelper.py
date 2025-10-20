@@ -3,7 +3,7 @@ import os
 import importlib.util
 
 # QDesktopServices
-from PySide2.QtGui import QDesktopServices
+from PySide6.QtGui import QDesktopServices
 
 
 # Return the path of the templates folder

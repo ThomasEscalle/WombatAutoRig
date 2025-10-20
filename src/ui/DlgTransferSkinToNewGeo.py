@@ -1,12 +1,12 @@
-from PySide2 import QtWidgets, QtCore, QtGui
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6.QtCore import *
+from PySide6.QtGui import *
+from PySide6.QtWidgets import *
 
 import sys
-from PySide2 import QtWidgets, QtCore, QtGui
+from PySide6 import QtWidgets, QtCore, QtGui
 import maya.OpenMayaUI as omui
-import shiboken2
+import shiboken6
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 import maya.cmds as cmds
 
@@ -17,7 +17,7 @@ from wombatAutoRig.src.ui.forms import ui_DlgTransferSkinToNewGeo
 
 def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
-    return shiboken2.wrapInstance(int(main_window_ptr), QtWidgets.QWidget)
+    return shiboken6.wrapInstance(int(main_window_ptr), QtWidgets.QWidget)
 
 
 def getInfluencingJoints(sel=None):
