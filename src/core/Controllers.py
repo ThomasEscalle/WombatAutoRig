@@ -3,7 +3,10 @@ import maya.mel as mel
 import os
 from wombatAutoRig.src.core import FileHelper
 
-from PySide6.QtGui import QImage
+try:
+    from PySide6.QtGui import QImage
+except:
+    from PySide2.QtGui import QImage
 
 
 

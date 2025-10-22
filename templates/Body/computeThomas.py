@@ -55,8 +55,8 @@ def createFoot(settings, side = "L"):
     ctrl = cmds.duplicate(f"AutoRig_Data|ControllersPlacement|IK_Controllers|PlacementCtrl_Foot_{side}", n=f"CTRL_Foot_{side}")
     # Put the controller at the root of the scene
     cmds.parent(f"CTRL_Foot_{side}", world=True)
-    # Freeze the transformation of the controller
-    cmds.makeIdentity(f"CTRL_Foot_{side}", a=True, t=True, r=True, s=True)
+    # Offset the controller
+    Offset.offset(f"CTRL_Foot_{side}", nbr=2)
     # Match the pivot of the controller with the pivot of the foot
     cmds.matchTransform(f"CTRL_Foot_{side}", f"Bind_Foot_{side}", pos=False, rot=False, scl=False, piv=True)
 
@@ -285,7 +285,7 @@ def createFoot(settings, side = "L"):
     #endregionBookmark
 
     # Move the CTRL_Foot_L to the group CTRLs_01
-    cmds.parent(f"CTRL_Foot_{side}", "CTRLs_01")
+    cmds.parent(f"CTRL_Foot_{side}_Offset", "CTRLs_01")
 
 
 

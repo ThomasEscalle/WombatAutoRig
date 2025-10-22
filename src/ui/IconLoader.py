@@ -1,6 +1,9 @@
 
 import os
-from PySide6.QtGui import QIcon
+try:
+    from PySide6.QtGui import QIcon
+except:
+    from PySide2.QtGui import QIcon
 
 
 def loadIcon(name):

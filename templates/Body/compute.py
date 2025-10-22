@@ -226,6 +226,7 @@ def createLeg(settings, side = "L"):
     cmds.addAttr(f"Settings_Leg_{side}", ln="IK_FK", at="enum", en="FK:IK", k=True)
     cmds.addAttr(f"Settings_Leg_{side}", ln="Vis_Bend", at="bool", nn="Vis Bend", k=True)
     cmds.addAttr(f"Settings_Leg_{side}", ln="Vis_Pin", at="bool", nn="Vis Pin", k=True)
+    cmds.addAttr(f"Settings_Leg_{side}", ln="Size", at="float", nn="Size", k=True, maxValue=10, minValue=0.1, dv=1)
     cmds.setAttr(f"Settings_Leg_{side}.tx", keyable=False, channelBox=False)
     cmds.setAttr(f"Settings_Leg_{side}.ty", keyable=False, channelBox=False)
     cmds.setAttr(f"Settings_Leg_{side}.tz", keyable=False, channelBox=False)
@@ -257,18 +258,22 @@ def createLeg(settings, side = "L"):
     FK_Knee = [f"CTRL_FK_Knee_{side}"]
     FK_Ankle = [f"CTRL_FK_Ankle_{side}"]
     FK_Ball = [f"CTRL_FK_Ball_{side}"]
-    MatrixConstrain.MatrixConstrain(FK_Leg, f"FK_Leg_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-12)
-    MatrixConstrain.MatrixConstrain(FK_Knee, f"FK_Knee_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-13)
-    MatrixConstrain.MatrixConstrain(FK_Ankle, f"FK_Ankle_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-14)
-    MatrixConstrain.MatrixConstrain(FK_Ball, f"FK_Ball_{side}", Offset=True, tX=False, tY=False, tZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-15)
+    MatrixConstrain.MatrixConstrain(FK_Leg, f"FK_Leg_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-12)
+    MatrixConstrain.MatrixConstrain(FK_Knee, f"FK_Knee_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-13)
+    MatrixConstrain.MatrixConstrain(FK_Ankle, f"FK_Ankle_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-14)
+    MatrixConstrain.MatrixConstrain(FK_Ball, f"FK_Ball_{side}", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-15)
+    cmds.connectAttr(FK_Leg[0] + ".s", f"FK_Leg_{side}.s")
+    cmds.connectAttr(FK_Knee[0] + ".s", f"FK_Knee_{side}.s")
+    cmds.connectAttr(FK_Ankle[0] + ".s", f"FK_Ankle_{side}.s")
+    cmds.connectAttr(FK_Ball[0] + ".s", f"FK_Ball_{side}.s")
 
     Bind_Hip = [f"Bind_Hip_{side}"]
     MatrixConstrain.MatrixConstrain(Bind_Hip, f"CTRL_FK_Leg_{side}_Hook", Offset=True, sX=False, sY=False, sZ=False, BookmarkName="MatX_Leg", BookColumnOffset=BookmarkRowOffset, BookRowOffset=-16)
 
 
     #region Ribbon
-    Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5, BindSet= "Bind_JNTs", ScaleMaster=DrvJnt_Leg_L, BookColumnOffset=BookmarkRowOffset, BookRowOffset=-2)
-    Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5, BindSet= "Bind_JNTs", ScaleMaster=DrvJnt_Knee_L, BookColumnOffset=BookmarkRowOffset, BookRowOffset=0)
+    Ribbon.Ribbon(Name=f"Ribbon_Leg_{side}", Span=5, BindSet= "Bind_JNTs", ScaleMaster=DrvJnt_Leg_L, sXonly=True, BookColumnOffset=BookmarkRowOffset, BookRowOffset=-2)
+    Ribbon.Ribbon(Name=f"Ribbon_Knee_{side}", Span=5, BindSet= "Bind_JNTs", ScaleMaster=[f"DrvJnt_Knee_{side}"], sXonly=True, BookColumnOffset=BookmarkRowOffset, BookRowOffset=0)
 
     Global = ["CTRL_{}_Global".format(settings["name"])]
     
@@ -334,7 +339,7 @@ def createLeg(settings, side = "L"):
     ############################################################################################################
 
     computeThomas.createFoot(settings, side)
-    
+
     ############################################################################################################
     ############################################################################################################
     ############################################################################################################
@@ -349,10 +354,59 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"IK_Toe_{side}.ikBlend")
     
     cmds.connectAttr(f"FK_Leg_{side}.rotate", f"DrvJnt_Leg_{side}.rotate")
+    cmds.connectAttr(f"FK_Leg_{side}.t", f"DrvJnt_Leg_{side}.t")
+    cmds.connectAttr(f"FK_Knee_{side}.t", f"DrvJnt_Knee_{side}.t")
     cmds.connectAttr(f"FK_Knee_{side}.rotate", f"DrvJnt_Knee_{side}.rotate")
     cmds.connectAttr(f"FK_Ankle_{side}.rotate", f"Bind_Foot_{side}.rotate")
     cmds.connectAttr(f"FK_Ball_{side}.rotate", f"Bind_Ball_{side}.rotate")
+    cmds.connectAttr(f"FK_Toe_{side}.t", f"Bind_Toe_{side}.t")
     cmds.connectAttr(f"FK_Toe_{side}.rotate", f"Bind_Toe_{side}.rotate")
+
+    #connecting scale
+    cmds.createNode("condition", n=f"Cond_Scale_Leg_{side}")
+    cmds.createNode("multiplyDivide", n=f"MDiv_Scale_Leg_{side}")
+    cmds.connectAttr(f"Settings_Leg_{side}.Size", f"MDiv_Scale_Leg_{side}.input1X")
+    cmds.connectAttr(f"Settings_Leg_{side}.Size", f"MDiv_Scale_Leg_{side}.input1Y")
+    cmds.connectAttr(f"Settings_Leg_{side}.Size", f"MDiv_Scale_Leg_{side}.input1Z")
+    cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"Cond_Scale_Leg_{side}.secondTerm")
+    cmds.connectAttr(f"FK_Leg_{side}.scale", f"Cond_Scale_Leg_{side}.colorIfTrue")
+    cmds.connectAttr(f"MDiv_Scale_Leg_{side}.output", f"Cond_Scale_Leg_{side}.colorIfFalse")
+    cmds.connectAttr(f"Cond_Scale_Leg_{side}.outColor", f"DrvJnt_Leg_{side}.scale")
+
+    cmds.createNode("multiplyDivide", n=f"mult_Scale_Knee_{side}")
+    cmds.createNode("multiplyDivide", n=f"mult_Scale_Foot_{side}")
+    cmds.createNode("multiplyDivide", n=f"mult_Scale_Ball_{side}")
+    cmds.createNode("multiplyDivide", n=f"mult_Scale_Toe_{side}")
+    cmds.createNode("condition", n=f"cond_Scale_Knee_{side}")
+    cmds.createNode("condition", n=f"cond_Scale_Foot_{side}")
+    cmds.createNode("condition", n=f"cond_Scale_Ball_{side}")
+    cmds.createNode("condition", n=f"cond_Scale_Toe_{side}")
+    cmds.connectAttr(f"DrvJnt_Leg_{side}.scale", f"mult_Scale_Knee_{side}.input1")
+    cmds.connectAttr(f"DrvJnt_Leg_{side}.scale", f"mult_Scale_Foot_{side}.input1")
+    cmds.connectAttr(f"DrvJnt_Leg_{side}.scale", f"mult_Scale_Ball_{side}.input1")
+    cmds.connectAttr(f"DrvJnt_Leg_{side}.scale", f"mult_Scale_Toe_{side}.input1")
+    cmds.connectAttr(f"FK_Knee_{side}.scale", f"mult_Scale_Knee_{side}.input2")
+    cmds.connectAttr(f"FK_Ankle_{side}.scale", f"mult_Scale_Foot_{side}.input2")
+    cmds.connectAttr(f"FK_Ball_{side}.scale", f"mult_Scale_Ball_{side}.input2")
+    cmds.connectAttr(f"FK_Toe_{side}.scale", f"mult_Scale_Toe_{side}.input2")
+    cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"cond_Scale_Knee_{side}.secondTerm")
+    cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"cond_Scale_Foot_{side}.secondTerm")
+    cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"cond_Scale_Ball_{side}.secondTerm")
+    cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"cond_Scale_Toe_{side}.secondTerm")
+    cmds.connectAttr(f"mult_Scale_Knee_{side}.output", f"cond_Scale_Knee_{side}.colorIfTrue")
+    cmds.connectAttr(f"mult_Scale_Foot_{side}.output", f"cond_Scale_Foot_{side}.colorIfTrue")
+    cmds.connectAttr(f"mult_Scale_Ball_{side}.output", f"cond_Scale_Ball_{side}.colorIfTrue")
+    cmds.connectAttr(f"mult_Scale_Toe_{side}.output", f"cond_Scale_Toe_{side}.colorIfTrue")
+    cmds.connectAttr(f"DrvJnt_Leg_{side}.scale", f"cond_Scale_Knee_{side}.colorIfFalse")
+    cmds.connectAttr(f"Settings_Leg_{side}.Size", f"cond_Scale_Foot_{side}.colorIfFalseG")
+    cmds.connectAttr(f"Bind_Foot_{side}.scale", f"cond_Scale_Ball_{side}.colorIfFalse")
+    cmds.connectAttr(f"Bind_Ball_{side}.scale", f"cond_Scale_Toe_{side}.colorIfFalse")
+    cmds.connectAttr(f"cond_Scale_Knee_{side}.outColor", f"DrvJnt_Knee_{side}.scale")
+    cmds.connectAttr(f"cond_Scale_Foot_{side}.outColorG", f"Bind_Foot_{side}.scaleX")
+    cmds.connectAttr(f"cond_Scale_Foot_{side}.outColorG", f"Bind_Foot_{side}.scaleY")
+    cmds.connectAttr(f"cond_Scale_Foot_{side}.outColorG", f"Bind_Foot_{side}.scaleZ")
+    cmds.connectAttr(f"cond_Scale_Ball_{side}.outColor", f"Bind_Ball_{side}.scale")
+    cmds.connectAttr(f"cond_Scale_Toe_{side}.outColor", f"Bind_Toe_{side}.scale")
     
     cmds.createNode("reverse", n="Reverse_Leg_{}".format(side))
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"Reverse_Leg_{side}.inputX")
@@ -395,6 +449,7 @@ def createLeg(settings, side = "L"):
     cmds.createNode("condition", n=f"Cond_Distance_Leg_{side}")
     cmds.createNode("condition", n=f"Cond_Boolean_Leg_{side}")
     cmds.createNode("condition", n=f"Cond_FK_Leg_{side}")
+    cmds.createNode("multiply", n=f"mult_localScale_Leg_{side}")
     
     #Connecting the nodes
     cmds.connectAttr(f"Locator_Hip_{side}.translate", f"Distance_Leg_{side}.point1")
@@ -406,7 +461,9 @@ def createLeg(settings, side = "L"):
     
     cmds.connectAttr("GlobalMove_01.scaleY", f"MD_Distance_Leg_{side}_GlobalRelativeScale.input2Y")
     Dist_Leg_Tendu = cmds.getAttr(f"DrvJnt_Knee_{side}.translateX") +cmds.getAttr(f"DrvJnt_Ankle_{side}.translateX")
-    cmds.setAttr(f"MD_Distance_Leg_{side}_GlobalRelativeScale.input1Y", Dist_Leg_Tendu)
+    cmds.connectAttr(f"Settings_Leg_{side}.Size", f"mult_localScale_Leg_{side}.input[0]")
+    cmds.setAttr(f"mult_localScale_Leg_{side}.input[1]", Dist_Leg_Tendu)
+    cmds.connectAttr(f"mult_localScale_Leg_{side}.output", f"MD_Distance_Leg_{side}_GlobalRelativeScale.input1Y")
     cmds.connectAttr(f"MD_Distance_Leg_{side}_GlobalRelativeScale.outputY", f"MD_Distance_Leg_{side}_Divide.input2X")
     
     cmds.connectAttr(f"MD_Distance_Leg_{side}_Divide.outputX", f"MD_Distance_Leg_{side}_Power.input1X")
@@ -425,9 +482,14 @@ def createLeg(settings, side = "L"):
     cmds.connectAttr(f"Settings_Leg_{side}.IK_FK", f"Cond_FK_Leg_{side}.firstTerm")
     cmds.setAttr(f"Cond_FK_Leg_{side}.secondTerm", 1)
     
-    cmds.connectAttr(f"Cond_FK_Leg_{side}.outColor", f"DrvJnt_Knee_{side}.s")
-    cmds.connectAttr(f"Cond_FK_Leg_{side}.outColor", f"DrvJnt_Leg_{side}.s")
+    #cmds.connectAttr(f"Cond_FK_Leg_{side}.outColor", f"DrvJnt_Knee_{side}.s")
+    cmds.connectAttr(f"Cond_FK_Leg_{side}.outColor", f"MDiv_Scale_Leg_{side}.input2")
 
+    cmds.matchTransform(f"CTRL_Foot_{side}_Move", f"DrvJnt_Leg_{side}", piv=True)
+    cmds.connectAttr(f"Settings_Leg_{side}.Size", f"CTRL_Foot_{side}_Move.scaleX")
+    cmds.connectAttr(f"Settings_Leg_{side}.Size", f"CTRL_Foot_{side}_Move.scaleY")
+    cmds.connectAttr(f"Settings_Leg_{side}.Size", f"CTRL_Foot_{side}_Move.scaleZ")
+    
     #Bookmark
     Bookmark.createBookmark("IkFk_Leg")
     Bookmark.addNodeToBookmark("IkFk_Leg", f"Settings_Leg_{side}", column=BookmarkRowOffset, row=0, state=2)
@@ -823,7 +885,7 @@ def createArm(settings, side = "L"):
     cmds.setAttr(f"MD_Preserve_Elbow_{side}.input2X", 0.5)
     
     #region Creating The Wrist CTRL
-    NewCTRL.NewCTRL(f"PlacementCtrl_Ik_Arm_{side}", f"DrvJnt_Wrist_{side}", name=f"CTRL_Wrist_{side}")
+    NewCTRL.NewCTRL(f"PlacementCtrl_Ik_Arm_{side}", f"DrvJnt_Wrist_{side}", name=f"CTRL_Wrist_{side}", nbr=2)
     cmds.parent(f"CTRL_Wrist_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
     cmds.addAttr(f"CTRL_Wrist_{side}", ln=f"Stretch_Arm", at="bool", dv=False, k=True)
 
@@ -895,8 +957,8 @@ def createArm(settings, side = "L"):
     MatrixConstrain.MatrixConstrain(Bind_Clavicle, f"CTRL_FK_Arm_{side}_Hook", Offset=True, rX=False, rY=False, rZ=False, sX=False, sY=False, sZ=False, BookmarkName="MatX_Arm", BookRowOffset=-17, BookColumnOffset=BookmarkColumnOffset)
     
     #region Ribbon
-    Ribbon.Ribbon(Name=f"Ribbon_Arm_{side}", Span=5, BindSet = "Bind_JNTs", ScaleMaster=DrvJnt_Arm_L, BookRowOffset=-6, BookColumnOffset=BookmarkColumnOffset)
-    Ribbon.Ribbon(Name=f"Ribbon_Elbow_{side}", Span=5, BindSet = "Bind_JNTs", ScaleMaster=DrvJnt_Elbow_L, BookRowOffset=-4, BookColumnOffset=BookmarkColumnOffset)
+    Ribbon.Ribbon(Name=f"Ribbon_Arm_{side}", Span=5, BindSet = "Bind_JNTs", ScaleMaster=DrvJnt_Arm_L, sYonly=True, BookRowOffset=-6, BookColumnOffset=BookmarkColumnOffset)
+    Ribbon.Ribbon(Name=f"Ribbon_Elbow_{side}", Span=5, BindSet = "Bind_JNTs", ScaleMaster=[f"DrvJnt_Elbow_{side}"], sYonly=True, BookRowOffset=-4, BookColumnOffset=BookmarkColumnOffset)
 
     Global = ["CTRL_{}_Global".format(settings["name"])]
     
@@ -1002,6 +1064,7 @@ def createArm(settings, side = "L"):
     cmds.createNode("condition", n=f"Cond_FK_Arm_{side}")
     cmds.createNode("multiplyDivide", n=f"mult_ScaleElbow_{side}")
     cmds.createNode("multiplyDivide", n=f"mult_ScaleArm_{side}")
+    cmds.createNode("multiply", n=f"mult_localScaleArm_{side}")
     
     #Connecting the nodes
     cmds.connectAttr(f"Locator_Arm_{side}.translate", f"Distance_Arm_{side}.point1")
@@ -1010,10 +1073,12 @@ def createArm(settings, side = "L"):
     cmds.connectAttr(f"Distance_Arm_{side}.distance", f"MD_Distance_Arm_{side}_GlobalRelativeScale.input1X")
     cmds.connectAttr("GlobalMove_01.scaleY", f"MD_Distance_Arm_{side}_GlobalRelativeScale.input2X")
     cmds.connectAttr(f"MD_Distance_Arm_{side}_GlobalRelativeScale.outputX", f"MD_Distance_Arm_{side}_Divide.input1X")
-    
+
     cmds.connectAttr("GlobalMove_01.scaleY", f"MD_Distance_Arm_{side}_GlobalRelativeScale.input2Y")
     Dist_Arm_Tendu = cmds.getAttr(f"DrvJnt_Elbow_{side}.translateX") +cmds.getAttr(f"DrvJnt_Wrist_{side}.translateX")
-    cmds.setAttr(f"MD_Distance_Arm_{side}_GlobalRelativeScale.input1Y", Dist_Arm_Tendu)
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"mult_localScaleArm_{side}.input[0]")
+    cmds.setAttr(f"mult_localScaleArm_{side}.input[1]", max(Dist_Arm_Tendu, -Dist_Arm_Tendu))
+    cmds.connectAttr(f"mult_localScaleArm_{side}.output", f"MD_Distance_Arm_{side}_GlobalRelativeScale.input1Y")
     cmds.connectAttr(f"MD_Distance_Arm_{side}_GlobalRelativeScale.outputY", f"MD_Distance_Arm_{side}_Divide.input2X")
     
     cmds.connectAttr(f"MD_Distance_Arm_{side}_Divide.outputX", f"MD_Distance_Arm_{side}_Power.input1X")
@@ -1035,11 +1100,71 @@ def createArm(settings, side = "L"):
     cmds.connectAttr(f"Cond_FK_Arm_{side}.outColor", f"mult_ScaleElbow_{side}.input1")
     cmds.connectAttr(f"Cond_FK_Arm_{side}.outColor", f"mult_ScaleArm_{side}.input1")
 
-    cmds.connectAttr(f"{FK_Elbow[0]}.s", f"mult_ScaleElbow_{side}.input2")
-    cmds.connectAttr(f"{FK_Arm[0]}.s", f"mult_ScaleArm_{side}.input2")
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"mult_ScaleElbow_{side}.input2X")
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"mult_ScaleElbow_{side}.input2Y")
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"mult_ScaleElbow_{side}.input2Z")
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"mult_ScaleArm_{side}.input2X")
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"mult_ScaleArm_{side}.input2Y")
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"mult_ScaleArm_{side}.input2Z")
 
-    cmds.connectAttr(f"mult_ScaleElbow_{side}.output", f"DrvJnt_Elbow_{side}.s")
-    cmds.connectAttr(f"mult_ScaleArm_{side}.output", f"DrvJnt_Arm_{side}.s")
+    #condition et mult pour scale bras
+    cmds.createNode("condition", n=f"cond_scaleArm_{side}")
+    cmds.createNode("condition", n=f"cond_scaleElbow_{side}")
+    cmds.createNode("condition", n=f"cond_scaleWrist_{side}")
+    cmds.createNode("multiplyDivide", n=f"mult_scaleEblowCorrect_{side}")
+    cmds.createNode("multiplyDivide", n=f"mult_scaleWristCorrect_{side}")
+    cmds.createNode("multiplyDivide", n=f"mult_scaleWristCorrectIK_{side}")
+    cmds.createNode("condition", n=f"cond_scaleEblowMode_{side}")
+
+    cmds.connectAttr(f"mult_ScaleElbow_{side}.output", f"cond_scaleArm_{side}.colorIfFalse")
+    cmds.connectAttr(f"FK_Arm_{side}.s", f"cond_scaleArm_{side}.colorIfTrue")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"cond_scaleArm_{side}.secondTerm")
+
+    cmds.connectAttr(f"mult_ScaleElbow_{side}.output", f"cond_scaleElbow_{side}.colorIfFalse")
+    cmds.connectAttr(f"FK_Arm_{side}.s", f"cond_scaleElbow_{side}.colorIfTrue")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"cond_scaleElbow_{side}.secondTerm")
+
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"mult_scaleWristCorrectIK_{side}.input1X")
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"mult_scaleWristCorrectIK_{side}.input1Y")
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"mult_scaleWristCorrectIK_{side}.input1Z")
+    cmds.connectAttr(f"CTRL_Wrist_{side}.s", f"mult_scaleWristCorrectIK_{side}.input2")
+
+    cmds.connectAttr(f"FK_Wrist_{side}.s", f"cond_scaleWrist_{side}.colorIfTrue")
+    cmds.connectAttr(f"mult_scaleWristCorrectIK_{side}.output", f"cond_scaleWrist_{side}.colorIfFalse")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"cond_scaleWrist_{side}.secondTerm")
+
+    cmds.connectAttr(f"FK_Elbow_{side}.s", f"mult_scaleEblowCorrect_{side}.input1")
+    cmds.connectAttr(f"DrvJnt_Arm_{side}.s", f"mult_scaleEblowCorrect_{side}.input2")
+
+    cmds.connectAttr(f"mult_scaleEblowCorrect_{side}.output", f"cond_scaleEblowMode_{side}.colorIfTrue")
+    cmds.connectAttr(f"cond_scaleElbow_{side}.outColor", f"cond_scaleEblowMode_{side}.colorIfFalse")
+    cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"cond_scaleEblowMode_{side}.secondTerm")
+
+    cmds.connectAttr(f"cond_scaleArm_{side}.outColor", f"DrvJnt_Arm_{side}.s")
+    cmds.connectAttr(f"cond_scaleEblowMode_{side}.outColor", f"DrvJnt_Elbow_{side}.s")
+    cmds.connectAttr(f"cond_scaleWrist_{side}.outColor", f"DrvJnt_Wrist_{side}.s")
+
+    cmds.createNode("multiply", n=f"mult_sizeDist_{side}")
+    cmds.setAttr(f"mult_sizeDist_{side}.input[0]", Dist_Arm_Tendu)
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"mult_sizeDist_{side}.input[1]")
+    cmds.createNode("addDoubleLinear", n=f"add_sizeDist_{side}")
+    cmds.setAttr(f"add_sizeDist_{side}.input1", -Dist_Arm_Tendu)
+    cmds.connectAttr(f"mult_sizeDist_{side}.output", f"add_sizeDist_{side}.input2")
+    cmds.connectAttr(f"add_sizeDist_{side}.output", f"CTRL_Wrist_{side}_Move.translateX")
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"CTRL_Wrist_{side}_Move.scaleX")
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"CTRL_Wrist_{side}_Move.scaleY")
+    cmds.connectAttr(f"Settings_Arm_{side}.Size", f"CTRL_Wrist_{side}_Move.scaleZ")
+
+    cmds.connectAttr(f"DrvJnt_Elbow_{side}.s", f"mult_scaleWristCorrect_{side}.input1")
+    cmds.connectAttr(f"CTRL_FK_Wrist_{side}.s", f"mult_scaleWristCorrect_{side}.input2")
+
+    #connect ctrl.s to joint.s
+    cmds.connectAttr(f"mult_scaleWristCorrect_{side}.output", f"FK_Wrist_{side}.s")
+    cmds.connectAttr(f"CTRL_FK_Arm_{side}.s", f"FK_Arm_{side}.s")
+    cmds.connectAttr(f"CTRL_FK_Elbow_{side}.s", f"FK_Elbow_{side}.s")
+    #disconnect inverse scale
+    cmds.disconnectAttr(f"FK_Arm_{side}.s", f"FK_Elbow_{side}.inverseScale")
+    cmds.disconnectAttr(f"FK_Elbow_{side}.s", f"FK_Wrist_{side}.inverseScale")
 
     # region Wrist
     #DrvJnt wrsit constraint bind hand and is constraint by FK and IK
@@ -1081,7 +1206,7 @@ def createArm(settings, side = "L"):
 
     cmds.connectAttr(f"Cond_ConstraintRotate_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.r")
     cmds.connectAttr(f"Cond_ConstraintTranslate_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.t")
-    cmds.connectAttr(f"Cond_ConstraintScale_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.s")
+    #cmds.connectAttr(f"Cond_ConstraintScale_DrvJnt_{side}.outColor", f"DrvJnt_Wrist_{side}.s")
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_ConstraintRotate_DrvJnt_{side}.secondTerm")
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_ConstraintTranslate_DrvJnt_{side}.secondTerm")
     cmds.connectAttr(f"Settings_Arm_{side}.IK_FK", f"Cond_ConstraintScale_DrvJnt_{side}.secondTerm")

@@ -13,7 +13,7 @@ from wombatAutoRig.src.core import Bookmark
 
 
 
-def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=True, rY=True, rZ=True, sX=True, sY=True, sZ=True, BookmarkName=None, BookRowOffset=0, BookColumnOffset=0):
+def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=True, rY=True, rZ=True, sX=True, sY=True, sZ=True, sYonly=False, sXonly=False, BookmarkName=None, BookRowOffset=0, BookColumnOffset=0):
     
     if len(Master)<1 :
         return "NOTHING IS SELECTED!!!!!!!!!!!!!!!!!"
@@ -95,12 +95,21 @@ def MatrixConstrain(Master, Slave, Offset=True, tX=True, tY=True, tZ=True, rX=Tr
             if cmds.objectType(Slave) == "joint" :
                 MatX = DecMatX_Jnt
             cmds.connectAttr(MatX+'.outputRotateZ',Slave+'.rotateZ')
-        if sX == True:
-            cmds.connectAttr(DecMatX+'.outputScaleX',Slave+'.scaleX')
-        if sY == True:
+        if sYonly == True:
+            cmds.connectAttr(DecMatX+'.outputScaleY',Slave+'.scaleX')
             cmds.connectAttr(DecMatX+'.outputScaleY',Slave+'.scaleY')
-        if sZ == True:
-            cmds.connectAttr(DecMatX+'.outputScaleZ',Slave+'.scaleZ')
+            cmds.connectAttr(DecMatX+'.outputScaleY',Slave+'.scaleZ')
+        elif sXonly == True:
+            cmds.connectAttr(DecMatX+'.outputScaleX',Slave+'.scaleX')
+            cmds.connectAttr(DecMatX+'.outputScaleX',Slave+'.scaleY')
+            cmds.connectAttr(DecMatX+'.outputScaleX',Slave+'.scaleZ')
+        else:
+            if sX == True:
+                cmds.connectAttr(DecMatX+'.outputScaleX',Slave+'.scaleX')
+            if sY == True:
+                cmds.connectAttr(DecMatX+'.outputScaleY',Slave+'.scaleY')
+            if sZ == True:
+                cmds.connectAttr(DecMatX+'.outputScaleZ',Slave+'.scaleZ')
 
         locator = cmds.spaceLocator(name='IS_CONSTRAIN_BY_{}'.format(Master))[0]
 
