@@ -202,11 +202,6 @@ def createLeg(settings, side = "L"):
     Offset.offset(f"PV_Leg_{side}", nbr=1)
     cmds.poleVectorConstraint(f"PV_Leg_{side}", f"IK_Leg_{side}")
     cmds.parent(f"PV_Leg_{side}_Offset", "{}|GlobalMove_01|CTRLs_01".format(settings["name"]))
-
-    #Create a locator that match the transform of the pole vector and parent it inside the fk Knee
-    cmds.spaceLocator(n=f"Locator_PoleVector_Knee_{side}")[0]
-    cmds.matchTransform(f"Locator_PoleVector_Knee_{side}", f"PV_Leg_{side}", pos=True)
-    cmds.parent(f"Locator_PoleVector_Knee_{side}", f"FK_Knee_{side}")
     
     #region Attach Joints 
     Bind_Hip_L = [f"Bind_Hip_{side}"]

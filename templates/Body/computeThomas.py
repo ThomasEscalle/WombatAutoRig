@@ -2,6 +2,7 @@ from maya import cmds
 from wombatAutoRig.src.core import Color
 from wombatAutoRig.src.core import Offset
 from wombatAutoRig.src.core import MatrixConstrain
+from wombatAutoRig.src.core import NewCTRL
 
 def compute(settings):
     # Create the foot (left)
@@ -52,13 +53,7 @@ def createFoot(settings, side = "L"):
 
 
     # Duplicate the controller "AutoRig_Data|ControllersPlacement|IK_Controllers|PlacementCtrl_Foot_{side}"
-    ctrl = cmds.duplicate(f"AutoRig_Data|ControllersPlacement|IK_Controllers|PlacementCtrl_Foot_{side}", n=f"CTRL_Foot_{side}")
-    # Put the controller at the root of the scene
-    cmds.parent(f"CTRL_Foot_{side}", world=True)
-    # Offset the controller
-    Offset.offset(f"CTRL_Foot_{side}", nbr=2)
-    # Match the pivot of the controller with the pivot of the foot
-    cmds.matchTransform(f"CTRL_Foot_{side}", f"Bind_Foot_{side}", pos=False, rot=False, scl=False, piv=True)
+    NewCTRL.NewCTRL(CTRL=f"PlacementCtrl_Foot_{side}", name=f"CTRL_Foot_{side}", Joint=f"Bind_Foot_{side}", nbr=3, rot=False)
 
     #region Attributes
 
